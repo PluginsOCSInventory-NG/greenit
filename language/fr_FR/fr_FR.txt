@@ -1,0 +1,21 @@
+80700 Consommation électrique
+80701 Gestionnaire GreenIT
+80702 Statistique du jour
+80703 Consommation totale
+80704 Moyenne de consommation
+80705 Total de temps en service
+80706 Moyenne de temps en service
+80707 Statistique du coût de consommation 
+80708 Coût du jour
+80709 Consommation par machine
+80710 Moyenne du côut par machine
+80711 depuis
+80712 jour(s)
+80713 Consommation
+80714 Coût
+
+80715 GreenIT
+80716 Format de consommation
+80717 Format du temps de service
+80718 Periode de collecte (en jours)
+80719 Confirmer

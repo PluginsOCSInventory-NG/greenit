@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hookstore>
+    <hook type="lang">
+        <value>en_GB</value>
+        <value>fr_FR</value>
+    </hook>
+    <hook type="submenu">
+        <mainmenuidentifier>ms_regconfig</mainmenuidentifier>
+        <identifier>ms_greenit_config</identifier>
+        <translation>80715</translation>
+    </hook>
+    <hook type="submenu">
+        <mainmenuidentifier>ms_extension</mainmenuidentifier>
+        <identifier>ms_greenit_dashboard</identifier>
+        <translation>80701</translation>
+    </hook>
+    <hook type="cdentry">
+        <identifier>cd_greenit</identifier>
+        <translation>80700</translation>
+        <category>other</category>
+        <available>greenit</available>
+    </hook>
+</hookstore>
