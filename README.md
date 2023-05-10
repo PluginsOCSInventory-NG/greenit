@@ -29,12 +29,15 @@ To install the plugin on your server :
 
 - Copy the files of datafilter folder into your server folder _(/etc/ocsinventory-server)_ :
 
-    ![tree](https://i.postimg.cc/pVk79B1r/Capture-d-cran-du-2023-05-09-16-22-38.png)
-
+<p align="center">
+  <img src="https://i.postimg.cc/pVk79B1r/Capture-d-cran-du-2023-05-09-16-22-38.png" alt="tree"/>
+</p>
+    
 - Set the crontab :
     - Use the command `$ crontab -e` in the server terminal
     - Add those two crontabs :
         - `0 5 * * 1 php /usr/share/ocsinventory-reports/ocsreports/extensions/greenit/script/cron_stats.php --mode full`
         - `0 * * * * php /usr/share/ocsinventory-reports/ocsreports/extensions/greenit/script/cron_stats.php --mode delta`
-    > *NOTE : Those two crontabs are default one. You are allow to change the execution time. (By default, every Mondays at 5 a.m for full mode and every hours for delta mode)*
+    
+> *NOTE : Those two crontabs are default one. You are allow to change the execution time. (By default, every Mondays at 5 a.m for full mode and every hours for delta mode)*
     
