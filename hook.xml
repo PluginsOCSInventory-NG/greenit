@@ -10,7 +10,7 @@
         <translation>80715</translation>
     </hook>
     <hook type="submenu">
-        <mainmenuidentifier>ms_extension</mainmenuidentifier>
+        <mainmenuidentifier>ms_inventory</mainmenuidentifier>
         <identifier>ms_greenit_dashboard</identifier>
         <translation>80701</translation>
     </hook>
