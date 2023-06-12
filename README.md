@@ -32,7 +32,7 @@ To install the plugin on your server :
 <p align="center">
   <img src="https://i.postimg.cc/pVk79B1r/Capture-d-cran-du-2023-05-09-16-22-38.png" alt="tree"/>
 </p>
-    
+
 - Set up the crontab :
     - Use the command `$ crontab -e` in the server terminal
     - Add these two crontabs :
@@ -40,4 +40,10 @@ To install the plugin on your server :
         - `0 * * * * php /usr/share/ocsinventory-reports/ocsreports/extensions/greenit/script/cron_stats.php --mode delta`
     
 > *NOTE: These two crontabs are the default ones. You are allowed to change the execution time. (By default, every Monday at 5 a.m for full mode and every hour for delta mode)*
-    
+
+## Results
+The GreenIT plugin operates by utilizing data collected by the service application running on the agent. This data is sent to the server as plugin data, which is then used to compile statistics about power consumption.
+
+These statistics are presented in a dashboard format, which can be accessed by navigating to `Inventory` > `GreenIT manager`. Configuration options for this dashboard can be found under `Manage` > `GreenIT`.
+
+Data for the dashboard is populated by the two cron jobs configured during the installation process. If these cron jobs are not properly set up, the dashboard will not display any data. In such a case, individual consumption data will still be available when examining a specific computer's details under the Miscellaneous > Power Consumption table.
