@@ -15,29 +15,29 @@
 ## Description
 Currently supported on Windows, this plugin is made to retrieve power consumption information.
 
-> _**IMPORTANT NOTE : This plugin is working with a windows service application downloadable <a href="https://github.com/Atineon/ocsinventory-service_greenit" target="_blank">here</a>**_
+> _**IMPORTANT NOTE : This plugin works with a windows service application which can be downloaded from <a href="https://github.com/Atineon/ocsinventory-service_greenit" target="_blank">here</a>**_
 
 
 
 ## Prerequisites
-*The following dependency need to be installed on your server*
+*The following dependency needs to be installed on your server :*
 - [Perl module]  DateTime.pm
 
 ## Installation
 To install the plugin on your server :
-- Download the plugin and extract to the server extensions folder. _(<a href="https://wiki.ocsinventory-ng.org/10.Plugin-engine/Using-plugins-installer/#plugin-activation" target="_blank">Documentation</a>)_
+- Download the plugin and extract it to the server extensions folder.  _(<a href="https://wiki.ocsinventory-ng.org/10.Plugin-engine/Using-plugins-installer/#plugin-activation" target="_blank">Documentation</a>)_
 
-- Copy the files of datafilter folder into your server folder _(/etc/ocsinventory-server)_ :
+- Copy the files from the `datafilter` folder into your server folder (`/etc/ocsinventory-server`):
 
 <p align="center">
   <img src="https://i.postimg.cc/pVk79B1r/Capture-d-cran-du-2023-05-09-16-22-38.png" alt="tree"/>
 </p>
     
-- Set the crontab :
+- Set up the crontab :
     - Use the command `$ crontab -e` in the server terminal
-    - Add those two crontabs :
+    - Add these two crontabs :
         - `0 5 * * 1 php /usr/share/ocsinventory-reports/ocsreports/extensions/greenit/script/cron_stats.php --mode full`
         - `0 * * * * php /usr/share/ocsinventory-reports/ocsreports/extensions/greenit/script/cron_stats.php --mode delta`
     
-> *NOTE : Those two crontabs are default one. You are allow to change the execution time. (By default, every Mondays at 5 a.m for full mode and every hours for delta mode)*
+> *NOTE: These two crontabs are the default ones. You are allowed to change the execution time. (By default, every Monday at 5 a.m for full mode and every hour for delta mode)*
     
