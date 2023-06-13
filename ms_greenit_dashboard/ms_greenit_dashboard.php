@@ -78,15 +78,19 @@ $numberDeviceInPeriode = mysqli_fetch_object($nbDevicesInPeriodResult)->nbDevice
 
 // Average of Consumption
 $sumConsumptionInPeriode = 0;
-foreach($limitedData as $key => $value)
-{
-    $sumConsumptionInPeriode += $value->totalConsumption;
+if (isset($limitedData)) {
+    foreach($limitedData as $key => $value)
+    {
+        $sumConsumptionInPeriode += $value->totalConsumption;
+    }
 }
-
 $sumConsumption = 0;
-foreach($data as $key => $value)
-{
-    $sumConsumption += $value->totalConsumption;
+
+if (isset($data)) {
+    foreach($data as $key => $value)
+    {
+        $sumConsumption += $value->totalConsumption;
+    }
 }
 
 // Start display page
