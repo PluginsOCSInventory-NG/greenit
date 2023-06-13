@@ -71,39 +71,30 @@ Class CronStats
 
     private function DeltaMode()
     {
-        echo $this->LogMessage("INFO", "Executing delta mode. Please wait during the treatment...");
-        echo $this->LogMessage("INFO", "Communinication with database system...");
+        echo $this->LogMessage("INFO", "Executing delta mode. Processing...");
+        echo $this->LogMessage("INFO", "Communication with database system...");
         $date = new DateTime("NOW");
-        $selectQuery = "SELECT CONSUMPTION,UPTIME FROM greenit WHERE DATE = '".$date->format("Y-m-d")."' ORDER BY UPTIME;";
-        
-        $consumptionRegex = "/[0-9]+|[0-9]+[.,][0-9]+/";
-        
-        $uptimeRegex = "/[0-9]+/";
+        $dateString = $date->format("Y-m-d");
+        $selectQuery = "SELECT CONSUMPTION,UPTIME FROM greenit WHERE DATE = '%s' ORDER BY UPTIME;";
 
         echo $this->LogMessage("INFO", "Getting values to insert...");
-        if($query = mysql2_query_secure($selectQuery, $_SESSION['OCS']["readServer"]))
+
+        if($query = mysql2_query_secure($selectQuery, $_SESSION['OCS']["readServer"], $dateString))
         {
             foreach ($query as $values)
             {
                 if(!isset($consumptionCount[$date->format("Y-m-d")])) $consumptionCount[$date->format("Y-m-d")] = 0;
                 if(!isset($uptimeCount[$date->format("Y-m-d")])) $uptimeCount[$date->format("Y-m-d")] = 0;
-
-                preg_match($consumptionRegex, $values["CONSUMPTION"], $consumptionMatches);
-                preg_match($uptimeRegex, $values["UPTIME"], $uptimeMatches);
-                foreach($consumptionMatches as $match)
+    
+                if(isset($data[$date->format("Y-m-d")]["totalConsumption"])) $data[$date->format("Y-m-d")]["totalConsumption"] += floatval($values["CONSUMPTION"]);
+                else $data[$date->format("Y-m-d")]["totalConsumption"] = floatval($values["CONSUMPTION"]);
+                $consumptionCount[$date->format("Y-m-d")]++;
+    
+                if($values["CONSUMPTION"] != "VM detected")
                 {
-                    if(isset($data[$date->format("Y-m-d")]["totalConsumption"])) $data[$date->format("Y-m-d")]["totalConsumption"] += floatval(str_replace(",",".",$match));
-                    else $data[$date->format("Y-m-d")]["totalConsumption"] = floatval(str_replace(",",".",$match));
-                    $consumptionCount[$date->format("Y-m-d")]++;
-                }
-                foreach($uptimeMatches as $match)
-                {
-                    if($values["CONSUMPTION"] != "VM detected")
-                    {
-                        if(isset($data[$date->format("Y-m-d")]["totalUptime"])) $data[$date->format("Y-m-d")]["totalUptime"] += intval($match);
-                        else $data[$date->format("Y-m-d")]["totalUptime"] = intval($match);
-                        $uptimeCount[$date->format("Y-m-d")]++;
-                    }
+                    if(isset($data[$date->format("Y-m-d")]["totalUptime"])) $data[$date->format("Y-m-d")]["totalUptime"] += intval($values["UPTIME"]);
+                    else $data[$date->format("Y-m-d")]["totalUptime"] = intval($values["UPTIME"]);
+                    $uptimeCount[$date->format("Y-m-d")]++;
                 }
             }
         }
@@ -115,7 +106,7 @@ Class CronStats
                 $data[$key]["uptimeAverage"] = round($data[$key]["totalUptime"]/$uptimeCount[$key], 6);
             }
             
-            echo $this->LogMessage("INFO", "Insert values to database...");
+            echo $this->LogMessage("INFO", "Inserting values into database...");
             $deleteQuery = "DELETE FROM greenit_stats WHERE DATE = '%s';";
             $alterQuery = "ALTER TABLE greenit_stats AUTO_INCREMENT 0;";
             $insertQuery = "INSERT INTO greenit_stats (DATE,DATA) VALUES ('%s','%s');";
@@ -130,40 +121,28 @@ Class CronStats
     
     private function FullMode()
     {
-        echo $this->LogMessage("INFO", "Executing full mode. Please wait during the treatment...");
-        echo $this->LogMessage("INFO", "Communinication with database system...");
+        echo $this->LogMessage("INFO", "Executing full mode. Processing...");
+        echo $this->LogMessage("INFO", "Communication with database system...");
         $selectQuery = "SELECT DATE,CONSUMPTION,UPTIME FROM greenit ORDER BY DATE;";
-                
-        $consumptionRegex = "/[0-9]+|[0-9]+[.,][0-9]+/";
-        
-        $uptimeRegex = "/[0-9]+/";
 
         echo $this->LogMessage("INFO", "Getting values to insert...");
-        if($query = mysql2_query_secure($selectQuery, $_SESSION['OCS']["writeServer"]))
+        if($query = mysql2_query_secure($selectQuery, $_SESSION['OCS']["readServer"]))
         {
             foreach ($query as $values)
             {
                 if(!isset($consumptionCount[$values["DATE"]])) $consumptionCount[$values["DATE"]] = 0;
                 if(!isset($uptimeCount[$values["DATE"]])) $uptimeCount[$values["DATE"]] = 0;
     
-                preg_match($consumptionRegex, $values["CONSUMPTION"], $consumptionMatches);
-                preg_match($uptimeRegex, $values["UPTIME"], $uptimeMatches);
-                foreach($consumptionMatches as $match)
+                if(isset($data[$values["DATE"]]["totalConsumption"])) $data[$values["DATE"]]["totalConsumption"] += floatval($values["CONSUMPTION"]);
+                else $data[$values["DATE"]]["totalConsumption"] = floatval($values["CONSUMPTION"]);
+                $consumptionCount[$values["DATE"]]++;
+    
+                if($values["CONSUMPTION"] != "VM detected")
                 {
-                    if(isset($data[$values["DATE"]]["totalConsumption"])) $data[$values["DATE"]]["totalConsumption"] += floatval(str_replace(",",".",$match));
-                    else $data[$values["DATE"]]["totalConsumption"] = floatval(str_replace(",",".",$match));
-                    $consumptionCount[$values["DATE"]]++;
+                    if(isset($data[$values["DATE"]]["totalUptime"])) $data[$values["DATE"]]["totalUptime"] += intval($values["UPTIME"]);
+                    else $data[$values["DATE"]]["totalUptime"] = intval($values["UPTIME"]);
+                    $uptimeCount[$values["DATE"]]++;
                 }
-                foreach($uptimeMatches as $match)
-                {
-                    if($values["CONSUMPTION"] != "VM detected")
-                    {
-                        if(isset($data[$values["DATE"]]["totalUptime"])) $data[$values["DATE"]]["totalUptime"] += intval($match);
-                        else $data[$values["DATE"]]["totalUptime"] = intval($match);
-                        $uptimeCount[$values["DATE"]]++;
-                    }
-                }
-                if((isset($data[$values["DATE"]]["totalConsumption"]) && $data[$values["DATE"]]["totalConsumption"] == " W/h") || (isset($data[$values["DATE"]]["totalUptime"]) && $data[$values["DATE"]]["totalUptime"] == " s")) unset($data[$values["DATE"]]);
             }
         }
 
@@ -174,7 +153,7 @@ Class CronStats
                 $data[$key]["uptimeAverage"] = round($data[$key]["totalUptime"]/$uptimeCount[$key], 6);
             }
 
-            echo $this->LogMessage("INFO", "Insert values to database...");
+            echo $this->LogMessage("INFO", "Inserting values into database...");
             $deleteQuery = "DELETE FROM greenit_stats WHERE DATE = '%s';";
             $alterQuery = "ALTER TABLE greenit_stats AUTO_INCREMENT 0;";
             $insertQuery = "INSERT INTO greenit_stats (DATE,DATA) VALUES ('%s','%s');";
