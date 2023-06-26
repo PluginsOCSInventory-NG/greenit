@@ -66,7 +66,6 @@ $form_name = "configuration";
 echo open_form($form_name, '', '', 'form-horizontal');
 
 $uptimeFormat = [
-    "0" => "-----",
     "s" => "s",
     "m-s" => "m-s",
     "h-m-s" => "h-m-s",
