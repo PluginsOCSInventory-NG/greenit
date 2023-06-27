@@ -67,21 +67,30 @@ if(count($data) == 0) $data = null;
 if(count($limitedData) == 0) $limitedData = null;
 if(count($todayData) == 0) $todayData = null;
 
+// we need the number of devices in the greenit table to calculate the average consumption (over a specific period if needed)
+$nbDevicesQuery = "SELECT COUNT(DISTINCT HARDWARE_ID) AS nbDevices FROM greenit";
+$nbDevicesResult = mysql2_query_secure($nbDevicesQuery, $_SESSION['OCS']["readServer"]);
+$numberDevice = mysqli_fetch_object($nbDevicesResult)->nbDevices;
+
+$nbDevicesInPeriod = "SELECT COUNT(DISTINCT HARDWARE_ID) AS nbDevices FROM greenit WHERE DATE BETWEEN '".$pastDate->format("Y-m-d")."' AND '".$date->format("Y-m-d")."'";
+$nbDevicesInPeriodResult = mysql2_query_secure($nbDevicesInPeriod, $_SESSION['OCS']["readServer"]);
+$numberDeviceInPeriode = mysqli_fetch_object($nbDevicesInPeriodResult)->nbDevices;
+
 // Average of Consumption
 $sumConsumptionInPeriode = 0;
-$numberDeviceInPeriode = 0;
-foreach($limitedData as $key => $value)
-{
-    $sumConsumptionInPeriode += $value->totalConsumption;
-    $numberDeviceInPeriode++;
+if (isset($limitedData)) {
+    foreach($limitedData as $key => $value)
+    {
+        $sumConsumptionInPeriode += $value->totalConsumption;
+    }
 }
-
 $sumConsumption = 0;
-$numberDevice = 0;
-foreach($data as $key => $value)
-{
-    $sumConsumption += $value->totalConsumption;
-    $numberDevice++;
+
+if (isset($data)) {
+    foreach($data as $key => $value)
+    {
+        $sumConsumption += $value->totalConsumption;
+    }
 }
 
 // Start display page
@@ -128,9 +137,9 @@ $table =
     <table id="tab_stats" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; text-align:center; margin:auto; width:100%; margin-top:20px; background:#fff; border: 1px solid #ddd; table-layout: fixed;" >
         <tr>
             <td style="border-right: 1px solid #ddd; padding: 5px;"><span style="font-size:32px; font-weight:bold;">' . (isset($todayData) ? $calculation->CostFormat($todayData[0]->totalConsumption, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0') . '</span> </p><span style="color:#333; font-size:13pt;">'.$l->g(80708).'</span></td>
-            <td style="border-right: 1px solid #ddd; padding: 5px;"><span style="font-size:32px; font-weight:bold;">' . (isset($limitedData) ? $calculation->CostFormat($sumConsumptionInPeriode, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0') . '</span> </p><span style="color:#333; font-size:13pt;">'.$l->g(80709)." ".$l->g(80711)." ".$config->COLLECT_INFO_PERIOD." ".$l->g(80712).'</span></td>
+            <td style="border-right: 1px solid #ddd; padding: 5px;"><span style="font-size:32px; font-weight:bold;">' . (isset($limitedData) ? $calculation->CostFormat($sumConsumptionInPeriode, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0') . '</span> </p><span style="color:#333; font-size:13pt;">'.$l->g(80709). " ".$config->COLLECT_INFO_PERIOD." ".$l->g(80712).'</span></td>
             <td style="border-right: 1px solid #ddd; padding: 5px;"><span style="font-size:32px; font-weight:bold;">' . (isset($data) ? $calculation->CostFormat($sumConsumption/$numberDevice, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0') . '</span> </p><span style="color:#333; font-size:13pt;">'.$l->g(80710).'</span></td>
-            <td style="border-right: 1px solid #ddd; padding: 5px;"><span style="font-size:32px; font-weight:bold;">' . (isset($limitedData) ? $calculation->CostFormat($sumConsumptionInPeriode/$numberDeviceInPeriode, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0') . '</span> </p><span style="color:#333; font-size:13pt;">'.$l->g(80710)." ".$l->g(80711)." ".$config->COLLECT_INFO_PERIOD." ".$l->g(80712).'</span></td>
+            <td style="border-right: 1px solid #ddd; padding: 5px;"><span style="font-size:32px; font-weight:bold;">' . (isset($limitedData) ? $calculation->CostFormat($sumConsumptionInPeriode/$numberDeviceInPeriode, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0') . '</span> </p><span style="color:#333; font-size:13pt;">'.$l->g(80711)." ".$config->COLLECT_INFO_PERIOD." ".$l->g(80712).'</span></td>
         </tr>
     </table>
 </div>';
@@ -139,7 +148,7 @@ echo $table;
 
 echo "<br>";
 
-$labels = ["'".$l->g(80703)."', '".$l->g(80709)." ".$l->g(80711)." ".$config->COLLECT_INFO_PERIOD." ".$l->g(80712)."'"];
+$labels = ["'".$l->g(80703)."', '".$l->g(80709)." ".$config->COLLECT_INFO_PERIOD." ".$l->g(80712)."'"];
 
 $labelsSettings = array(
     "consumption" => array(

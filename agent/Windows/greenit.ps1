@@ -21,9 +21,9 @@ if($null -eq $dataContent) {
             }
             else
             {
-                $xml += "<CONSUMPTION>" + $Matches.CONSUMPTION + " W/h</CONSUMPTION>`n"
+                $xml += "<CONSUMPTION>" + $Matches.CONSUMPTION + "</CONSUMPTION>`n"
             }
-            $xml += "<UPTIME>" + $Matches.UPTIME + " s</UPTIME>`n"
+            $xml += "<UPTIME>" + $Matches.UPTIME + "</UPTIME>`n"
             $xml += "</GREENIT>`n"
         }
     }
