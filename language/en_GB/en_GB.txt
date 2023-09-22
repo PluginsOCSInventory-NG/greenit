@@ -6,7 +6,7 @@
 80705 Total uptime
 80706 Uptime average
 80707 Consumption Cost Statistics
-80708 yesterday cost
+80708 Yesterday's cost
 80709 Consumption cost for last 
 80710 Average cost per device
 80711 Average cost per device for last
