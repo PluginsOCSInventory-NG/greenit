@@ -9,37 +9,62 @@ $uptimeFormat = [
 
 echo '
     <div class="form-group">
-        <label class="control-label col-sm-2" for="'.strtoupper(str_replace(" ", "_",$l->g(80716))).'">'.$l->g(80716).'</label>
-        <div class="col-sm-10">
-            <input name="'.strtoupper(str_replace(" ", "_",$l->g(80716))).'" id="'.strtoupper(str_replace(" ", "_",$l->g(80716))).'" class="form-control" type="number" min="1" max="365" value="'.($protectedPost[strtoupper(str_replace(" ", "_",$l->g(80716)))] ?? $config->COLLECT_INFO_PERIOD).'"\>
+        <label class="col-sm-8 text-left" for="'.strtoupper(str_replace(" ", "_",$l->g(80801))).'">'.$l->g(80801).'</label>
+        <div class="col-sm-4">
+            <input name="'.strtoupper(str_replace(" ", "_",$l->g(80801))).'" id="'.strtoupper(str_replace(" ", "_",$l->g(80801))).'" class="form-control" type="number" min="1" max="365" value="'.($protectedPost[strtoupper(str_replace(" ", "_",$l->g(80801)))] ?? $config->COLLECT_INFO_PERIOD).'"\>
         </div>
     </div>
+    <hr/>
     <div class="form-group">
-        <label class="control-label col-sm-2" for="'.strtoupper(str_replace(" ", "_",$l->g(80717))).'">'.$l->g(80717).'</label>
-        <div class="col-sm-10">
-            <input name="'.strtoupper(str_replace(" ", "_",$l->g(80717))).'" id="'.strtoupper(str_replace(" ", "_",$l->g(80717))).'" class="form-control" type="number" min="1" max="10" value="'.($protectedPost[strtoupper(str_replace(" ", "_",$l->g(80717)))] ?? $config->CONSUMPTION_ROUND).'"\>
+        <label class="col-sm-8 text-left" for="'.strtoupper(str_replace(" ", "_",$l->g(80802))).'">'.$l->g(80802).'</label>
+        <div class="col-sm-4">
+            <input name="'.strtoupper(str_replace(" ", "_",$l->g(80802))).'" id="'.strtoupper(str_replace(" ", "_",$l->g(80802))).'" class="form-control" type="number" min="1" value="'.($protectedPost[strtoupper(str_replace(" ", "_",$l->g(80802)))] ?? $config->COMPARE_INFO_PERIOD).'"\>
         </div>
     </div>
+    <hr/>
     <div class="form-group">
-        <label class="control-label col-sm-2" for="'.strtoupper(str_replace(" ", "_",$l->g(80718))).'">'.$l->g(80718).'</label>
-        <div class="col-sm-10">
-            <input name="'.strtoupper(str_replace(" ", "_",$l->g(80718))).'" id="'.strtoupper(str_replace(" ", "_",$l->g(80718))).'" class="form-control" type="number" min="1" max="10" value="'.($protectedPost[strtoupper(str_replace(" ", "_",$l->g(80718)))] ?? $config->COST_ROUND).'"\>
+        <label class="col-sm-8 text-left" for="'.strtoupper(str_replace(" ", "_",$l->g(80803))).'">'.$l->g(80803).'</label>
+        <div class="col-sm-4">
+            <input name="'.strtoupper(str_replace(" ", "_",$l->g(80803))).'" id="'.strtoupper(str_replace(" ", "_",$l->g(80803))).'" class="form-control" type="number" min="1" max="10" value="'.($protectedPost[strtoupper(str_replace(" ", "_",$l->g(80803)))] ?? $config->CONSUMPTION_ROUND).'"\>
         </div>
     </div>
+    <hr/>
     <div class="form-group">
-        <label class="control-label col-sm-2" for="'.strtoupper(str_replace(" ", "_",$l->g(80719))).'">'.$l->g(80719).'</label>
-        <div class="col-sm-10">
-            <input name="'.strtoupper(str_replace(" ", "_",$l->g(80719))).'" id="'.strtoupper(str_replace(" ", "_",$l->g(80719))).'" class="form-control" type="text" value="'.($protectedPost[strtoupper(str_replace(" ", "_",$l->g(80719)))] ?? $config->COST_UNIT).'"\>
+        <label class="col-sm-8 text-left" for="'.strtoupper(str_replace(" ", "_",$l->g(80804))).'">'.$l->g(80804).'</label>
+        <div class="col-sm-4">
+            <input name="'.strtoupper(str_replace(" ", "_",$l->g(80804))).'" id="'.strtoupper(str_replace(" ", "_",$l->g(80804))).'" class="form-control" type="number" min="1" max="10" value="'.($protectedPost[strtoupper(str_replace(" ", "_",$l->g(80804)))] ?? $config->COST_ROUND).'"\>
         </div>
     </div>
+    <hr/>
     <div class="form-group">
-        <label class="control-label col-sm-2" for="'.strtoupper(str_replace(" ", "_",$l->g(80720))).'">'.$l->g(80720).'</label>
-        <div class="col-sm-10">
-            <input name="'.strtoupper(str_replace(" ", "_",$l->g(80720))).'" id="'.strtoupper(str_replace(" ", "_",$l->g(80720))).'" class="form-control" type="number" min="0" step="0.000001" value="'.($protectedPost[strtoupper(str_replace(" ", "_",$l->g(80720)))] ?? $config->KILOWATT_COST).'"\>
+        <label class="col-sm-8 text-left" for="'.strtoupper(str_replace(" ", "_",$l->g(80805))).'">'.$l->g(80805).'</label>
+        <div class="col-sm-4">
+            <input name="'.strtoupper(str_replace(" ", "_",$l->g(80805))).'" id="'.strtoupper(str_replace(" ", "_",$l->g(80805))).'" class="form-control" type="text" value="'.($protectedPost[strtoupper(str_replace(" ", "_",$l->g(80805)))] ?? $config->COST_UNIT).'"\>
         </div>
     </div>
+    <hr/>
+    <div class="form-group">
+        <label class="col-sm-8 text-left" for="'.strtoupper(str_replace(" ", "_",$l->g(80806))).'">'.$l->g(80806).'</label>
+        <div class="col-sm-4">
+            <input name="'.strtoupper(str_replace(" ", "_",$l->g(80806))).'" id="'.strtoupper(str_replace(" ", "_",$l->g(80806))).'" class="form-control" type="number" min="0" step="0.000001" value="'.($protectedPost[strtoupper(str_replace(" ", "_",$l->g(80806)))] ?? $config->KILOWATT_COST).'"\>
+        </div>
+    </div>
+    <hr/>
+    <div class="form-group">
+        <label class="col-sm-8 text-left" for="'.strtoupper(str_replace(" ", "_",$l->g(80807))).'">'.$l->g(80807).'</label>
+        <div class="col-sm-4">
+            <select name='.strtoupper(str_replace(" ", "_",$l->g(80807))).' id='.strtoupper(str_replace(" ", "_",$l->g(80807))).' class="form-control">"
 ';
-formGroup('select', strtoupper(str_replace(" ", "_",$l->g(80721))), $l->g(80721), '', '', $protectedPost[strtoupper(str_replace(" ", "_",$l->g(80721)))] ?? $config->UPTIME_FORMAT, '', $uptimeFormat, $uptimeFormat, '');
-
+                if(is_array($uptimeFormat)) {
+                    foreach ($uptimeFormat as $option => $value){
+                        echo "<option value='".$option."' ".($option == ($protectedPost[strtoupper(str_replace(" ", "_",$l->g(80807)))] ?? $config->UPTIME_FORMAT) ? 'selected' : '').">".($uptimeFormat[$option] ? $uptimeFormat[$option] : $option)."</option>";
+                    }
+                }
+echo '
+            </select>
+        </div>
+    </div>
+    <hr/>
+';
 
 ?>
