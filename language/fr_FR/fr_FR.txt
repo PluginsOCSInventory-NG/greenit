@@ -1,30 +1,38 @@
 80700 Consommation d'énergie
-80701 Gestionnaire GreenIT
-80702 Statistiques de la journée précédente
-80703 Consommation totale
-80704 Consommation moyenne
-80705 Temps de fonctionnement total
-80706 Temps de fonctionnement moyen
-80707 Statistiques du coût de consommation
-80708 Coût de la journée précédente
-80709 Coût de consommation pour les derniers
-80710 Coût moyen par appareil
-80711 Coût moyen par appareil pour les derniers
-80712 jour(s)
-80713 Consommation
-80714 Coût
 
-80715 GreenIT
-80716 Période de collecte des données (en jours)
-80717 Précision décimale de la consommation
-80718 Précision décimale du coût
-80719 Unité de coût
-80720 Coût du kilowatt
-80721 Format du temps de fonctionnement
-80722 Confirmer
 
-80723 La configuration a été mise à jour
+80800 GreenIT
 
-80724 Statistiques globales
-80725 Statistiques individuelles
-80726 Recherche individuelle
+80801 Période de collecte des données (en jours)
+80802 Data comparator period (in days)
+80803 Précision décimale de la consommation
+80804 Précision décimale du coût
+80805 Unité de coût
+80806 Coût du kilowatt
+80807 Format du temps de fonctionnement
+
+80808 La configuration a été mise à jour
+
+
+80900 Gestionnaire GreenIT
+
+80901 Statistiques globales
+80902 Statistiques individuelles
+80903 Recherche individuelle
+
+80904 Statistiques de la journée précédente
+
+80905 Consommation totale
+80906 Consommation moyenne
+80907 Temps de fonctionnement total
+80908 Temps de fonctionnement moyen
+
+80909 Statistiques du coût de consommation
+
+80910 Coût de la journée précédente
+80911 Coût de consommation pour les derniers
+80912 Coût moyen par appareil
+80913 Coût moyen par appareil pour les derniers
+80914 jour(s)
+80915 Consommation
+80916 Coût
