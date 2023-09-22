@@ -1,27 +1,30 @@
 80700 Power consumption
-
 80701 GreenIT manager
-80702 Today stats
+80702 yesterday's Statistics
 80703 Total consumption
 80704 Consumption average
 80705 Total uptime
 80706 Uptime average
-80707 Consumption cost stats
-80708 Today cost
-80709 Consumption per device
+80707 Consumption Cost Statistics
+80708 yesterday cost
+80709 Consumption cost for last 
 80710 Average cost per device
-80711 since
+80711 Average cost per device for last
 80712 day(s)
 80713 Consumption
 80714 Cost
 
 80715 GreenIT
-80716 Period of collect (in days)
-80717 Consumption round
-80718 Cost round
+80716 Data collection period (in days)
+80717 Consumption decimal precision
+80718 Cost decimal precision
 80719 Cost unit
 80720 Kilowatt cost
 80721 Uptime format
 80722 Submit
 
-80723 Configuration have been changed
+80723 Configuration has been updated
+
+80724 Global Statistics
+80725 Individual Statistics
+80726 Individual Search
