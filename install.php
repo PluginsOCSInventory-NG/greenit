@@ -36,7 +36,7 @@ function extension_install_greenit()
     );
 
     $commonObject->sqlQuery(
-        "INSERT INTO `greenit_config` (COLLECT_INFO_PERIOD,CONSUMPTION_ROUND,COST_ROUND,COST_UNIT,KILOWATT_COST,UPTIME_FORMAT) VALUES ('30','5','5','€','','h-m-s');"
+        "INSERT INTO `greenit_config` (COLLECT_INFO_PERIOD,CONSUMPTION_ROUND,COST_ROUND,COST_UNIT,KILOWATT_COST,UPTIME_FORMAT) VALUES ('30','2','2','€','','h-m-s');"
     );
 
     $commonObject->sqlQuery(
