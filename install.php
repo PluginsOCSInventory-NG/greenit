@@ -27,6 +27,7 @@ function extension_install_greenit()
         "CREATE TABLE IF NOT EXISTS `greenit_config` (
         `ID` INTEGER NOT NULL AUTO_INCREMENT,
         `COLLECT_INFO_PERIOD` INTEGER NOT NULL,
+        `COMPARE_INFO_PERIOD` INTEGER NOT NULL,
         `CONSUMPTION_ROUND` INTEGER NOT NULL,
         `COST_ROUND` INTEGER NOT NULL,
         `COST_UNIT` varchar(255) NOT NULL,
@@ -36,7 +37,7 @@ function extension_install_greenit()
     );
 
     $commonObject->sqlQuery(
-        "INSERT INTO `greenit_config` (COLLECT_INFO_PERIOD,CONSUMPTION_ROUND,COST_ROUND,COST_UNIT,KILOWATT_COST,UPTIME_FORMAT) VALUES ('30','2','2','€','','h-m-s');"
+        "INSERT INTO `greenit_config` (COLLECT_INFO_PERIOD,COMPARE_INFO_PERIOD,CONSUMPTION_ROUND,COST_ROUND,COST_UNIT,KILOWATT_COST,UPTIME_FORMAT) VALUES ('30','365','2','2','€','','h-m-s');"
     );
 
     $commonObject->sqlQuery(

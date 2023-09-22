@@ -48,7 +48,7 @@ require_once("components/greenitMenu.php");
 
 echo "<div class='col-md-10'>";
 
-printEnTete($l->g(80701));
+printEnTete($l->g(80900));
 echo "<hr>";
 
 if(!isset($protectedPost['onglet'])){

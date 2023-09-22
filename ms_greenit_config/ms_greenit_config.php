@@ -20,12 +20,13 @@ else{
 }
 
 if(
-    isset($protectedPost[strtoupper(str_replace(" ", "_",$l->g(80716)))]) &&
-    isset($protectedPost[strtoupper(str_replace(" ", "_",$l->g(80717)))]) &&
-    isset($protectedPost[strtoupper(str_replace(" ", "_",$l->g(80718)))]) &&
-    isset($protectedPost[strtoupper(str_replace(" ", "_",$l->g(80719)))]) &&
-    isset($protectedPost[strtoupper(str_replace(" ", "_",$l->g(80720)))]) &&
-    isset($protectedPost[strtoupper(str_replace(" ", "_",$l->g(80721)))])
+    isset($protectedPost[strtoupper(str_replace(" ", "_",$l->g(80801)))]) &&
+    isset($protectedPost[strtoupper(str_replace(" ", "_",$l->g(80802)))]) &&
+    isset($protectedPost[strtoupper(str_replace(" ", "_",$l->g(80803)))]) &&
+    isset($protectedPost[strtoupper(str_replace(" ", "_",$l->g(80804)))]) &&
+    isset($protectedPost[strtoupper(str_replace(" ", "_",$l->g(80805)))]) &&
+    isset($protectedPost[strtoupper(str_replace(" ", "_",$l->g(80806)))]) &&
+    isset($protectedPost[strtoupper(str_replace(" ", "_",$l->g(80807)))])
 )
 {
     require_once("data/updateDB.php");
@@ -36,9 +37,10 @@ else
 }
 
 // Start display page
+echo "<div class='col-md-1'></div>";
 echo "<div class='col-md-10'>";
 
-printEnTete($l->g(80715));
+printEnTete($l->g(80800));
 echo "<hr>";
 
 if(!isset($protectedPost['onglet'])){
@@ -50,9 +52,11 @@ echo open_form($form_name, '', '', 'form-horizontal');
 
 require("components/formular.php");
 
-echo '<input type="submit" class="btn btn-success" value="'.$l->g(80722).'" name="SUBMIT_FORM">';
+echo '<input type="submit" class="btn btn-success" value="'.$l->g(103).'" name="SUBMIT_FORM">';
 
 echo close_form();
 
 echo "</div>";
+echo "<div class='col-md-1'></div>";
+
 ?>
