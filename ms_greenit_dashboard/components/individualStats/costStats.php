@@ -19,18 +19,24 @@ echo $table;
 
 echo "<br>";
 
-$labels = ["'".$l->g(80905)."', '".$l->g(80911)." ".$config->COLLECT_INFO_PERIOD." ".$l->g(80914)."'"];
+$labels = ["'".$l->g(80911)." ".$config->COMPARE_INFO_PERIOD." ".$l->g(80914)."', '".$l->g(80911)." ".$config->COLLECT_INFO_PERIOD." ".$l->g(80914)."'"];
 
 $labelsSettings = array(
     "consumption" => array(
         "backgroundColor" => "'#1941A5'",
-        "data" => "['".str_replace(" "."kW/h", "", $calculation->ConsumptionFormat($sumConsumption, "kW/h", $config->CONSUMPTION_ROUND))."', '".str_replace(" "."kW/h", "", $calculation->ConsumptionFormat($sumConsumptionInPeriode, "kW/h", $config->CONSUMPTION_ROUND))."']",
+        "data" => "[
+            '".str_replace(" "."kW/h", "", $calculation->ConsumptionFormat($sumConsumptionCompare, "kW/h", $config->CONSUMPTION_ROUND))."',
+            '".str_replace(" "."kW/h", "", $calculation->ConsumptionFormat($sumConsumptionInPeriode, "kW/h", $config->CONSUMPTION_ROUND))."'
+            ]",
         "label" => "'".$l->g(80915)." ("."kW/h".")'",
         "type" => "'bar'"
     ),
     "cost" => array(
         "backgroundColor" => "'#AFD8F8'",
-        "data" => "['".str_replace(" ".$config->COST_UNIT, "", $calculation->CostFormat($sumConsumption, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND))."', '".str_replace(" ".$config->COST_UNIT, "", $calculation->CostFormat($sumConsumptionInPeriode, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND))."']",
+        "data" => "[
+            '".str_replace(" ".$config->COST_UNIT, "", $calculation->CostFormat($sumConsumptionCompare, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND))."',
+            '".str_replace(" ".$config->COST_UNIT, "", $calculation->CostFormat($sumConsumptionInPeriode, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND))."'
+            ]",
         "label" => "'".$l->g(80916)." (".$config->COST_UNIT.")'",
         "type" => "'bar'"
     )
