@@ -74,6 +74,7 @@ Class CronStats
         echo $this->LogMessage("INFO", "Executing delta mode. Please wait during the treatment...");
         echo $this->LogMessage("INFO", "Communinication with database system...");
         $date = new DateTime("NOW");
+        $date->modify("-1 day");
         $selectQuery = "SELECT CONSUMPTION,UPTIME FROM greenit WHERE DATE = '".$date->format("Y-m-d")."' ORDER BY UPTIME;";
         
         $consumptionRegex = "/[0-9]+|[0-9]+[.,][0-9]+/";
