@@ -30,6 +30,7 @@ if(!isset($protectedGet['cat']))
 require_once('data/config.php');
 
 // Data recovery
+require_once('data/title.php');
 if($protectedGet['cat'] == 'globalstats')
 {
     require_once('data/globalStats.php');
@@ -44,8 +45,7 @@ require_once("components/greenitMenu.php");
 
 echo "<div class='col-md-10'>";
 
-printEnTete($l->g(80900));
-echo "<hr>";
+require_once("components/title.php");
 
 if(!isset($protectedPost['onglet'])){
     $protectedPost['onglet'] = 1;

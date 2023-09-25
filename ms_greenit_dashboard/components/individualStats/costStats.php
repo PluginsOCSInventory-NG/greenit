@@ -3,14 +3,14 @@
 $form_name = "costStats";
 echo open_form($form_name, '', '', 'form-horizontal');
 
-echo "<br><h4>".$l->g(80909)."</h4>";
+echo "<br><h4>".$l->g(80910)."</h4>";
 
 $table =
 '<div>
     <table id="tab_stats" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; text-align:center; margin:auto; width:100%; margin-top:20px; background:#fff; border: 1px solid #ddd; table-layout: fixed;" >
         <tr>
-            <td style="border-right: 1px solid #ddd; padding: 5px;"><span style="font-size:32px; font-weight:bold;">' . (isset($yesterdayData) ? $calculation->CostFormat($yesterdayData[0]->totalConsumption, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0') . '</span> </p><span style="color:#333; font-size:13pt;">'.$l->g(80910).'</span></td>
-            <td style="border-right: 1px solid #ddd; padding: 5px;"><span style="font-size:32px; font-weight:bold;">' . (isset($limitedData) ? $calculation->CostFormat($sumConsumptionInPeriode, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0') . '</span> </p><span style="color:#333; font-size:13pt;">'.$l->g(80913). " ".$config->COLLECT_INFO_PERIOD." ".$l->g(80914).'</span></td>
+            <td style="border-right: 1px solid #ddd; padding: 5px;"><span style="font-size:32px; font-weight:bold;">' . (isset($yesterdayData) ? $calculation->CostFormat($yesterdayData[0]->totalConsumption, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0') . '</span> </p><span style="color:#333; font-size:13pt;">'.$l->g(80911).'</span></td>
+            <td style="border-right: 1px solid #ddd; padding: 5px;"><span style="font-size:32px; font-weight:bold;">' . (isset($limitedData) ? $calculation->CostFormat($sumConsumptionInPeriode, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0') . '</span> </p><span style="color:#333; font-size:13pt;">'.$l->g(80914). " ".$config->COLLECT_INFO_PERIOD." ".$l->g(80915).'</span></td>
         </tr>
     </table>
 </div>';
@@ -19,7 +19,7 @@ echo $table;
 
 echo "<br>";
 
-$labels = ["'".$l->g(80911)." ".$config->COMPARE_INFO_PERIOD." ".$l->g(80914)."', '".$l->g(80911)." ".$config->COLLECT_INFO_PERIOD." ".$l->g(80914)."'"];
+$labels = ["'".$l->g(80912)." ".$config->COMPARE_INFO_PERIOD." ".$l->g(80915)."', '".$l->g(80912)." ".$config->COLLECT_INFO_PERIOD." ".$l->g(80915)."'"];
 
 $labelsSettings = array(
     "consumption" => array(
@@ -28,7 +28,7 @@ $labelsSettings = array(
             '".str_replace(" "."kW/h", "", $calculation->ConsumptionFormat($sumConsumptionCompare, "kW/h", $config->CONSUMPTION_ROUND))."',
             '".str_replace(" "."kW/h", "", $calculation->ConsumptionFormat($sumConsumptionInPeriode, "kW/h", $config->CONSUMPTION_ROUND))."'
             ]",
-        "label" => "'".$l->g(80915)." ("."kW/h".")'",
+        "label" => "'".$l->g(80916)." ("."kW/h".")'",
         "type" => "'bar'"
     ),
     "cost" => array(
@@ -37,7 +37,7 @@ $labelsSettings = array(
             '".str_replace(" ".$config->COST_UNIT, "", $calculation->CostFormat($sumConsumptionCompare, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND))."',
             '".str_replace(" ".$config->COST_UNIT, "", $calculation->CostFormat($sumConsumptionInPeriode, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND))."'
             ]",
-        "label" => "'".$l->g(80916)." (".$config->COST_UNIT.")'",
+        "label" => "'".$l->g(80917)." (".$config->COST_UNIT.")'",
         "type" => "'bar'"
     )
 );

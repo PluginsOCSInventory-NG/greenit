@@ -15,24 +15,25 @@
 
 
 80900 Gestionnaire GreenIT
+80901 machines dans le parc GreenIT sur
 
-80901 Statistiques globales
-80902 Statistiques individuelles
-80903 Recherche individuelle
+80902 Statistiques globales
+80903 Statistiques individuelles
+80904 Recherche individuelle
 
-80904 Statistiques de la journée précédente
+80905 Statistiques de la journée précédente
 
-80905 Consommation totale
-80906 Consommation moyenne
-80907 Temps de fonctionnement total
-80908 Temps de fonctionnement moyen
+80906 Consommation totale
+80907 Consommation moyenne
+80908 Temps de fonctionnement total
+80909 Temps de fonctionnement moyen
 
-80909 Statistiques du coût de consommation
+80910 Statistiques du coût de consommation
 
-80910 Coût de la journée précédente
-80911 Coût de consommation pour les derniers
-80912 Coût moyen par appareil
-80913 Coût moyen par appareil pour les derniers
-80914 jour(s)
-80915 Consommation
-80916 Coût
+80911 Coût de la journée précédente
+80912 Coût de consommation pour les derniers
+80913 Coût moyen par appareil
+80914 Coût moyen par appareil pour les derniers
+80915 jour(s)
+80916 Consommation
+80917 Coût
