@@ -9,14 +9,10 @@
 // Please refer to the General Public Licence http://www.gnu.org/ or Licence.txt
 //====================================================================================
 
-if(AJAX){
-        parse_str($protectedPost['ocs']['0'], $params);
-        $protectedPost+=$params;
-        ob_start();
-        $ajax = true;
-}
-else{
-        $ajax=false;
+if (AJAX) {
+    parse_str($protectedPost['ocs']['0'], $params);
+    $protectedPost += $params;
+    ob_start();
 }
 
 require_once("class/calculation.class.php");
@@ -38,7 +34,7 @@ if($protectedGet['cat'] == 'globalstats')
 {
     require_once('data/globalStats.php');
 }
-else if($protectedGet['cat'] == 'individualstats' && isset($protectedPost[strtoupper(str_replace(" ", "_",$l->g(35)))]))
+else if($protectedGet['cat'] == 'individualstats' && isset($protectedGet[strtolower(str_replace(" ", "_",$l->g(35)))]))
 {
     require_once('data/individualStats.php');
 }
@@ -63,12 +59,24 @@ if($protectedGet['cat'] == 'globalstats')
 else if ($protectedGet['cat'] == 'individualstats')
 {
     require_once("components/individualStats/individualSearch.php");
-    if(isset($protectedPost[strtoupper(str_replace(" ", "_",$l->g(35)))])) 
+    if(isset($protectedGet[strtolower(str_replace(" ", "_",$l->g(35)))]))
     {
         require_once("components/individualStats/yesterdayStats.php");
-        require_once("components/individualStats/costStats.php");    
+        require_once("components/individualStats/costStats.php");
     }
 }
 
 echo "</div>";
+
+if (AJAX) {
+    ob_end_clean();
+    tab_req(
+        $list_fields_individual_search,
+        $default_fields_individual_search,
+        $list_col_cant_del_individual_search,
+        $sql_individual_search['SQL'],
+        $tab_options_individual_search
+    );
+}
+
 ?>
