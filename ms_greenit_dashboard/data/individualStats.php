@@ -11,16 +11,16 @@ $compareDate = new DateTime("NOW");
 $compareDate->modify('-1 day');
 $compareDate->modify("-".$config->COMPARE_INFO_PERIOD." days");
 
-$yesterdayQuery = "SELECT greenit.CONSUMPTION, greenit.UPTIME FROM greenit INNER JOIN hardware WHERE greenit.DATE='".$date->format("Y-m-d")."' AND hardware.NAME='".$protectedPost[strtoupper(str_replace(" ", "_",$l->g(35)))]."' AND greenit.HARDWARE_ID=hardware.ID";
+$yesterdayQuery = "SELECT greenit.CONSUMPTION, greenit.UPTIME FROM greenit INNER JOIN hardware WHERE greenit.DATE='".$date->format("Y-m-d")."' AND hardware.NAME='".$protectedGet[strtolower(str_replace(" ", "_",$l->g(35)))]."' AND greenit.HARDWARE_ID=hardware.ID";
 $yesterdayDataResult = mysql2_query_secure($yesterdayQuery, $_SESSION['OCS']["readServer"]);
 
-$limitedQuery = "SELECT greenit.DATE, greenit.CONSUMPTION, greenit.UPTIME FROM greenit INNER JOIN hardware WHERE greenit.DATE BETWEEN '".$pastDate->format("Y-m-d")."' AND '".$date->format("Y-m-d")."' AND hardware.NAME='".$protectedPost[strtoupper(str_replace(" ", "_",$l->g(35)))]."' AND greenit.HARDWARE_ID=hardware.ID";
+$limitedQuery = "SELECT greenit.DATE, greenit.CONSUMPTION, greenit.UPTIME FROM greenit INNER JOIN hardware WHERE greenit.DATE BETWEEN '".$pastDate->format("Y-m-d")."' AND '".$date->format("Y-m-d")."' AND hardware.NAME='".$protectedGet[strtolower(str_replace(" ", "_",$l->g(35)))]."' AND greenit.HARDWARE_ID=hardware.ID";
 $limitedDataResult = mysql2_query_secure($limitedQuery, $_SESSION['OCS']["readServer"]);
 
-$compareQuery = "SELECT greenit.DATE, greenit.CONSUMPTION, greenit.UPTIME FROM greenit INNER JOIN hardware WHERE greenit.DATE BETWEEN '".$compareDate->format("Y-m-d")."' AND '".$date->format("Y-m-d")."' AND hardware.NAME='".$protectedPost[strtoupper(str_replace(" ", "_",$l->g(35)))]."' AND greenit.HARDWARE_ID=hardware.ID";
+$compareQuery = "SELECT greenit.DATE, greenit.CONSUMPTION, greenit.UPTIME FROM greenit INNER JOIN hardware WHERE greenit.DATE BETWEEN '".$compareDate->format("Y-m-d")."' AND '".$date->format("Y-m-d")."' AND hardware.NAME='".$protectedGet[strtolower(str_replace(" ", "_",$l->g(35)))]."' AND greenit.HARDWARE_ID=hardware.ID";
 $compareDataResult = mysql2_query_secure($compareQuery, $_SESSION['OCS']["readServer"]);
 
-$dataQuery = "SELECT greenit.DATE, greenit.CONSUMPTION, greenit.UPTIME FROM greenit INNER JOIN hardware WHERE hardware.NAME='".$protectedPost[strtoupper(str_replace(" ", "_",$l->g(35)))]."' AND greenit.HARDWARE_ID=hardware.ID";
+$dataQuery = "SELECT greenit.DATE, greenit.CONSUMPTION, greenit.UPTIME FROM greenit INNER JOIN hardware WHERE hardware.NAME='".$protectedGet[strtolower(str_replace(" ", "_",$l->g(35)))]."' AND greenit.HARDWARE_ID=hardware.ID";
 $dataResult = mysql2_query_secure($dataQuery, $_SESSION['OCS']["readServer"]);
 
 $yesterdayData = array();
