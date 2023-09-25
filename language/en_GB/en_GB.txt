@@ -15,24 +15,25 @@
 
 
 80900 GreenIT manager
+80901 machines in the GreenIT parc of
 
-80901 Global Statistics
-80902 Individual Statistics
-80903 Individual Search
+80902 Global Statistics
+80903 Individual Statistics
+80904 Individual Search
 
-80904 Yesterday's Statistics
+80905 Yesterday's Statistics
 
-80905 Total consumption
-80906 Consumption average
-80907 Total uptime
-80908 Uptime average
+80906 Total consumption
+80907 Consumption average
+80908 Total uptime
+80909 Uptime average
 
-80909 Consumption Cost Statistics
+80910 Consumption Cost Statistics
 
-80910 Yesterday's cost
-80911 Consumption cost for last 
-80912 Average cost per device
-80913 Average cost per device for last
-80914 day(s)
-80915 Consumption
-80916 Cost
+80911 Yesterday's cost
+80912 Consumption cost for last 
+80913 Average cost per device
+80914 Average cost per device for last
+80915 day(s)
+80916 Consumption
+80917 Cost
