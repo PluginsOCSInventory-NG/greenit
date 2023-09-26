@@ -31,6 +31,7 @@ require_once('data/config.php');
 
 // Data recovery
 require_once('data/title.php');
+require_once('data/individualSearch.php');
 if($protectedGet['cat'] == 'globalstats')
 {
     require_once('data/globalStats.php');
@@ -58,12 +59,12 @@ if($protectedGet['cat'] == 'globalstats')
 }
 else if ($protectedGet['cat'] == 'individualstats')
 {
-    require_once("components/individualStats/individualSearch.php");
     if(isset($protectedGet[strtolower(str_replace(" ", "_",$l->g(35)))]))
     {
         require_once("components/individualStats/yesterdayStats.php");
         require_once("components/individualStats/costStats.php");
     }
+    require_once("components/individualStats/individualSearch.php");
 }
 
 echo "</div>";
