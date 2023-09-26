@@ -20,7 +20,6 @@ $tab_options_individual_search['LIEN_CHAMP'][$l->g(35)] = 'NAME';
 
 echo open_form($form_name, '', '', 'form-horizontal');
 
-
 echo "<br><h4>".$l->g(80904)."</h4>";
 
 echo '
