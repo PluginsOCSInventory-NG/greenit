@@ -15,6 +15,10 @@ if (AJAX) {
     ob_start();
 }
 
+if(!isset($protectedPost['onglet'])){
+    $protectedPost['onglet'] = 1;
+}
+
 require_once("class/calculation.class.php");
 require_once('class/chart.class.php');
 
@@ -47,10 +51,6 @@ require_once("components/greenitMenu.php");
 echo "<div class='col-md-10'>";
 
 require_once("components/title.php");
-
-if(!isset($protectedPost['onglet'])){
-    $protectedPost['onglet'] = 1;
-}
 
 if($protectedGet['cat'] == 'globalstats')
 {

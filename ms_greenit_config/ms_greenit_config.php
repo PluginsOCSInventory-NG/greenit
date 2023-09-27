@@ -9,14 +9,14 @@
 // Please refer to the General Public Licence http://www.gnu.org/ or Licence.txt
 //====================================================================================
 
-if(AJAX){
-        parse_str($protectedPost['ocs']['0'], $params);
-        $protectedPost+=$params;
-        ob_start();
-        $ajax = true;
+if (AJAX) {
+    parse_str($protectedPost['ocs']['0'], $params);
+    $protectedPost += $params;
+    ob_start();
 }
-else{
-        $ajax=false;
+
+if(!isset($protectedPost['onglet'])){
+    $protectedPost['onglet'] = 1;
 }
 
 if(
@@ -29,34 +29,28 @@ if(
     isset($protectedPost[strtoupper(str_replace(" ", "_",$l->g(80807)))])
 )
 {
+    // Data insert
     require_once("data/updateDB.php");
 }
 else
 {
+    // Config recovery
     require_once("data/config.php");
 }
 
 // Start display page
-echo "<div class='col-md-1'></div>";
-echo "<div class='col-md-10'>";
+echo '
+<div class="col-md-1"></div>
+<div class="col-md-10">
+';
 
-printEnTete($l->g(80800));
-echo "<hr>";
-
-if(!isset($protectedPost['onglet'])){
-    $protectedPost['onglet'] = 1;
-}
-
-$form_name = "configuration";
-echo open_form($form_name, '', '', 'form-horizontal');
+require_once("components/title.php");
 
 require("components/formular.php");
 
-echo '<input type="submit" class="btn btn-success" value="'.$l->g(103).'" name="SUBMIT_FORM">';
-
-echo close_form();
-
-echo "</div>";
-echo "<div class='col-md-1'></div>";
+echo '
+</div>
+<div class="col-md-1"></div>
+';
 
 ?>

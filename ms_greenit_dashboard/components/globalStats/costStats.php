@@ -3,19 +3,28 @@
 $form_name = "costStats";
 echo open_form($form_name, '', '', 'form-horizontal');
 
-echo "<br><h4>".$l->g(80910)."</h4>";
+echo "<h4>".$l->g(80910)."</h4>";
 
-$table =
-'<div>
-    <table id="tab_stats" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; text-align:center; margin:auto; width:100%; margin-top:20px; background:#fff; border: 1px solid #ddd; table-layout: fixed;" >
-        <tr>
-            <td style="border-right: 1px solid #ddd; padding: 5px;"><span style="font-size:32px; font-weight:bold;">' . (isset($yesterdayData) ? $calculation->CostFormat($yesterdayData[0]->totalConsumption, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0') . '</span> </p><span style="color:#333; font-size:13pt;">'.$l->g(80911).'</span></td>
-            <td style="border-right: 1px solid #ddd; padding: 5px;"><span style="font-size:32px; font-weight:bold;">' . (isset($limitedData) ? $calculation->CostFormat($sumConsumptionInPeriode, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0') . '</span> </p><span style="color:#333; font-size:13pt;">'.$l->g(80912). " ".$config->COLLECT_INFO_PERIOD." ".$l->g(80915).'</span></td>
-            <td style="border-right: 1px solid #ddd; padding: 5px;"><span style="font-size:32px; font-weight:bold;">' . (isset($data) ? $calculation->CostFormat($sumConsumption/$numberDevice, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0') . '</span> </p><span style="color:#333; font-size:13pt;">'.$l->g(80913).'</span></td>
-            <td style="border-right: 1px solid #ddd; padding: 5px;"><span style="font-size:32px; font-weight:bold;">' . (isset($limitedData) ? $calculation->CostFormat($sumConsumptionInPeriode/$numberDeviceInPeriode, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0') . '</span> </p><span style="color:#333; font-size:13pt;">'.$l->g(80914)." ".$config->COLLECT_INFO_PERIOD." ".$l->g(80915).'</span></td>
-        </tr>
-    </table>
-</div>';
+$table = '
+<div class="row">
+    <div class="col-md-3" style="border: 1px solid #ddd; padding: 5px;">
+        <p style="font-size:2vw; font-weight:bold;">' . (isset($yesterdayData) ? $calculation->CostFormat($yesterdayData[0]->totalConsumption, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0') . '</p>
+        <p style="color:#333; font-size:1vw;">'.$l->g(80911).'</p>
+    </div>
+    <div class="col-md-3" style="border: 1px solid #ddd; padding: 5px;">
+        <p style="font-size:2vw; font-weight:bold;">' . (isset($limitedData) ? $calculation->CostFormat($sumConsumptionInPeriode, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0') . '</p>
+        <p style="color:#333; font-size:1vw;">'.$l->g(80912). " ".$config->COLLECT_INFO_PERIOD." ".$l->g(80915).'</p>
+    </div>
+    <div class="col-md-3" style="border: 1px solid #ddd; padding: 5px;">
+        <p style="font-size:2vw; font-weight:bold;">' . (isset($data) ? $calculation->CostFormat($sumConsumption/$numberDevice, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0') . '</p>
+        <p style="color:#333; font-size:1vw;">'.$l->g(80913).'</p>
+    </div>
+    <div class="col-md-3" style="border: 1px solid #ddd; padding: 5px;">
+        <p style="font-size:2vw; font-weight:bold;">' . (isset($limitedData) ? $calculation->CostFormat($sumConsumptionInPeriode/$numberDeviceInPeriode, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0') . '</p>
+        <p style="color:#333; font-size:1vw;">'.$l->g(80914)." ".$config->COLLECT_INFO_PERIOD." ".$l->g(80915).'</p>
+    </div>
+</div>
+';
 
 echo $table;
 

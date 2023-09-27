@@ -20,7 +20,7 @@ $tab_options_individual_search['LIEN_CHAMP'][$l->g(35)] = 'NAME';
 
 echo open_form($form_name, '', '', 'form-horizontal');
 
-echo "<br><h4>".$l->g(80904)."</h4>";
+echo "<h4>".$l->g(80904)."</h4>";
 
 echo '
 <div class="form-group">
@@ -42,81 +42,91 @@ ajaxtab_entete_fixe($list_fields_individual_search, $default_fields_individual_s
 // ****************************************** FILTER ******************************************/
 echo '
         <button type="button" data-toggle="collapse" data-target="#filter" class="btn">'.$l->g(735).'</button>
-';
-
-echo '
         <div id="filter" class="collapse">
 ';
 
 // FILTER OS/GROUP/TAG/ASSET
 
 // OS
-echo '<div class="form-group">';
-echo "<label class='control-label col-sm-2' for='OS'>".$l->g(25)."</label>";
-echo "<div class='col-sm-3'>";
-echo "<select name='OS' id='OS' class='form-control'>";
-foreach($os as $key => $name) {
-    if(isset($_SESSION['GREENIT']['FILTER']['OS']) && $_SESSION['GREENIT']['FILTER']['OS'] == $key) {
-        echo "<option value='".$key."' selected>".$name."</option>";
-    } else {
-        echo "<option value='".$key."'>".$name."</option>";
-    }
-}
-echo "</select>";
-echo "</div>";
-
+echo '
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="OS">'.$l->g(25).'</label>
+            <div class="col-sm-3">
+                <select name="OS" id="OS" class="form-control">
+';
+                    foreach($os as $key => $name) {
+                        if(isset($_SESSION['GREENIT']['FILTER']['OS']) && $_SESSION['GREENIT']['FILTER']['OS'] == $key) {
+                            echo "<option value='".$key."' selected>".$name."</option>";
+                        } else {
+                            echo "<option value='".$key."'>".$name."</option>";
+                        }
+                    }
+echo '
+                </select>
+            </div>
+';
 
 // GROUP
-echo "<label class='control-label col-sm-2' for='GROUP'>".$l->g(583)."</label>";
-echo "<div class='col-sm-3'>";
-echo "<select name='GROUP' id='GROUP' class='form-control'>";
-foreach($group as $key => $name) {
-    if(isset($_SESSION['GREENIT']['FILTER']['GROUP']) && $_SESSION['GREENIT']['FILTER']['GROUP'] == $key) {
-        echo "<option value='".$key."' selected>".$name."</option>";
-    } else {
-        echo "<option value='".$key."'>".$name."</option>";
-    }
-}
-echo "</select>";
-echo "</div>";
-echo "</div>";
+echo '
+            <label class="control-label col-sm-2" for="GROUP">'.$l->g(583).'</label>
+            <div class="col-sm-3">
+                <select name="GROUP" id="GROUP" class="form-control">
+';
+                    foreach($group as $key => $name) {
+                        if(isset($_SESSION['GREENIT']['FILTER']['GROUP']) && $_SESSION['GREENIT']['FILTER']['GROUP'] == $key) {
+                            echo "<option value='".$key."' selected>".$name."</option>";
+                        } else {
+                            echo "<option value='".$key."'>".$name."</option>";
+                        }
+                    }
+echo '
+                </select>
+            </div>
+        </div>
+';
 
 // TAG
-echo '<div class="form-group">';
-echo "<label class='control-label col-sm-2' for='TAG'>".$l->g(1425)."</label>";
-echo "<div class='col-sm-3'>";
-echo "<select name='TAG' id='TAG' class='form-control'>";
-foreach($tag as $key => $name) {
-    if(isset($_SESSION['GREENIT']['FILTER']['TAG']) && $_SESSION['GREENIT']['FILTER']['TAG'] == $key) {
-        echo "<option value='".$key."' selected>".$name."</option>";
-    } else {
-        echo "<option value='".$key."'>".$name."</option>";
-    }
-}
-echo "</select>";
-echo "</div>";
+echo '
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="TAG">'.$l->g(1425).'</label>
+            <div class="col-sm-3">
+                <select name="TAG" id="TAG" class="form-control">
+';
+                    foreach($tag as $key => $name) {
+                        if(isset($_SESSION['GREENIT']['FILTER']['TAG']) && $_SESSION['GREENIT']['FILTER']['TAG'] == $key) {
+                            echo "<option value='".$key."' selected>".$name."</option>";
+                        } else {
+                            echo "<option value='".$key."'>".$name."</option>";
+                        }
+                    }
+echo '
+                </select>
+            </div>
+';
 
 // ASSET CATEGORY
-echo '<div class="form-group">';
-echo "<label class='control-label col-sm-2' for='ASSET'>".$l->g(2132)."</label>";
-echo "<div class='col-sm-3'>";
-echo "<select name='ASSET' id='ASSET' class='form-control'>";
-foreach($asset as $key => $name) {
-    if(isset($_SESSION['GREENIT']['FILTER']['ASSET']) && $_SESSION['GREENIT']['FILTER']['ASSET'] == $key) {
-        echo "<option value='".$key."' selected>".$name."</option>";
-    } else {
-        echo "<option value='".$key."'>".$name."</option>";
-    }
-}
-echo "</select>";
-echo "</div>";
-echo "</div>";
+echo '
+            <label class="control-label col-sm-2" for="ASSET">'.$l->g(2132).'</label>
+            <div class="col-sm-3">
+                <select name="ASSET" id="ASSET" class="form-control">
+';
+                    foreach($asset as $key => $name) {
+                        if(isset($_SESSION['GREENIT']['FILTER']['ASSET']) && $_SESSION['GREENIT']['FILTER']['ASSET'] == $key) {
+                            echo "<option value='".$key."' selected>".$name."</option>";
+                        } else {
+                            echo "<option value='".$key."'>".$name."</option>";
+                        }
+                    }
+echo '
+                </select>
+            </div>
+        </div>
+';
 // END FILTER OS/GROUP/TAG/ASSET
 
-echo '<input type="submit" class="btn btn-success" value="'.$l->g(393).'" name="SUBMIT_FORM">';
-echo '<input type="submit" class="btn btn-danger" value="'.$l->g(396).'" name="RESET">';
-
 echo '
+        <input type="submit" class="btn btn-success" value="'.$l->g(393).'" name="SUBMIT_FORM">
+        <input type="submit" class="btn btn-danger" value="'.$l->g(396).'" name="RESET">
     </div>
 </div>
 ';
