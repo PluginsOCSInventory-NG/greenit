@@ -10,7 +10,7 @@ class Diagram {
         <?php
     }
 
-    public function createBarChart(string $canvasName, string $title, array $labels, array $labelsSettings){
+    public function createChart(string $canvasName, string $title, array $labels, array $labelsSettings){
         require_once("require/charts/StatsChartsRenderer.php");
         $stats = new StatsChartsRenderer;
         ?>
