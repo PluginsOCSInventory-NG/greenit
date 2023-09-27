@@ -23,12 +23,12 @@ $table = '
 <br>
 <div class="row">
     <div class="col-md-6" style="border: 1px solid #ddd; padding: 5px;">
-        <p style="font-size: 32px; font-weight:bold;">' . (isset($data) ? $calculation->CostFormat($sumConsumption/$numberDevice, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0') . '</p>
-        <p style="color:#333; font-size: 15px;">'.$l->g(102703).'</p>
+        <p style="font-size: 32px; font-weight:bold;">' . (isset($limitedData) ? $calculation->CostFormat($sumConsumptionInPeriode/$numberDeviceInPeriod, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0') . '</p>
+        <p style="color:#333; font-size: 15px;">'.$l->g(102704)." ".$config->COLLECT_INFO_PERIOD." ".$l->g(102705).'</p>
     </div>
     <div class="col-md-6" style="border: 1px solid #ddd; padding: 5px;">
-        <p style="font-size: 32px; font-weight:bold;">' . (isset($limitedData) ? $calculation->CostFormat($sumConsumptionInPeriode/$numberDeviceInPeriode, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0') . '</p>
-        <p style="color:#333; font-size: 15px;">'.$l->g(102704)." ".$config->COLLECT_INFO_PERIOD." ".$l->g(102705).'</p>
+        <p style="font-size: 32px; font-weight:bold;">' . (isset($limitedData) ? $calculation->CostFormat($sumConsumptionCompare/$numberDeviceCompare, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0') . '</p>
+        <p style="color:#333; font-size: 15px;">'.$l->g(102704)." ".$config->COMPARE_INFO_PERIOD." ".$l->g(102705).'</p>
     </div>
 </div>
 ';

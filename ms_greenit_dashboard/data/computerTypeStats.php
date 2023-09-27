@@ -73,7 +73,6 @@ $numberDevice = mysqli_fetch_object($nbDevicesResult)->nbDevices;
 
 $nbDevicesInPeriod = "SELECT COUNT(DISTINCT HARDWARE_ID) AS nbDevices FROM greenit WHERE DATE BETWEEN '".$pastDate->format("Y-m-d")."' AND '".$date->format("Y-m-d")."'";
 $nbDevicesInPeriodResult = mysql2_query_secure($nbDevicesInPeriod, $_SESSION['OCS']["readServer"]);
-$numberDeviceInPeriode = mysqli_fetch_object($nbDevicesInPeriodResult)->nbDevices;
-
+$numberDeviceInPeriod = mysqli_fetch_object($nbDevicesInPeriodResult)->nbDevices;
 
 ?>
