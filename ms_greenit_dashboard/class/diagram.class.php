@@ -1,6 +1,6 @@
 <?php
 
-class Chart {
+class Diagram {
 
     public function createCanvas(string $canvasName){
         ?>
@@ -10,35 +10,12 @@ class Chart {
         <?php
     }
 
-    public function createChart(string $canvasName, string $title, array $labels, array $labelsSettings){
+    public function createBarChart(string $canvasName, string $title, array $labels, array $labelsSettings){
         require_once("require/charts/StatsChartsRenderer.php");
         $stats = new StatsChartsRenderer;
         ?>
         <script>
             var config = {
-                data: {
-                    labels: [
-                        <?php
-                            foreach($labels as $column)
-                            {
-                                echo $column.", ";
-                            }
-                        ?>
-                    ],
-                    datasets: [
-                        <?php
-                            foreach($labelsSettings as $column)
-                            {
-                                echo "{\n";
-                                foreach($column as $key => $setting)
-                                {
-                                    echo $key.": ".$setting.",";
-                                }
-                                echo "},\n";
-                            }
-                        ?>
-                    ],
-                },
                 type: 'bar',
                 options: {
                     title: {
@@ -61,6 +38,29 @@ class Chart {
                         }]
                     },
                     responsive: true
+                },
+                data: {
+                    labels: [
+                        <?php
+                            foreach($labels as $column)
+                            {
+                                echo $column.", ";
+                            }
+                        ?>
+                    ],
+                    datasets: [
+                        <?php
+                            foreach($labelsSettings as $column)
+                            {
+                                echo "{\n";
+                                foreach($column as $key => $setting)
+                                {
+                                    echo $key.": ".$setting.",";
+                                }
+                                echo "},\n";
+                            }
+                        ?>
+                    ],
                 }
             }
     

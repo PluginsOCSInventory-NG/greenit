@@ -20,10 +20,10 @@ if(!isset($protectedPost['onglet'])){
 }
 
 require_once("class/calculation.class.php");
-require_once('class/chart.class.php');
+require_once('class/diagram.class.php');
 
 $calculation = new Calculation;
-$chart = new Chart;
+$diagram = new Diagram;
 
 if(!isset($protectedGet['cat']))
 {
