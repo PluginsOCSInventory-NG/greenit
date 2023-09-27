@@ -7,7 +7,6 @@ echo "<h4>".$l->g(102700)."</h4>";
 
 $table = '
 <div class="row">
-<<<<<<< HEAD
     <div class="col-md-4" style="border: 1px solid #ddd; padding: 5px;">
         <p style="font-size: 32px; font-weight:bold;">'.(isset($yesterdayData) ? $calculation->CostFormat($yesterdayData[0]->totalConsumption, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0').'</p>
         <p style="color:#333; font-size: 15px;">'.$l->g(102701).'</p>
@@ -19,15 +18,6 @@ $table = '
     <div class="col-md-4" style="border: 1px solid #ddd; padding: 5px;">
         <p style="font-size: 32px; font-weight:bold;">'.(isset($limitedData) ? $calculation->CostFormat($sumConsumptionCompare, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0').'</p>
         <p style="color:#333; font-size: 15px;">'.$l->g(102702)." ".$config->COMPARE_INFO_PERIOD." ".$l->g(102705).'</p>
-=======
-    <div class="col-md-6" style="border: 1px solid #ddd; padding: 5px;">
-        <p style="font-size: 32px; font-weight:bold;">'.(isset($yesterdayData) ? $calculation->CostFormat($yesterdayData[0]->totalConsumption, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0').'</p>
-        <p style="color: #333; font-size: 15px;">'.$l->g(80911).'</p>
-    </div>
-    <div class="col-md-6" style="border: 1px solid #ddd; padding: 5px;">
-        <p style="font-size: 32px; font-weight:bold;">'.(isset($limitedData) ? $calculation->CostFormat($sumConsumptionInPeriode, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0').'</p>
-        <p style="color: #333; font-size: 15px;">'.$l->g(80914)." ".$config->COLLECT_INFO_PERIOD." ".$l->g(80915).'</p>
->>>>>>> main
     </div>
 </div>
 ';
