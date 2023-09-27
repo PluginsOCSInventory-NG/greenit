@@ -1,39 +1,35 @@
-80700 Power consumption
+100000 GreenIT
 
+101000 Configuration has been updated
 
-80800 GreenIT
+102000 Power consumption
+102001 Data collection period (in days)
+102002 Data comparator period (in days)
+102003 Consumption decimal precision
+102004 Cost decimal precision
+102005 Cost unit
+102006 Kilowatt cost
+102007 Uptime format
 
-80801 Data collection period (in days)
-80802 Data comparator period (in days)
-80803 Consumption decimal precision
-80804 Cost decimal precision
-80805 Cost unit
-80806 Kilowatt cost
-80807 Uptime format
+102100 GreenIT manager
+102101 machines in the GreenIT parc of
+102102 Global Statistics
+102103 Individual Statistics
+102104 Individual Search
+102105 Computer Type Statistics
+102106 Computer Type Search
 
-80808 Configuration has been updated
+102600 Yesterday's Statistics
+102601 Total consumption
+102602 Consumption average
+102603 Total uptime
+102604 Uptime average
 
-
-80900 GreenIT manager
-80901 machines in the GreenIT parc of
-
-80902 Global Statistics
-80903 Individual Statistics
-80904 Individual Search
-
-80905 Yesterday's Statistics
-
-80906 Total consumption
-80907 Consumption average
-80908 Total uptime
-80909 Uptime average
-
-80910 Consumption Cost Statistics
-
-80911 Yesterday's cost
-80912 Consumption cost for last 
-80913 Average cost per device
-80914 Average cost per device for last
-80915 day(s)
-80916 Consumption
-80917 Cost
+102700 Consumption Cost Statistics
+102701 Yesterday's cost
+102702 Consumption cost for last 
+102703 Average cost per device
+102704 Average cost per device for last
+102705 day(s)
+102706 Consumption
+102707 Cost

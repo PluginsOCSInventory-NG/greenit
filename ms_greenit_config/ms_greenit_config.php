@@ -20,13 +20,13 @@ if(!isset($protectedPost['onglet'])){
 }
 
 if(
-    isset($protectedPost[strtoupper(str_replace(" ", "_",$l->g(80801)))]) &&
-    isset($protectedPost[strtoupper(str_replace(" ", "_",$l->g(80802)))]) &&
-    isset($protectedPost[strtoupper(str_replace(" ", "_",$l->g(80803)))]) &&
-    isset($protectedPost[strtoupper(str_replace(" ", "_",$l->g(80804)))]) &&
-    isset($protectedPost[strtoupper(str_replace(" ", "_",$l->g(80805)))]) &&
-    isset($protectedPost[strtoupper(str_replace(" ", "_",$l->g(80806)))]) &&
-    isset($protectedPost[strtoupper(str_replace(" ", "_",$l->g(80807)))])
+    isset($protectedPost[strtoupper(str_replace(" ", "_",$l->g(102001)))]) &&
+    isset($protectedPost[strtoupper(str_replace(" ", "_",$l->g(102002)))]) &&
+    isset($protectedPost[strtoupper(str_replace(" ", "_",$l->g(102003)))]) &&
+    isset($protectedPost[strtoupper(str_replace(" ", "_",$l->g(102004)))]) &&
+    isset($protectedPost[strtoupper(str_replace(" ", "_",$l->g(102005)))]) &&
+    isset($protectedPost[strtoupper(str_replace(" ", "_",$l->g(102006)))]) &&
+    isset($protectedPost[strtoupper(str_replace(" ", "_",$l->g(102007)))])
 )
 {
     // Data insert

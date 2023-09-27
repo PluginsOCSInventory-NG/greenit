@@ -26,7 +26,7 @@ if (AJAX) {
 
 
 // print a title for the table
-print_item_header($l->g(80700));
+print_item_header($l->g(102000));
 
 if (!isset($protectedPost['SHOW'])) {
     $protectedPost['SHOW'] = 'NOSHOW';
