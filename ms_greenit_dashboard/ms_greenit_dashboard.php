@@ -35,14 +35,19 @@ require_once('data/config.php');
 
 // Data recovery
 require_once('data/title.php');
-require_once('data/individualSearch.php');
 if($protectedGet['cat'] == 'globalstats')
 {
     require_once('data/globalStats.php');
 }
-else if($protectedGet['cat'] == 'individualstats' && isset($protectedGet[strtolower(str_replace(" ", "_",$l->g(35)))]))
+else if($protectedGet['cat'] == 'computertypestats')
 {
-    require_once('data/individualStats.php');
+    require_once('data/computerTypeSearch.php');
+    require_once('data/computerTypeStats.php');
+}
+else if($protectedGet['cat'] == 'individualstats')
+{
+    require_once('data/individualSearch.php');
+    if(isset($protectedGet[strtolower(str_replace(" ", "_",$l->g(35)))])) require_once('data/individualStats.php');
 }
 
 // Start display page
@@ -56,6 +61,15 @@ if($protectedGet['cat'] == 'globalstats')
 {
     require_once("components/globalStats/yesterdayStats.php");
     require_once("components/globalStats/costStats.php");    
+}
+else if ($protectedGet['cat'] == 'computertypestats')
+{
+    if(isset($protectedPost[strtolower(str_replace(" ", "_",$l->g(25)))]))
+    {
+        require_once("components/computerTypeStats/yesterdayStats.php");
+        require_once("components/computerTypeStats/costStats.php");
+    }
+    require_once("components/computerTypeStats/computerTypeSearch.php");
 }
 else if ($protectedGet['cat'] == 'individualstats')
 {

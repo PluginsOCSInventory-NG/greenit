@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <menu>
   <menu-elem id="globalstats">
-    <label>g(80902)</label>
+    <label>g(102102)</label>
     <url>index.php?function=ms_greenit_dashboard&amp;cat=globalstats</url>
   </menu-elem>
+  <menu-elem id="computertypestats">
+    <label>g(102105)</label>
+    <url>index.php?function=ms_greenit_dashboard&amp;cat=computertypestats</url>
+  </menu-elem>
   <menu-elem id="individualstats">
-    <label>g(80903)</label>
+    <label>g(102103)</label>
     <url>index.php?function=ms_greenit_dashboard&amp;cat=individualstats</url>
   </menu-elem>
 </menu>
