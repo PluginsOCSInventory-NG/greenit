@@ -33,3 +33,6 @@
 102705 jour(s)
 102706 Consommation
 102707 Coût
+
+102800 Statistiques de consommation
+102801 Consommation totale pour les derniers

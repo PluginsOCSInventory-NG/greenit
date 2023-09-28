@@ -64,12 +64,7 @@ if($protectedGet['cat'] == 'globalstats')
 }
 else if ($protectedGet['cat'] == 'computertypestats')
 {
-    if(isset($protectedPost[strtolower(str_replace(" ", "_",$l->g(25)))]))
-    {
-        require_once("components/computerTypeStats/yesterdayStats.php");
-        require_once("components/computerTypeStats/costStats.php");
-    }
-    require_once("components/computerTypeStats/computerTypeSearch.php");
+    require_once("components/computerTypeStats/consumptionStats.php");
 }
 else if ($protectedGet['cat'] == 'individualstats')
 {
