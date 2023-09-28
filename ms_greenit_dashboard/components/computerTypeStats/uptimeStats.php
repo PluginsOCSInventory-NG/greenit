@@ -36,7 +36,7 @@ $datasets = array(
 );
 
 $diagram->createCanvas($l->g(102901)." ".$config->COLLECT_INFO_PERIOD." ".$l->g(102705)." (s)", "6", "400");
-$diagram->createDoughnutChart($l->g(102901)." ".$config->COLLECT_INFO_PERIOD." ".$l->g(102705)." (s)", $l->g(102802)." ".$config->COLLECT_INFO_PERIOD." ".$l->g(102705)." (s)", $labels, $datasets);
+$diagram->createDoughnutChart($l->g(102901)." ".$config->COLLECT_INFO_PERIOD." ".$l->g(102705)." (s)", $l->g(102901)." ".$config->COMPARE_INFO_PERIOD." ".$l->g(102705)." (s)", $labels, $datasets);
 
 // ****************************************** Total uptime for last compare doughnut ******************************************/
 $labels = array();
@@ -69,7 +69,7 @@ $datasets = array(
 );
 
 $diagram->createCanvas($l->g(102901)." ".$config->COMPARE_INFO_PERIOD." ".$l->g(102705)." (s)", "6", "400");
-$diagram->createDoughnutChart($l->g(102901)." ".$config->COMPARE_INFO_PERIOD." ".$l->g(102705)." (s)", $l->g(102802)." ".$config->COMPARE_INFO_PERIOD." ".$l->g(102705)." (s)", $labels, $datasets);
+$diagram->createDoughnutChart($l->g(102901)." ".$config->COMPARE_INFO_PERIOD." ".$l->g(102705)." (s)", $l->g(102901)." ".$config->COMPARE_INFO_PERIOD." ".$l->g(102705)." (s)", $labels, $datasets);
 
 echo close_form();
 
