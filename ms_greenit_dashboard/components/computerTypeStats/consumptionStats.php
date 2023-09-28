@@ -35,8 +35,8 @@ $datasets = array(
     "backgroundColor" => "[".$backgroundColor."]",
 );
 
-$diagram->createCanvas("test", "6", "400");
-$diagram->createDoughnutChart("test", $l->g(102801)." ".$config->COLLECT_INFO_PERIOD." ".$l->g(102705)." (kW/h)", $labels, $datasets);
+$diagram->createCanvas($l->g(102801)." ".$config->COLLECT_INFO_PERIOD." ".$l->g(102705)." (kW/h)", "6", "400");
+$diagram->createDoughnutChart($l->g(102801)." ".$config->COLLECT_INFO_PERIOD." ".$l->g(102705)." (kW/h)", $l->g(102801)." ".$config->COLLECT_INFO_PERIOD." ".$l->g(102705)." (kW/h)", $labels, $datasets);
 
 // ****************************************** Total uptime doughnut ******************************************/
 $labels = array();
