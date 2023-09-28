@@ -2,6 +2,41 @@
 
 class Diagram {
 
+    public $colorsList = array(
+        "#1941A5", //Dark Blue
+        "#AFD8F8",
+        "#F6BD0F",
+        "#8BBA00",
+        "#A66EDD",
+        "#F984A1",
+        "#CCCC00", //Chrome Yellow+Green
+        "#999999", //Grey
+        "#0099CC", //Blue Shade
+        "#FF0000", //Bright Red
+        "#006F00", //Dark Green
+        "#0099FF", //Blue (Light)
+        "#FF66CC", //Dark Pink
+        "#669966", //Dirty green
+        "#7C7CB4", //Violet shade of blue
+        "#FF9933", //Orange
+        "#9900FF", //Violet
+        "#99FFCC", //Blue+Green Light
+        "#CCCCFF", //Light violet
+        "#669900", //Shade of green
+    );
+
+    static public function generateColorList($nb){
+        $self = new self();
+
+        $string = "";
+        for($i = 0; $i <= $nb; $i++)
+        {
+            $string .= "'".$self->colorsList[$i]."'";
+            if ($i != $nb) $string .= ", ";
+        }
+        return $string;
+    }
+
     public function createCanvas(string $canvasName, string $nbColumn, string $height){
         ?>
         <div class='col-md-<?= $nbColumn ?>'>
