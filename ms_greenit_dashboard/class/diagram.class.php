@@ -80,7 +80,7 @@ class Diagram {
                         text: '<?= $title ?>'
                     },
                     legend: {
-                        position: 'bottom'
+                        position: 'right'
                     },
                     animation: {
                         animateScale: true,
@@ -131,7 +131,7 @@ class Diagram {
                         text: '<?= $title ?>'
                     },
                     legend: {
-                        position: 'bottom'
+                        position: 'right'
                     },
                     animation: {
                         animateScale: true,
