@@ -36,3 +36,6 @@
 
 102800 Consumption Statistics
 102801 Total consumption for last
+
+102900 Uptime Statistics
+102901 Total uptime for last

@@ -41,7 +41,6 @@ if($protectedGet['cat'] == 'globalstats')
 }
 else if($protectedGet['cat'] == 'computertypestats')
 {
-    require_once('data/computerTypeSearch.php');
     require_once('data/computerTypeStats.php');
 }
 else if($protectedGet['cat'] == 'individualstats')
@@ -65,6 +64,7 @@ if($protectedGet['cat'] == 'globalstats')
 else if ($protectedGet['cat'] == 'computertypestats')
 {
     require_once("components/computerTypeStats/consumptionStats.php");
+    require_once("components/computerTypeStats/uptimeStats.php");
 }
 else if ($protectedGet['cat'] == 'individualstats')
 {
