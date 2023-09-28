@@ -30,13 +30,13 @@ $data = $string;
 $backgroundColor = $diagram->generateColorList($nbLabels);
 
 $datasets = array(
-    "label" => "'".$l->g(102802)." ".$config->COLLECT_INFO_PERIOD." ".$l->g(102705)." (s)'",
+    "label" => "'".$l->g(102901)." ".$config->COLLECT_INFO_PERIOD." ".$l->g(102705)." (s)'",
     "data" => "[".$data."]",
     "backgroundColor" => "[".$backgroundColor."]"
 );
 
-$diagram->createCanvas($l->g(102802)." ".$config->COLLECT_INFO_PERIOD." ".$l->g(102705)." (s)", "6", "400");
-$diagram->createDoughnutChart($l->g(102802)." ".$config->COLLECT_INFO_PERIOD." ".$l->g(102705)." (s)", $l->g(102802)." ".$config->COLLECT_INFO_PERIOD." ".$l->g(102705)." (s)", $labels, $datasets);
+$diagram->createCanvas($l->g(102901)." ".$config->COLLECT_INFO_PERIOD." ".$l->g(102705)." (s)", "6", "400");
+$diagram->createDoughnutChart($l->g(102901)." ".$config->COLLECT_INFO_PERIOD." ".$l->g(102705)." (s)", $l->g(102802)." ".$config->COLLECT_INFO_PERIOD." ".$l->g(102705)." (s)", $labels, $datasets);
 
 // ****************************************** Total uptime for last compare doughnut ******************************************/
 $labels = array();
@@ -63,13 +63,13 @@ $data = $string;
 $backgroundColor = $diagram->generateColorList($nbLabels);
 
 $datasets = array(
-    "label" => "'".$l->g(102802)." ".$config->COMPARE_INFO_PERIOD." ".$l->g(102705)." (s)'",
+    "label" => "'".$l->g(102901)." ".$config->COMPARE_INFO_PERIOD." ".$l->g(102705)." (s)'",
     "data" => "[".$data."]",
     "backgroundColor" => "[".$backgroundColor."]"
 );
 
-$diagram->createCanvas($l->g(102802)." ".$config->COMPARE_INFO_PERIOD." ".$l->g(102705)." (s)", "6", "400");
-$diagram->createDoughnutChart($l->g(102802)." ".$config->COMPARE_INFO_PERIOD." ".$l->g(102705)." (s)", $l->g(102802)." ".$config->COMPARE_INFO_PERIOD." ".$l->g(102705)." (s)", $labels, $datasets);
+$diagram->createCanvas($l->g(102901)." ".$config->COMPARE_INFO_PERIOD." ".$l->g(102705)." (s)", "6", "400");
+$diagram->createDoughnutChart($l->g(102901)." ".$config->COMPARE_INFO_PERIOD." ".$l->g(102705)." (s)", $l->g(102802)." ".$config->COMPARE_INFO_PERIOD." ".$l->g(102705)." (s)", $labels, $datasets);
 
 echo close_form();
 
