@@ -35,7 +35,7 @@ while ($row = mysqli_fetch_object($compareDataResult)) {
     $compareData[$row->DATE] = json_decode($row->DATA);
 }
 
-if(count($yesterdayData) == 0) $yesterdayData = null;
+if($yesterdayData[0]->totalConsumption == null || $yesterdayData[0]->totalUptime == null) $yesterdayData = null;
 if(count($limitedData) == 0) $limitedData = null;
 if(count($compareData) == 0) $compareData = null;
 // Average of Consumption

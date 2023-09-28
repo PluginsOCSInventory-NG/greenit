@@ -2,15 +2,15 @@
 
 class Diagram {
 
-    public function createCanvas(string $canvasName){
+    public function createCanvas(string $canvasName, string $nbColumn, string $height){
         ?>
-        <div class='col-md-12'>
-            <canvas id="<?= $canvasName?>" width="400" height="100"/>
+        <div class='col-md-<?= $nbColumn ?>'>
+            <canvas id="<?= $canvasName ?>" width="500" height="<?= $height ?>"/>
         </div>
         <?php
     }
 
-    public function createChart(string $canvasName, string $title, array $labels, array $labelsSettings){
+    public function createBarChart(string $canvasName, array $labels, array $datasets){
         require_once("require/charts/StatsChartsRenderer.php");
         $stats = new StatsChartsRenderer;
         ?>
@@ -18,10 +18,6 @@ class Diagram {
             var config = {
                 type: 'bar',
                 options: {
-                    title: {
-                        display: true,
-                        text: "<?php echo $title ?>"
-                    },
                     legend: {
                         display: true,
                         position: 'right'
@@ -50,7 +46,7 @@ class Diagram {
                     ],
                     datasets: [
                         <?php
-                            foreach($labelsSettings as $column)
+                            foreach($datasets as $column)
                             {
                                 echo "{\n";
                                 foreach($column as $key => $setting)
@@ -63,6 +59,108 @@ class Diagram {
                     ],
                 }
             }
+    
+            var ctx = document.getElementById("<?= $canvasName ?>").getContext("2d");
+            window.mySNMP = new Chart(ctx, config);
+        </script>
+        <?php
+    }
+
+    public function createDoughnutChart(string $canvasName, string $title, array $labels, array $datasets){
+        require_once("require/charts/StatsChartsRenderer.php");
+        $stats = new StatsChartsRenderer;
+        ?>
+        <script>
+            var config = {
+                type: 'doughnut',
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: '<?= $title ?>'
+                    },
+                    legend: {
+                        position: 'bottom'
+                    },
+                    animation: {
+                        animateScale: true,
+                        animateRotate: true
+                    },
+                },       
+                data: {
+                    labels: [
+                        <?php
+                            foreach($labels as $column)
+                            {
+                                echo $column.", ";
+                            }
+                        ?>
+                    ],
+                    datasets: [
+                        <?php
+                            echo "{\n";
+                                foreach($datasets as $key => $setting)
+                                {
+                                    echo $key.": ".$setting.",";
+                                }
+                            echo "},\n";
+                        ?>
+                    ],
+                }
+            }
+
+            console.log(config);
+    
+            var ctx = document.getElementById("<?= $canvasName ?>").getContext("2d");
+            window.mySNMP = new Chart(ctx, config);
+        </script>
+        <?php
+    }
+
+    public function createPieChart(string $canvasName, string $title, array $labels, array $datasets){
+        require_once("require/charts/StatsChartsRenderer.php");
+        $stats = new StatsChartsRenderer;
+        ?>
+        <script>
+            var config = {
+                type: 'pie',
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: '<?= $title ?>'
+                    },
+                    legend: {
+                        position: 'bottom'
+                    },
+                    animation: {
+                        animateScale: true,
+                        animateRotate: true
+                    },
+                },                
+                data: {
+                    labels: [
+                        <?php
+                            foreach($labels as $column)
+                            {
+                                echo $column.", ";
+                            }
+                        ?>
+                    ],
+                    datasets: [
+                        <?php
+                            echo "{\n";
+                                foreach($datasets as $key => $setting)
+                                {
+                                    echo $key.": ".$setting.",";
+                                }
+                            echo "},\n";
+                        ?>
+                    ],
+                }
+            }
+
+            console.log(config);
     
             var ctx = document.getElementById("<?= $canvasName ?>").getContext("2d");
             window.mySNMP = new Chart(ctx, config);
