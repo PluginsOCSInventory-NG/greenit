@@ -19,14 +19,14 @@ while ($row = mysqli_fetch_object($osGroupDataResult)) {
     $osGroupData[] = $row->OSNAME;
 }
 
-$limitedData = array();
+$yesterdayData = array();
 foreach($osGroupData as $key => $osGroup)
 {
-    $limitedQuery = "SELECT hardware.OSNAME AS osName, greenit.DATE, SUM(greenit.CONSUMPTION) AS totalConsumption, SUM(greenit.UPTIME) AS totalUptime FROM greenit INNER JOIN hardware WHERE greenit.DATE BETWEEN '".$pastDate->format("Y-m-d")."' AND '".$date->format("Y-m-d")."' AND hardware.OSNAME='".$osGroup."' AND greenit.HARDWARE_ID=hardware.ID GROUP BY greenit.DATE";
-    $limitedDataResult = mysql2_query_secure($limitedQuery, $_SESSION['OCS']["readServer"]);
+    $yesterdayQuery = "SELECT hardware.OSNAME AS osName, greenit.DATE, SUM(greenit.CONSUMPTION) AS totalConsumption, SUM(greenit.UPTIME) AS totalUptime FROM greenit INNER JOIN hardware WHERE greenit.DATE ='".$date->format("Y-m-d")."' AND hardware.OSNAME='".$osGroup."' AND greenit.HARDWARE_ID=hardware.ID GROUP BY greenit.DATE";
+    $yesterdayDataResult = mysql2_query_secure($yesterdayQuery, $_SESSION['OCS']["readServer"]);
 
-    while ($row = mysqli_fetch_object($limitedDataResult)) {
-        $limitedData[$row->osName][$row->DATE] = (object) array(
+    while ($row = mysqli_fetch_object($yesterdayDataResult)) {
+        $yesterdayData[$row->osName][$row->DATE] = (object) array(
             "totalConsumption" => $row->totalConsumption,
             "totalUptime" => $row->totalUptime,
         );
@@ -47,28 +47,28 @@ foreach($osGroupData as $key => $osGroup)
     }
 }
 
-if(count($limitedData) == 0) $limitedData = null;
+if(count($yesterdayData) == 0) $yesterdayData = null;
 if(count($compareData) == 0) $compareData = null;
 
-$sumConsumptionLimited = array();
+$sumConsumptionYesterday = array();
 
-foreach($limitedData as $group => $date)
+foreach($yesterdayData as $group => $date)
 {
-    $sumConsumptionLimited[$group] = 0;
+    $sumConsumptionYesterday[$group] = 0;
     foreach($date as $value)
     {
-        $sumConsumptionLimited[$group] += $value->totalConsumption;
+        $sumConsumptionYesterday[$group] += $value->totalConsumption;
     }
 }
 
-$sumUptimeLimited = array();
+$sumUptimeYesterday = array();
 
-foreach($limitedData as $group => $date)
+foreach($yesterdayData as $group => $date)
 {
-    $sumUptimeLimited[$group] = 0;
+    $sumUptimeYesterday[$group] = 0;
     foreach($date as $value)
     {
-        $sumUptimeLimited[$group] += $value->totalUptime;
+        $sumUptimeYesterday[$group] += $value->totalUptime;
     }
 }
 

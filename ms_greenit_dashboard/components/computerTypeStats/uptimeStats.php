@@ -9,21 +9,21 @@ echo "<h4>".$l->g(102900)."</h4>";
 $labels = array();
 $nbLabels = 0;
 $string = "";
-foreach($sumUptimeLimited as $group => $value)
+foreach($sumUptimeYesterday as $group => $value)
 {
     $string .= "'".$group."'";
     $nbLabels++;
-    if (next($sumUptimeLimited)==true) $string .= ", ";
+    if (next($sumUptimeYesterday)==true) $string .= ", ";
 }
 $labels = [$string];
 
 $data = "";
 $string = "";
-foreach($sumUptimeLimited as $group => $value)
+foreach($sumUptimeYesterday as $group => $value)
 {
     $string .= "'".str_replace(" "."s", "", $calculation->TimeFormat($value, "s"))."'";
 
-    if (next($sumUptimeLimited)==true) $string .= ", ";
+    if (next($sumUptimeYesterday)==true) $string .= ", ";
 }
 $data = $string;
 
