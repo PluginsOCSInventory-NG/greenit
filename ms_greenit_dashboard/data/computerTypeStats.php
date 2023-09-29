@@ -4,11 +4,9 @@ $date = new DateTime("NOW");
 $date->modify('-1 day');
 
 $pastDate = new DateTime("NOW");
-$pastDate->modify('-1 day');
 $pastDate->modify("-".$config->COLLECT_INFO_PERIOD." days");
 
 $compareDate = new DateTime("NOW");
-$compareDate->modify('-1 day');
 $compareDate->modify("-".$config->COMPARE_INFO_PERIOD." days");
 
 $osGroupQuery = "SELECT OSNAME FROM hardware WHERE OSNAME LIKE '%Windows%' AND DEVICEID<>'_SYSTEMGROUP_' AND DEVICEID<>'_DOWNLOADGROUP_' GROUP BY OSNAME ORDER BY OSNAME";
@@ -72,6 +70,17 @@ foreach($yesterdayData as $group => $date)
     }
 }
 
+$sumCostYesterday = array();
+
+foreach($yesterdayData as $group => $date)
+{
+    $sumCostYesterday[$group] = 0;
+    foreach($date as $value)
+    {
+        $sumCostYesterday[$group] += $value->totalConsumption;
+    }
+}
+
 $sumConsumptionCompare = array();
 
 foreach($compareData as $group => $date)
@@ -91,6 +100,17 @@ foreach($compareData as $group => $date)
     foreach($date as $value)
     {
         $sumUptimeCompare[$group] += $value->totalUptime;
+    }
+}
+
+$sumCostCompare = array();
+
+foreach($compareData as $group => $date)
+{
+    $sumCostCompare[$group] = 0;
+    foreach($date as $value)
+    {
+        $sumCostCompare[$group] += $value->totalConsumption;
     }
 }
 
