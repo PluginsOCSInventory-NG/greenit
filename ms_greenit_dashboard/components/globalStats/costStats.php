@@ -60,7 +60,7 @@ $labelsSettings = array(
     )
 );
 
-$diagram->createCanvas("histogram", "12", "100");
+$diagram->createCanvas("histogram", "12", "95");
 $diagram->createBarChart("histogram", $labels, $labelsSettings);
 
 echo close_form();
