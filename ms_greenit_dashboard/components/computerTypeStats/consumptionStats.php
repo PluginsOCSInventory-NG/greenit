@@ -44,7 +44,7 @@ $nbLabels = 0;
 $string = "";
 foreach($sumConsumptionCompare as $group => $value)
 {
-    $string .= "'".$group."'";
+    $string .= '"'.$group.'"';
     $nbLabels++;
     if (next($sumConsumptionCompare)==true) $string .= ", ";
 }
@@ -54,7 +54,7 @@ $data = "";
 $string = "";
 foreach($sumConsumptionCompare as $group => $value)
 {
-    $string .= "'".str_replace(" "."kW/h", "", $calculation->ConsumptionFormat($value, "kW/h", $config->CONSUMPTION_ROUND))."'";
+    $string .= '"'.str_replace(" "."kW/h", "", $calculation->ConsumptionFormat($value, "kW/h", $config->CONSUMPTION_ROUND)).'"';
 
     if (next($sumConsumptionCompare)==true) $string .= ", ";
 }
@@ -63,7 +63,7 @@ $data = $string;
 $backgroundColor = $diagram->generateColorList($nbLabels);
 
 $datasets = array(
-    "label" => "'".$l->g(102802)." ".$config->COMPARE_INFO_PERIOD." ".$l->g(102705)." (kW/h)'",
+    "label" => '"'.$l->g(102802)." ".$config->COMPARE_INFO_PERIOD." ".$l->g(102705).' (kW/h)"',
     "data" => "[".$data."]",
     "backgroundColor" => "[".$backgroundColor."]",
 );

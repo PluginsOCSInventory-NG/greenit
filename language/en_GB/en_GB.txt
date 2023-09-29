@@ -39,4 +39,5 @@
 102802 Total consumption for last
 
 102900 Uptime Statistics
-102901 Total uptime for last
+102901 Yesterday's total uptime
+102902 Total uptime for last

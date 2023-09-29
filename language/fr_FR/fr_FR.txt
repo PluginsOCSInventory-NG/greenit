@@ -35,7 +35,9 @@
 102707 Coût
 
 102800 Statistiques de consommation
-102801 Consommation totale pour les derniers
+102801 Consommation totale de la journée précédente
+102802 Consommation totale pour les derniers
 
 102900 Statistiques de temps de fonctionnement
-102901 Temps de fonctionnement total pour les derniers
+102901 Temps de fonctionnement total de la journée précédente
+102902 Temps de fonctionnement total pour les derniers
