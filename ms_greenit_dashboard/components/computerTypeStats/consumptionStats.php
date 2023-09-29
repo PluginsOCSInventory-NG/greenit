@@ -5,7 +5,7 @@ echo open_form($form_name, '', '', 'form-horizontal');
 
 echo "<h4>".$l->g(102800)."</h4>";
 
-// ****************************************** Total consumption for yesterday pie ******************************************/
+// ****************************************** Total consumption for yesterday doughnut ******************************************/
 $labels = array();
 $nbLabels = 0;
 $string = "";

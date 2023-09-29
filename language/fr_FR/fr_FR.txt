@@ -17,7 +17,7 @@
 102103 Statistiques individuelles
 102104 Recherche individuelle
 102105 Statistiques par type de machine
-102106 Recherche par type de machine
+102106 Statistiques par constructeur
 
 102600 Statistiques de la journée précédente
 102601 Consommation totale
@@ -41,3 +41,7 @@
 102900 Statistiques de temps de fonctionnement
 102901 Temps de fonctionnement total de la journée précédente
 102902 Temps de fonctionnement total pour les derniers
+
+103000 Statistiques de coût
+103001 Coût total de la journée précédente
+103002 Coût total pour les derniers

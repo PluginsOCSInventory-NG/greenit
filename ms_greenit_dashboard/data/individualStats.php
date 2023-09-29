@@ -4,11 +4,9 @@ $date = new DateTime("NOW");
 $date->modify('-1 day');
 
 $pastDate = new DateTime("NOW");
-$pastDate->modify('-1 day');
 $pastDate->modify("-".$config->COLLECT_INFO_PERIOD." days");
 
 $compareDate = new DateTime("NOW");
-$compareDate->modify('-1 day');
 $compareDate->modify("-".$config->COMPARE_INFO_PERIOD." days");
 
 $yesterdayQuery = "SELECT greenit.CONSUMPTION, greenit.UPTIME FROM greenit INNER JOIN hardware WHERE greenit.DATE='".$date->format("Y-m-d")."' AND hardware.NAME='".$protectedGet[strtolower(str_replace(" ", "_",$l->g(35)))]."' AND greenit.HARDWARE_ID=hardware.ID";

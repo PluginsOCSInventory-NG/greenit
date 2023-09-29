@@ -17,7 +17,7 @@
 102103 Individual Statistics
 102104 Individual Search
 102105 Computer Type Statistics
-102106 Computer Type Search
+102106 Manufacturer Statistics
 
 102600 Yesterday's Statistics
 102601 Total consumption
@@ -41,3 +41,7 @@
 102900 Uptime Statistics
 102901 Yesterday's total uptime
 102902 Total uptime for last
+
+103000 Cost Statistics
+103001 Yesterday's total cost
+103002 Total cost for last
