@@ -43,6 +43,10 @@ else if($protectedGet['cat'] == 'computertypestats')
 {
     require_once('data/computerTypeStats.php');
 }
+else if($protectedGet['cat'] == 'manufacturerstats')
+{
+    require_once('data/manufacturerStats.php');
+}
 else if($protectedGet['cat'] == 'individualstats')
 {
     require_once('data/individualSearch.php');
@@ -65,6 +69,11 @@ else if ($protectedGet['cat'] == 'computertypestats')
 {
     require_once("components/computerTypeStats/consumptionStats.php");
     require_once("components/computerTypeStats/uptimeStats.php");
+    require_once("components/computerTypeStats/costStats.php");
+}
+else if ($protectedGet['cat'] == 'manufacturerstats')
+{
+
 }
 else if ($protectedGet['cat'] == 'individualstats')
 {
