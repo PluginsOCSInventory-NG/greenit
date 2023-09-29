@@ -4,11 +4,9 @@ $date = new DateTime("NOW");
 $date->modify('-1 day');
 
 $pastDate = new DateTime("NOW");
-$pastDate->modify('-1 day');
 $pastDate->modify("-".$config->COLLECT_INFO_PERIOD." days");
 
 $compareDate = new DateTime("NOW");
-$compareDate->modify('-1 day');
 $compareDate->modify("-".$config->COMPARE_INFO_PERIOD." days");
 
 $yesterdayQuery = "SELECT DATA FROM greenit_stats WHERE DATE='".$date->format("Y-m-d")."'";
