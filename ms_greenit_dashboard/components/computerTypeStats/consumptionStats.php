@@ -5,38 +5,38 @@ echo open_form($form_name, '', '', 'form-horizontal');
 
 echo "<h4>".$l->g(102800)."</h4>";
 
-// ****************************************** Total consumption for last collect doughnut ******************************************/
+// ****************************************** Total consumption for yesterday pie ******************************************/
 $labels = array();
 $nbLabels = 0;
 $string = "";
-foreach($sumConsumptionLimited as $group => $value)
+foreach($sumConsumptionYesterday as $group => $value)
 {
-    $string .= "'".$group."'";
+    $string .= '"'.$group.'"';
     $nbLabels++;
-    if (next($sumConsumptionLimited)==true) $string .= ", ";
+    if (next($sumConsumptionYesterday)==true) $string .= ", ";
 }
 $labels = [$string];
 
 $data = "";
 $string = "";
-foreach($sumConsumptionLimited as $group => $value)
+foreach($sumConsumptionYesterday as $group => $value)
 {
-    $string .= "'".str_replace(" "."kW/h", "", $calculation->ConsumptionFormat($value, "kW/h", $config->CONSUMPTION_ROUND))."'";
+    $string .= '"'.str_replace(" "."kW/h", "", $calculation->ConsumptionFormat($value, "kW/h", $config->CONSUMPTION_ROUND)).'"';
 
-    if (next($sumConsumptionLimited)==true) $string .= ", ";
+    if (next($sumConsumptionYesterday)==true) $string .= ", ";
 }
 $data = $string;
 
 $backgroundColor = $diagram->generateColorList($nbLabels);
 
 $datasets = array(
-    "label" => "'".$l->g(102801)." ".$config->COLLECT_INFO_PERIOD." ".$l->g(102705)." (kW/h)'",
+    "label" => '"'.$l->g(102801).' (kW/h)"',
     "data" => "[".$data."]",
     "backgroundColor" => "[".$backgroundColor."]",
 );
 
-$diagram->createCanvas($l->g(102801)." ".$config->COLLECT_INFO_PERIOD." ".$l->g(102705)." (kW/h)", "6", "400");
-$diagram->createDoughnutChart($l->g(102801)." ".$config->COLLECT_INFO_PERIOD." ".$l->g(102705)." (kW/h)", $l->g(102801)." ".$config->COLLECT_INFO_PERIOD." ".$l->g(102705)." (kW/h)", $labels, $datasets);
+$diagram->createCanvas($l->g(102801)." (kW/h)", "6", "400");
+$diagram->createDoughnutChart($l->g(102801)." (kW/h)", $l->g(102801)." (kW/h)", $labels, $datasets);
 
 // ****************************************** Total consumption for last compare doughnut ******************************************/
 $labels = array();
@@ -63,13 +63,13 @@ $data = $string;
 $backgroundColor = $diagram->generateColorList($nbLabels);
 
 $datasets = array(
-    "label" => "'".$l->g(102801)." ".$config->COMPARE_INFO_PERIOD." ".$l->g(102705)." (kW/h)'",
+    "label" => "'".$l->g(102802)." ".$config->COMPARE_INFO_PERIOD." ".$l->g(102705)." (kW/h)'",
     "data" => "[".$data."]",
     "backgroundColor" => "[".$backgroundColor."]",
 );
 
-$diagram->createCanvas($l->g(102801)." ".$config->COMPARE_INFO_PERIOD." ".$l->g(102705)." (kW/h)", "6", "400");
-$diagram->createDoughnutChart($l->g(102801)." ".$config->COMPARE_INFO_PERIOD." ".$l->g(102705)." (kW/h)", $l->g(102801)." ".$config->COMPARE_INFO_PERIOD." ".$l->g(102705)." (kW/h)", $labels, $datasets);
+$diagram->createCanvas($l->g(102802)." ".$config->COMPARE_INFO_PERIOD." ".$l->g(102705)." (kW/h)", "6", "400");
+$diagram->createDoughnutChart($l->g(102802)." ".$config->COMPARE_INFO_PERIOD." ".$l->g(102705)." (kW/h)", $l->g(102802)." ".$config->COMPARE_INFO_PERIOD." ".$l->g(102705)." (kW/h)", $labels, $datasets);
 
 echo close_form();
 
