@@ -161,7 +161,7 @@ class Diagram {
                     responsive: true,
                     title: {
                         display: true,
-                        text: '<?= $title ?>'
+                        text: "<?= $title ?>"
                     },
                     legend: {
                         position: 'right'
