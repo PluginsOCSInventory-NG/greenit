@@ -37,13 +37,14 @@ echo $table;
 
 echo "<br>";
 
-$labels = ["'".$l->g(102702)." ".$config->COMPARE_INFO_PERIOD." ".$l->g(102705)."', '".$l->g(102702)." ".$config->COLLECT_INFO_PERIOD." ".$l->g(102705)."'"];
+// ****************************************** Global stats for collect period  ******************************************/
+
+$labels = ["'".$l->g(102702)." ".$config->COLLECT_INFO_PERIOD." ".$l->g(102705)."'"];
 
 $labelsSettings = array(
     "consumption" => array(
         "backgroundColor" => "'#1941A5'",
         "data" => "[
-            '".str_replace(" "."kW/h", "", $calculation->ConsumptionFormat($sumConsumptionCompare, "kW/h", $config->CONSUMPTION_ROUND))."',
             '".str_replace(" "."kW/h", "", $calculation->ConsumptionFormat($sumConsumptionInPeriode, "kW/h", $config->CONSUMPTION_ROUND))."'
             ]",
         "label" => "'".$l->g(102706)." ("."kW/h".")'",
@@ -52,7 +53,6 @@ $labelsSettings = array(
     "cost" => array(
         "backgroundColor" => "'#AFD8F8'",
         "data" => "[
-            '".str_replace(" ".$config->COST_UNIT, "", $calculation->CostFormat($sumConsumptionCompare, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND))."',
             '".str_replace(" ".$config->COST_UNIT, "", $calculation->CostFormat($sumConsumptionInPeriode, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND))."'
             ]",
         "label" => "'".$l->g(102707)." (".$config->COST_UNIT.")'",
@@ -60,8 +60,34 @@ $labelsSettings = array(
     )
 );
 
-$diagram->createCanvas("histogram", "12", "95");
-$diagram->createBarChart("histogram", "", $labels, $labelsSettings);
+$diagram->createCanvas("histogram_collect_period", "6", "200");
+$diagram->createBarChart("histogram_collect_period", "", $labels, $labelsSettings);
+
+// ****************************************** Global stats for compare period  ******************************************/
+
+$labels = ["'".$l->g(102702)." ".$config->COMPARE_INFO_PERIOD." ".$l->g(102705)."'"];
+
+$labelsSettings = array(
+    "consumption" => array(
+        "backgroundColor" => "'#1941A5'",
+        "data" => "[
+            '".str_replace(" "."kW/h", "", $calculation->ConsumptionFormat($sumConsumptionCompare, "kW/h", $config->CONSUMPTION_ROUND))."'
+            ]",
+        "label" => "'".$l->g(102706)." ("."kW/h".")'",
+        "type" => "'bar'"
+    ),
+    "cost" => array(
+        "backgroundColor" => "'#AFD8F8'",
+        "data" => "[
+            '".str_replace(" ".$config->COST_UNIT, "", $calculation->CostFormat($sumConsumptionCompare, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND))."'
+            ]",
+        "label" => "'".$l->g(102707)." (".$config->COST_UNIT.")'",
+        "type" => "'bar'"
+    )
+);
+
+$diagram->createCanvas("histogram_compare_period", "6", "200");
+$diagram->createBarChart("histogram_compare_period", "", $labels, $labelsSettings);
 
 echo close_form();
 
