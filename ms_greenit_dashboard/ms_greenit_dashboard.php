@@ -39,6 +39,11 @@ if($protectedGet['cat'] == 'globalstats')
 {
     require_once('data/globalStats.php');
 }
+else if($protectedGet['cat'] == 'filteredstats')
+{
+    require_once('data/filteredSearch.php');
+    if(isset($protectedGet[strtolower(str_replace(" ", "_",$l->g(35)))])) require_once('data/filteredStats.php');
+}
 else if($protectedGet['cat'] == 'computertypestats')
 {
     require_once('data/computerTypeStats.php');
@@ -46,11 +51,6 @@ else if($protectedGet['cat'] == 'computertypestats')
 else if($protectedGet['cat'] == 'manufacturerstats')
 {
     require_once('data/manufacturerStats.php');
-}
-else if($protectedGet['cat'] == 'individualstats')
-{
-    require_once('data/individualSearch.php');
-    if(isset($protectedGet[strtolower(str_replace(" ", "_",$l->g(35)))])) require_once('data/individualStats.php');
 }
 
 // Start display page
@@ -65,6 +65,15 @@ if($protectedGet['cat'] == 'globalstats')
     require_once("components/globalStats/yesterdayStats.php");
     require_once("components/globalStats/costStats.php");    
 }
+else if ($protectedGet['cat'] == 'filteredstats')
+{
+    if(isset($protectedGet[strtolower(str_replace(" ", "_",$l->g(35)))]))
+    {
+        require_once("components/filteredStats/yesterdayStats.php");
+        require_once("components/filteredStats/costStats.php");
+    }
+    require_once("components/filteredStats/filteredSearch.php");
+}
 else if ($protectedGet['cat'] == 'computertypestats')
 {
     require_once("components/computerTypeStats/consumptionStats.php");
@@ -75,26 +84,17 @@ else if ($protectedGet['cat'] == 'manufacturerstats')
 {
 
 }
-else if ($protectedGet['cat'] == 'individualstats')
-{
-    if(isset($protectedGet[strtolower(str_replace(" ", "_",$l->g(35)))]))
-    {
-        require_once("components/individualStats/yesterdayStats.php");
-        require_once("components/individualStats/costStats.php");
-    }
-    require_once("components/individualStats/individualSearch.php");
-}
 
 echo "</div>";
 
 if (AJAX) {
     ob_end_clean();
     tab_req(
-        $list_fields_individual_search,
-        $default_fields_individual_search,
-        $list_col_cant_del_individual_search,
-        $sql_individual_search['SQL'],
-        $tab_options_individual_search
+        $list_fields_filtered_search,
+        $default_fields_filtered_search,
+        $list_col_cant_del_filtered_search,
+        $sql_filtered_search['SQL'],
+        $tab_options_filtered_search
     );
 }
 

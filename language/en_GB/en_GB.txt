@@ -14,8 +14,8 @@
 102100 GreenIT manager
 102101 machines in the GreenIT parc of
 102102 Global Statistics
-102103 Individual Statistics
-102104 Individual Search
+102103 Filtered Statistics
+102104 Filtered Search
 102105 Computer Type Statistics
 102106 Manufacturer Statistics
 

@@ -4,12 +4,20 @@
     <label>g(102102)</label>
     <url>index.php?function=ms_greenit_dashboard&amp;cat=globalstats</url>
   </menu-elem>
+  <menu-elem id="filteredstats">
+    <label>g(102103)</label>
+    <url>index.php?function=ms_greenit_dashboard&amp;cat=filteredstats</url>
+  </menu-elem>
   <menu-elem id="computertypestats">
     <label>g(102105)</label>
     <url>index.php?function=ms_greenit_dashboard&amp;cat=computertypestats</url>
   </menu-elem>
-  <menu-elem id="individualstats">
-    <label>g(102103)</label>
-    <url>index.php?function=ms_greenit_dashboard&amp;cat=individualstats</url>
+  <menu-elem id="manufacturerstats">
+    <label>g(102106)</label>
+    <url>index.php?function=ms_greenit_dashboard&amp;cat=manufacturerstats</url>
+  </menu-elem>
+  <menu-elem id="groupstats">
+    <label>g(102107)</label>
+    <url>index.php?function=ms_greenit_dashboard&amp;cat=groupstats</url>
   </menu-elem>
 </menu>

@@ -28,7 +28,7 @@ echo "<br>";
 
 $labels = ["'".$l->g(102702)." ".$config->COMPARE_INFO_PERIOD." ".$l->g(102705)."', '".$l->g(102702)." ".$config->COLLECT_INFO_PERIOD." ".$l->g(102705)."'"];
 
-$labelsSettings = array(
+$datasets = array(
     "consumption" => array(
         "backgroundColor" => "'#1941A5'",
         "data" => "[
@@ -50,7 +50,7 @@ $labelsSettings = array(
 );
 
 $diagram->createCanvas("histogram", "12", "100");
-$diagram->createBarChart("histogram", $labels, $labelsSettings);
+$diagram->createBarChart("histogram", "", $labels, $datasets);
 
 echo close_form();
 
