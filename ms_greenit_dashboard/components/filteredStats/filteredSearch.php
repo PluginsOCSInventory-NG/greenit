@@ -1,22 +1,22 @@
 <?php
 
-$form_name = "individualSearch";
+$form_name = "filteredSearch";
 $table_name = $form_name;
-$tab_options_individual_search = $protectedPost;
-$tab_options_individual_search['form_name'] = $form_name;
-$tab_options_individual_search['table_name'] = $table_name;
+$tab_options_filtered_search = $protectedPost;
+$tab_options_filtered_search['form_name'] = $form_name;
+$tab_options_filtered_search['table_name'] = $table_name;
 
-$list_fields_individual_search = array(
+$list_fields_filtered_search = array(
     $l->g(35) => 'NAME',
     $l->g(190) . ' ' . strtoupper($l->g(1425)) => 'TAG',
     $l->g(25) => 'OS_NAME',
 );
 
-$list_col_cant_del_individual_search = $list_fields_individual_search;
-$default_fields_individual_search = $list_fields_individual_search;
+$list_col_cant_del_filtered_search = $list_fields_filtered_search;
+$default_fields_filtered_search = $list_fields_filtered_search;
 
-$tab_options_individual_search['LIEN_LBL'][$l->g(35)] = 'index.php?function=ms_greenit_dashboard&cat=individualstats&'.strtolower(str_replace(" ", "_",$l->g(35))).'=';
-$tab_options_individual_search['LIEN_CHAMP'][$l->g(35)] = 'NAME';
+$tab_options_filtered_search['LIEN_LBL'][$l->g(35)] = 'index.php?function=ms_greenit_dashboard&cat=filteredstats&'.strtolower(str_replace(" ", "_",$l->g(35))).'=';
+$tab_options_filtered_search['LIEN_CHAMP'][$l->g(35)] = 'NAME';
 
 echo open_form($form_name, '', '', 'form-horizontal');
 
@@ -37,7 +37,7 @@ if (
     msg_warning($l->g(767));
 }
 
-ajaxtab_entete_fixe($list_fields_individual_search, $default_fields_individual_search, $tab_options_individual_search, $list_col_cant_del_individual_search);
+ajaxtab_entete_fixe($list_fields_filtered_search, $default_fields_filtered_search, $tab_options_filtered_search, $list_col_cant_del_filtered_search);
 
 // ****************************************** FILTER ******************************************/
 echo '

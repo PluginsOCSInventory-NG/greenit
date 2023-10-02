@@ -18,6 +18,7 @@
 102104 Recherche individuelle
 102105 Statistiques par type de machine
 102106 Statistiques par constructeur
+102107 Statistiques par groupe
 
 102600 Statistiques de la journée précédente
 102601 Consommation totale

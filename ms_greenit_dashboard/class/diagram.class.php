@@ -45,7 +45,7 @@ class Diagram {
         <?php
     }
 
-    public function createBarChart(string $canvasName, array $labels, array $datasets){
+    public function createBarChart(string $canvasName, string $title, array $labels, array $datasets){
         require_once("require/charts/StatsChartsRenderer.php");
         $stats = new StatsChartsRenderer;
         ?>
@@ -53,6 +53,10 @@ class Diagram {
             var config = {
                 type: 'bar',
                 options: {
+                    title: {
+                        display: true,
+                        text: "<?= $title ?>"
+                    },
                     legend: {
                         display: true,
                         position: 'right'
