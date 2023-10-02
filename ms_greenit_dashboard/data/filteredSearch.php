@@ -24,10 +24,6 @@ if(is_defined($protectedPost['GROUP']) && $protectedPost['GROUP'] != "0") $_SESS
 if(is_defined($protectedPost['TAG']) && $protectedPost['TAG'] != "0") $_SESSION['GREENIT']['FILTER']['TAG'] = $protectedPost['TAG'];
 if(is_defined($protectedPost['ASSET']) && $protectedPost['ASSET'] != "0") $_SESSION['GREENIT']['FILTER']['ASSET'] = $protectedPost['ASSET'];
 
-echo "<pre style='text-align: left;'>";
-var_dump($_SESSION["GREENIT"]);
-echo "</pre>";
-
 $sql_filtered_search['SQL'] = '
     SELECT DISTINCT 
     hardware.NAME as NAME,
