@@ -44,9 +44,9 @@ else if($protectedGet['cat'] == 'filteredstats')
     require_once('data/filteredSearch.php');
     if(isset($protectedGet[strtolower(str_replace(" ", "_",$l->g(35)))])) require_once('data/filteredStats.php');
 }
-else if($protectedGet['cat'] == 'computertypestats')
+else if($protectedGet['cat'] == 'osstats')
 {
-    require_once('data/computerTypeStats.php');
+    require_once('data/osStats.php');
 }
 else if($protectedGet['cat'] == 'manufacturerstats')
 {
@@ -74,11 +74,11 @@ else if ($protectedGet['cat'] == 'filteredstats')
     }
     require_once("components/filteredStats/filteredSearch.php");
 }
-else if ($protectedGet['cat'] == 'computertypestats')
+else if ($protectedGet['cat'] == 'osstats')
 {
-    require_once("components/computerTypeStats/consumptionStats.php");
-    require_once("components/computerTypeStats/uptimeStats.php");
-    require_once("components/computerTypeStats/costStats.php");
+    require_once("components/osStats/consumptionStats.php");
+    require_once("components/osStats/uptimeStats.php");
+    require_once("components/osStats/costStats.php");
 }
 else if ($protectedGet['cat'] == 'manufacturerstats')
 {

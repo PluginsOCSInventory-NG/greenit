@@ -16,7 +16,7 @@
 102102 Statistiques globales
 102103 Statistiques individuelles
 102104 Recherche individuelle
-102105 Statistiques par type de machine
+102105 Statistiques par Système d'exploitation
 102106 Statistiques par constructeur
 102107 Statistiques par groupe
 
