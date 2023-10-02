@@ -42,6 +42,8 @@ if ($protectedGet['cat'] == 'globalstats') {
         require_once('data/filteredStats.php');
 } else if ($protectedGet['cat'] == 'computertypestats') {
     require_once('data/computerTypeStats.php');
+} else if ($protectedGet['cat'] == 'manufacturerstats') {
+    require_once('data/manufacturerStats.php');
 }
 
 // Start display page
