@@ -14,10 +14,19 @@ if (isset($protectedPost['RESET']))
 
 if (isset($protectedPost['SUBMIT_FORM'])) $tab_options['CACHE'] = 'RESET';
 
+if($protectedPost['OS'] == "0") unset($_SESSION['GREENIT']['FILTER']['OS']);
+if($protectedPost['GROUP'] == "0") unset($_SESSION['GREENIT']['FILTER']['GROUP']);
+if($protectedPost['TAG'] == "0") unset($_SESSION['GREENIT']['FILTER']['TAG']);
+if($protectedPost['ASSET'] == "0") unset($_SESSION['GREENIT']['FILTER']['ASSET']);
+
 if(is_defined($protectedPost['OS']) && $protectedPost['OS'] != "0") $_SESSION['GREENIT']['FILTER']['OS'] = $protectedPost['OS'];
 if(is_defined($protectedPost['GROUP']) && $protectedPost['GROUP'] != "0") $_SESSION['GREENIT']['FILTER']['GROUP'] = $protectedPost['GROUP'];
 if(is_defined($protectedPost['TAG']) && $protectedPost['TAG'] != "0") $_SESSION['GREENIT']['FILTER']['TAG'] = $protectedPost['TAG'];
 if(is_defined($protectedPost['ASSET']) && $protectedPost['ASSET'] != "0") $_SESSION['GREENIT']['FILTER']['ASSET'] = $protectedPost['ASSET'];
+
+echo "<pre style='text-align: left;'>";
+var_dump($_SESSION["GREENIT"]);
+echo "</pre>";
 
 $sql_filtered_search['SQL'] = '
     SELECT DISTINCT 
