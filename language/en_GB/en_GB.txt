@@ -30,7 +30,7 @@
 
 102700 Consumption Cost Statistics
 102701 Yesterday's cost
-102702 Consumption cost for last 
+102702 Cost for last 
 102703 Average cost per device
 102704 Average cost per device for last
 102705 day(s)

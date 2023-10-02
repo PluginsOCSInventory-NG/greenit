@@ -3,7 +3,7 @@
 $form_name = "costStats";
 echo open_form($form_name, '', '', 'form-horizontal');
 
-echo "<h4>" . $l->g(103000) . "</h4>";
+echo "<h4>" . $l->g(102700) . "</h4>";
 
 //////////////////////////////
 // Show cost per period D-1
@@ -64,7 +64,7 @@ $datasets = array(
 );
 
 $diagram->createCanvas("collect_cost_diagram", "4", "250");
-$diagram->createDoughnutChart("collect_cost_diagram", $l->g(102701) . ' (' . $config->COST_UNIT . ')', $labels, $datasets);
+$diagram->createDoughnutChart("collect_cost_diagram", $l->g(102702) . ' ' . $config->COLLECT_INFO_PERIOD . ' ' . $l->g(102705) . ' (' . $config->COST_UNIT . ')', $labels, $datasets);
 //////////////////////////////
 
 //////////////////////////////
@@ -95,7 +95,7 @@ $datasets = array(
 );
 
 $diagram->createCanvas("compare_cost_diagram", "4", "250");
-$diagram->createDoughnutChart("compare_cost_diagram", $l->g(102701) . ' (' . $config->COST_UNIT . ')', $labels, $datasets);
+$diagram->createDoughnutChart("compare_cost_diagram", $l->g(102702) . ' ' . $config->COMPARE_INFO_PERIOD . ' ' . $l->g(102705) . ' (' . $config->COST_UNIT . ')', $labels, $datasets);
 //////////////////////////////
 
 echo close_form();
