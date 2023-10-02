@@ -3,73 +3,100 @@
 $form_name = "costStats";
 echo open_form($form_name, '', '', 'form-horizontal');
 
-echo "<h4>".$l->g(103000)."</h4>";
+echo "<h4>" . $l->g(103000) . "</h4>";
 
-// ****************************************** Total cost for yesterday doughnut ******************************************/
+//////////////////////////////
+// Show cost per period D-1
 $labels = array();
-$nbLabels = 0;
-$string = "";
-foreach($sumCostYesterday as $group => $value)
-{
-    $string .= '"'.$group.'"';
-    $nbLabels++;
-    if (next($sumCostYesterday)==true) $string .= ", ";
-}
-$labels = [$string];
+$nbLabels = 2;
+$labels = [
+    "'" . $l->g(102606) . "'",
+    "'" . $l->g(102607) . "'"
+];
 
 $data = "";
 $string = "";
-foreach($sumCostYesterday as $group => $value)
-{
-    $string .= '"'.str_replace(" "."€", "", floatval($calculation->CostFormat(floatval($value), "W/h", floatval($config->KILOWATT_COST), $config->COST_UNIT, intval($config->COST_ROUND)))).'"';
+foreach ($yesterdayData as $group => $value) {
+    $string .= '"' . str_replace(" " . $config->COST_UNIT, "", $calculation->CostFormat(floatval($value->totalConsumption), "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND)) . '"';
 
-    if (next($sumCostYesterday)==true) $string .= ", ";
+    if (next($yesterdayData) == true)
+        $string .= ", ";
 }
 $data = $string;
 
 $backgroundColor = $diagram->generateColorList($nbLabels);
 
 $datasets = array(
-    "label" => '"'.$l->g(103001).' ('.$config->COST_UNIT.')"',
-    "data" => "[".$data."]",
-    "backgroundColor" => "[".$backgroundColor."]",
+    "label" => '"' . $l->g(102707) . ' (' . $config->COST_UNIT . ')"',
+    "data" => "[" . $data . "]",
+    "backgroundColor" => "[" . $backgroundColor . "]"
 );
 
-$diagram->createCanvas($l->g(103001)." ($config->COST_UNIT)", "6", "400");
-$diagram->createDoughnutChart($l->g(103001)." ($config->COST_UNIT)", $l->g(103001)." ($config->COST_UNIT)", $labels, $datasets);
+$diagram->createCanvas("yesterday_cost_diagram", "4", "250");
+$diagram->createDoughnutChart("yesterday_cost_diagram", $l->g(102701) . ' (' . $config->COST_UNIT . ')', $labels, $datasets);
+//////////////////////////////
 
-// ****************************************** Total cost for last compare doughnut ******************************************/
+//////////////////////////////
+// Show cost per period Collect
 $labels = array();
-$nbLabels = 0;
-$string = "";
-foreach($sumCostCompare as $group => $value)
-{
-    $string .= '"'.$group.'"';
-    $nbLabels++;
-    if (next($sumCostCompare)==true) $string .= ", ";
-}
-$labels = [$string];
+$nbLabels = 2;
+$labels = [
+    "'" . $l->g(102606) . "'",
+    "'" . $l->g(102607) . "'"
+];
 
 $data = "";
 $string = "";
-foreach($sumCostCompare as $group => $value)
-{
-    $string .= '"'.str_replace(" "."€", "", floatval($calculation->CostFormat(floatval($value), "W/h", floatval($config->KILOWATT_COST), $config->COST_UNIT, intval($config->COST_ROUND)))).'"';
+foreach ($sumConsumptionCollect as $group => $value) {
+    $string .= '"' . str_replace(" " . $config->COST_UNIT, "", $calculation->CostFormat($value, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND)) . '"';
 
-    if (next($sumCostCompare)==true) $string .= ", ";
+    if (next($sumConsumptionCollect) == true)
+        $string .= ", ";
 }
 $data = $string;
 
 $backgroundColor = $diagram->generateColorList($nbLabels);
 
 $datasets = array(
-    "label" => '"'.$l->g(103002).' '.$config->COMPARE_INFO_PERIOD.' '.$l->g(102705).' ('.$config->COST_UNIT.')"',
-    "data" => "[".$data."]",
-    "backgroundColor" => "[".$backgroundColor."]",
+    "label" => '"' . $l->g(102707) . ' (' . $config->COST_UNIT . ')"',
+    "data" => "[" . $data . "]",
+    "backgroundColor" => "[" . $backgroundColor . "]"
 );
 
-$diagram->createCanvas($l->g(103002)." ".$config->COMPARE_INFO_PERIOD." ".$l->g(102705)." (".$config->COST_UNIT.")", "6", "400");
-$diagram->createDoughnutChart($l->g(103002)." ".$config->COMPARE_INFO_PERIOD." ".$l->g(102705)." (".$config->COST_UNIT.")", $l->g(103002)." ".$config->COMPARE_INFO_PERIOD." ".$l->g(102705)." (".$config->COST_UNIT.")", $labels, $datasets);
+$diagram->createCanvas("collect_cost_diagram", "4", "250");
+$diagram->createDoughnutChart("collect_cost_diagram", $l->g(102701) . ' (' . $config->COST_UNIT . ')', $labels, $datasets);
+//////////////////////////////
+
+//////////////////////////////
+// Show cost per period Compare
+$labels = array();
+$nbLabels = 2;
+$labels = [
+    "'" . $l->g(102606) . "'",
+    "'" . $l->g(102607) . "'"
+];
+
+$data = "";
+$string = "";
+foreach ($sumConsumptionCompare as $group => $value) {
+    $string .= '"' . str_replace(" " . $config->COST_UNIT, "", $calculation->CostFormat($value, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND)) . '"';
+
+    if (next($sumConsumptionCompare) == true)
+        $string .= ", ";
+}
+$data = $string;
+
+$backgroundColor = $diagram->generateColorList($nbLabels);
+
+$datasets = array(
+    "label" => '"' . $l->g(102707) . ' (' . $config->COST_UNIT . ')"',
+    "data" => "[" . $data . "]",
+    "backgroundColor" => "[" . $backgroundColor . "]"
+);
+
+$diagram->createCanvas("compare_cost_diagram", "4", "250");
+$diagram->createDoughnutChart("compare_cost_diagram", $l->g(102701) . ' (' . $config->COST_UNIT . ')', $labels, $datasets);
+//////////////////////////////
 
 echo close_form();
 
