@@ -1,6 +1,13 @@
 <?php
 
-$greenitMachineQuery = "SELECT COUNT(DISTINCT HARDWARE_ID) AS ID_COUNT FROM greenit";
+$greenitMachineQuery = "
+    SELECT 
+    count(DISTINCT hardware.ID)
+    FROM hardware
+    INNER JOIN accountinfo ON hardware.ID = accountinfo.hardware_id
+    INNER JOIN greenit ON hardware.ID = greenit.HARDWARE_ID
+    LEFT JOIN groups_cache ON hardware.ID = groups_cache.HARDWARE_ID
+";
 $greenitMachineResult = mysql2_query_secure($greenitMachineQuery, $_SESSION['OCS']["readServer"]);
 
 $greenitMachineInfos = array();

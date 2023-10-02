@@ -1,51 +1,66 @@
 <?php
 
-class Diagram {
+class Diagram
+{
 
     public $colorsList = array(
-        "#1941A5", //Dark Blue
+        "#1941A5",
         "#AFD8F8",
         "#F6BD0F",
         "#8BBA00",
         "#A66EDD",
         "#F984A1",
-        "#CCCC00", //Chrome Yellow+Green
-        "#999999", //Grey
-        "#0099CC", //Blue Shade
-        "#FF0000", //Bright Red
-        "#006F00", //Dark Green
-        "#0099FF", //Blue (Light)
-        "#FF66CC", //Dark Pink
-        "#669966", //Dirty green
-        "#7C7CB4", //Violet shade of blue
-        "#FF9933", //Orange
-        "#9900FF", //Violet
-        "#99FFCC", //Blue+Green Light
-        "#CCCCFF", //Light violet
-        "#669900", //Shade of green
+        "#CCCC00",
+        "#999999",
+        "#0099CC",
+        "#FF0000",
+        "#006F00",
+        "#0099FF",
+        "#FF66CC",
+        "#669966",
+        "#7C7CB4",
+        "#FF9933",
+        "#9900FF",
+        "#99FFCC",
+        "#CCCCFF",
+        "#669900",
     );
 
-    static public function generateColorList($nb){
-        $self = new self();
+    static public function generateColorList(int $nb, bool $arrayMode = false)
+    {
+        if ($arrayMode == false) {
+            $self = new self();
 
-        $string = "";
-        for($i = 0; $i <= $nb; $i++)
-        {
-            $string .= "'".$self->colorsList[$i]."'";
-            if ($i != $nb) $string .= ", ";
+            $string = "";
+            for ($i = 0; $i <= $nb - 1; $i++) {
+                $string .= "'" . $self->colorsList[$i] . "'";
+                if ($i != $nb)
+                    $string .= ", ";
+            }
+            return $string;
+        } else if ($arrayMode == true) {
+            $self = new self();
+
+            $array = array();
+            for ($i = 0; $i <= $nb - 1; $i++) {
+                $color = "'" . $self->colorsList[$i] . "'";
+                array_push($array, $color);
+            }
+            return $array;
         }
-        return $string;
     }
 
-    public function createCanvas(string $canvasName, string $nbColumn, string $height){
+    public function createCanvas(string $canvasName, string $nbColumn, string $height)
+    {
         ?>
         <div class='col-md-<?= $nbColumn ?>'>
-            <canvas id="<?= $canvasName ?>" width="500" height="<?= $height ?>"/>
+            <canvas id="<?= $canvasName ?>" width="500" height="<?= $height ?>" />
         </div>
         <?php
     }
 
-    public function createBarChart(string $canvasName, string $title, array $labels, array $datasets){
+    public function createBarChart(string $canvasName, string $title, array $labels, array $datasets)
+    {
         require_once("require/charts/StatsChartsRenderer.php");
         $stats = new StatsChartsRenderer;
         ?>
@@ -59,16 +74,16 @@ class Diagram {
                     },
                     legend: {
                         display: true,
-                        position: 'right'
+                        position: 'top'
                     },
                     animation: {
-                            animateScale: true,
-                            animateRotate: true
-                        },
+                        animateScale: true,
+                        animateRotate: true
+                    },
                     scales: {
                         yAxes: [{
-                            ticks:{
-                                beginAtZero:true
+                            ticks: {
+                                beginAtZero: true
                             }
                         }]
                     },
@@ -77,35 +92,33 @@ class Diagram {
                 data: {
                     labels: [
                         <?php
-                            foreach($labels as $column)
-                            {
-                                echo $column.", ";
-                            }
+                        foreach ($labels as $column) {
+                            echo $column . ", ";
+                        }
                         ?>
                     ],
                     datasets: [
                         <?php
-                            foreach($datasets as $column)
-                            {
-                                echo "{\n";
-                                foreach($column as $key => $setting)
-                                {
-                                    echo $key.": ".$setting.",";
-                                }
-                                echo "},\n";
+                        foreach ($datasets as $column) {
+                            echo "{\n";
+                            foreach ($column as $key => $setting) {
+                                echo $key . ": " . $setting . ",";
                             }
+                            echo "},\n";
+                        }
                         ?>
                     ],
                 }
             }
-    
+
             var ctx = document.getElementById("<?= $canvasName ?>").getContext("2d");
             window.mySNMP = new Chart(ctx, config);
         </script>
         <?php
     }
 
-    public function createDoughnutChart(string $canvasName, string $title, array $labels, array $datasets){
+    public function createDoughnutChart(string $canvasName, string $title, array $labels, array $datasets)
+    {
         require_once("require/charts/StatsChartsRenderer.php");
         $stats = new StatsChartsRenderer;
         ?>
@@ -119,42 +132,41 @@ class Diagram {
                         text: "<?= $title ?>"
                     },
                     legend: {
-                        position: 'right'
+                        position: 'bottom'
                     },
                     animation: {
                         animateScale: true,
                         animateRotate: true
                     },
-                },       
+                },
                 data: {
                     labels: [
                         <?php
-                            foreach($labels as $column)
-                            {
-                                echo $column.", ";
-                            }
+                        foreach ($labels as $column) {
+                            echo $column . ", ";
+                        }
                         ?>
                     ],
                     datasets: [
                         <?php
-                            echo "{\n";
-                                foreach($datasets as $key => $setting)
-                                {
-                                    echo $key.": ".$setting.",";
-                                }
-                            echo "},\n";
+                        echo "{\n";
+                        foreach ($datasets as $key => $setting) {
+                            echo $key . ": " . $setting . ",";
+                        }
+                        echo "},\n";
                         ?>
                     ],
                 }
             }
-    
+
             var ctx = document.getElementById("<?= $canvasName ?>").getContext("2d");
             window.mySNMP = new Chart(ctx, config);
         </script>
         <?php
     }
 
-    public function createPieChart(string $canvasName, string $title, array $labels, array $datasets){
+    public function createPieChart(string $canvasName, string $title, array $labels, array $datasets)
+    {
         require_once("require/charts/StatsChartsRenderer.php");
         $stats = new StatsChartsRenderer;
         ?>
@@ -168,35 +180,33 @@ class Diagram {
                         text: "<?= $title ?>"
                     },
                     legend: {
-                        position: 'right'
+                        position: 'bottom'
                     },
                     animation: {
                         animateScale: true,
                         animateRotate: true
                     },
-                },                
+                },
                 data: {
                     labels: [
                         <?php
-                            foreach($labels as $column)
-                            {
-                                echo $column.", ";
-                            }
+                        foreach ($labels as $column) {
+                            echo $column . ", ";
+                        }
                         ?>
                     ],
                     datasets: [
                         <?php
-                            echo "{\n";
-                                foreach($datasets as $key => $setting)
-                                {
-                                    echo $key.": ".$setting.",";
-                                }
-                            echo "},\n";
+                        echo "{\n";
+                        foreach ($datasets as $key => $setting) {
+                            echo $key . ": " . $setting . ",";
+                        }
+                        echo "},\n";
                         ?>
                     ],
                 }
             }
-    
+
             var ctx = document.getElementById("<?= $canvasName ?>").getContext("2d");
             window.mySNMP = new Chart(ctx, config);
         </script>

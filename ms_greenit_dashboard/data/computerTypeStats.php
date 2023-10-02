@@ -3,115 +3,184 @@
 $date = new DateTime("NOW");
 $date->modify('-1 day');
 
-$pastDate = new DateTime("NOW");
-$pastDate->modify("-".$config->COLLECT_INFO_PERIOD." days");
+$collectDate = new DateTime("NOW");
+$collectDate->modify("-" . $config->COLLECT_INFO_PERIOD . " days");
 
 $compareDate = new DateTime("NOW");
-$compareDate->modify("-".$config->COMPARE_INFO_PERIOD." days");
-
-$osGroupQuery = "SELECT OSNAME FROM hardware WHERE OSNAME LIKE '%Windows%' AND DEVICEID<>'_SYSTEMGROUP_' AND DEVICEID<>'_DOWNLOADGROUP_' GROUP BY OSNAME ORDER BY OSNAME";
-$osGroupDataResult = mysql2_query_secure($osGroupQuery, $_SESSION['OCS']["readServer"]);
-
-$osGroupData = array();
-while ($row = mysqli_fetch_object($osGroupDataResult)) {
-    $osGroupData[] = $row->OSNAME;
-}
+$compareDate->modify("-" . $config->COMPARE_INFO_PERIOD . " days");
 
 $yesterdayData = array();
-foreach($osGroupData as $key => $osGroup)
-{
-    $yesterdayQuery = "SELECT hardware.OSNAME AS osName, greenit.DATE, SUM(greenit.CONSUMPTION) AS totalConsumption, SUM(greenit.UPTIME) AS totalUptime FROM greenit INNER JOIN hardware WHERE greenit.DATE ='".$date->format("Y-m-d")."' AND hardware.OSNAME='".$osGroup."' AND greenit.HARDWARE_ID=hardware.ID GROUP BY greenit.DATE";
-    $yesterdayDataResult = mysql2_query_secure($yesterdayQuery, $_SESSION['OCS']["readServer"]);
-
-    while ($row = mysqli_fetch_object($yesterdayDataResult)) {
-        $yesterdayData[$row->osName][$row->DATE] = (object) array(
-            "totalConsumption" => $row->totalConsumption,
-            "totalUptime" => $row->totalUptime,
-        );
-    }
-}
-
+$collectData = array();
 $compareData = array();
-foreach($osGroupData as $key => $osGroup)
-{
-    $compareQuery = "SELECT hardware.OSNAME AS osName, greenit.DATE, SUM(greenit.CONSUMPTION) AS totalConsumption, SUM(greenit.UPTIME) AS totalUptime FROM greenit INNER JOIN hardware WHERE greenit.DATE BETWEEN '".$compareDate->format("Y-m-d")."' AND '".$date->format("Y-m-d")."' AND hardware.OSNAME='".$osGroup."' AND greenit.HARDWARE_ID=hardware.ID GROUP BY greenit.DATE";
-    $compareDataResult = mysql2_query_secure($compareQuery, $_SESSION['OCS']["readServer"]);
 
-    while ($row = mysqli_fetch_object($compareDataResult)) {
-        $compareData[$row->osName][$row->DATE] = (object) array(
-            "totalConsumption" => $row->totalConsumption,
-            "totalUptime" => $row->totalUptime,
-        );
+//////////////////////////////
+// Get yesterday consumption of all Windows Clients
+$yesterdayClientQuery = "
+    SELECT 
+    SUM(greenit.CONSUMPTION) AS totalConsumption, 
+    SUM(greenit.UPTIME) AS totalUptime 
+    FROM greenit 
+    INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
+    WHERE greenit.DATE='" . $date->format("Y-m-d") . "' 
+    AND hardware.OSNAME LIKE '%Windows%' 
+    AND hardware.OSNAME NOT IN (SELECT hardware.OSNAME FROM hardware WHERE hardware.OSNAME LIKE '%Windows Server%') 
+";
+$yesterdayClientDataResult = mysql2_query_secure($yesterdayClientQuery, $_SESSION['OCS']["readServer"]);
+
+while ($row = mysqli_fetch_object($yesterdayClientDataResult)) {
+    $yesterdayData["CLIENTS"] = (object) array(
+        "totalConsumption" => $row->totalConsumption,
+        "totalUptime" => $row->totalUptime,
+    );
+}
+//////////////////////////////
+
+//////////////////////////////
+// Get yesterday consumption of all Windows Servers
+$yesterdayServerQuery = "
+    SELECT 
+    SUM(greenit.CONSUMPTION) AS totalConsumption, 
+    SUM(greenit.UPTIME) AS totalUptime 
+    FROM greenit 
+    INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
+    WHERE greenit.DATE='" . $date->format("Y-m-d") . "' 
+    AND hardware.OSNAME LIKE '%Windows Server%' 
+";
+$yesterdayServerDataResult = mysql2_query_secure($yesterdayServerQuery, $_SESSION['OCS']["readServer"]);
+
+while ($row = mysqli_fetch_object($yesterdayServerDataResult)) {
+    $yesterdayData["SERVERS"] = (object) array(
+        "totalConsumption" => $row->totalConsumption,
+        "totalUptime" => $row->totalUptime,
+    );
+}
+//////////////////////////////
+
+//////////////////////////////
+// Get collect consumption of all Windows Clients
+$collectClientQuery = "
+    SELECT 
+    greenit.DATE, 
+    SUM(greenit.CONSUMPTION) AS totalConsumption, 
+    SUM(greenit.UPTIME) AS totalUptime 
+    FROM greenit 
+    INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
+    WHERE greenit.DATE BETWEEN '" . $collectDate->format("Y-m-d") . "' AND '" . $date->format("Y-m-d") . "' 
+    AND hardware.OSNAME LIKE '%Windows%' 
+    AND hardware.OSNAME NOT IN (SELECT hardware.OSNAME FROM hardware WHERE hardware.OSNAME LIKE '%Windows Server%') 
+    GROUP BY greenit.DATE
+";
+$collectClientDataResult = mysql2_query_secure($collectClientQuery, $_SESSION['OCS']["readServer"]);
+
+while ($row = mysqli_fetch_object($collectClientDataResult)) {
+    $collectData["CLIENTS"][$row->DATE] = (object) array(
+        "totalConsumption" => $row->totalConsumption,
+        "totalUptime" => $row->totalUptime,
+    );
+}
+//////////////////////////////
+
+//////////////////////////////
+// Get collect consumption of all Windows Servers
+$collectServerQuery = "
+    SELECT 
+    greenit.DATE, 
+    SUM(greenit.CONSUMPTION) AS totalConsumption, 
+    SUM(greenit.UPTIME) AS totalUptime 
+    FROM greenit 
+    INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
+    WHERE greenit.DATE BETWEEN '" . $collectDate->format("Y-m-d") . "' AND '" . $date->format("Y-m-d") . "' 
+    AND hardware.OSNAME LIKE '%Windows Server%' 
+    GROUP BY greenit.DATE
+";
+$collectServerDataResult = mysql2_query_secure($collectServerQuery, $_SESSION['OCS']["readServer"]);
+
+while ($row = mysqli_fetch_object($collectServerDataResult)) {
+    $collectData["SERVERS"][$row->DATE] = (object) array(
+        "totalConsumption" => $row->totalConsumption,
+        "totalUptime" => $row->totalUptime,
+    );
+}
+//////////////////////////////
+
+//////////////////////////////
+// Get compare consumption of all Windows Clients
+$compareClientQuery = "
+    SELECT 
+    greenit.DATE, 
+    SUM(greenit.CONSUMPTION) AS totalConsumption, 
+    SUM(greenit.UPTIME) AS totalUptime 
+    FROM greenit 
+    INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
+    WHERE greenit.DATE BETWEEN '" . $compareDate->format("Y-m-d") . "' AND '" . $date->format("Y-m-d") . "' 
+    AND hardware.OSNAME LIKE '%Windows%' 
+    AND hardware.OSNAME NOT IN (SELECT hardware.OSNAME FROM hardware WHERE hardware.OSNAME LIKE '%Windows Server%') 
+    GROUP BY greenit.DATE
+";
+$compareClientDataResult = mysql2_query_secure($compareClientQuery, $_SESSION['OCS']["readServer"]);
+
+while ($row = mysqli_fetch_object($compareClientDataResult)) {
+    $compareData["CLIENTS"][$row->DATE] = (object) array(
+        "totalConsumption" => $row->totalConsumption,
+        "totalUptime" => $row->totalUptime,
+    );
+}
+//////////////////////////////
+
+//////////////////////////////
+// Get compare consumption of all Windows Servers
+$compareServerQuery = "
+    SELECT 
+    greenit.DATE, 
+    SUM(greenit.CONSUMPTION) AS totalConsumption, 
+    SUM(greenit.UPTIME) AS totalUptime 
+    FROM greenit 
+    INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
+    WHERE greenit.DATE BETWEEN '" . $compareDate->format("Y-m-d") . "' AND '" . $date->format("Y-m-d") . "' 
+    AND hardware.OSNAME LIKE '%Windows Server%' 
+    GROUP BY greenit.DATE
+";
+$compareServerDataResult = mysql2_query_secure($compareServerQuery, $_SESSION['OCS']["readServer"]);
+
+while ($row = mysqli_fetch_object($compareServerDataResult)) {
+    $compareData["SERVERS"][$row->DATE] = (object) array(
+        "totalConsumption" => $row->totalConsumption,
+        "totalUptime" => $row->totalUptime,
+    );
+}
+//////////////////////////////
+
+if (count($yesterdayData) == 0)
+    $yesterdayData = null;
+if (count($collectData) == 0)
+    $collectData = null;
+if (count($compareData) == 0)
+    $compareData = null;
+
+//////////////////////////////
+// Sum of all data per period Collect
+$sumConsumptionCollect = array();
+
+if (isset($collectData)) {
+    foreach ($collectData as $group => $date) {
+        foreach ($date as $value) {
+            $sumConsumptionCollect[$group] += $value->totalConsumption;
+        }
     }
 }
+//////////////////////////////
 
-if(count($yesterdayData) == 0) $yesterdayData = null;
-if(count($compareData) == 0) $compareData = null;
-
-$sumConsumptionYesterday = array();
-
-foreach($yesterdayData as $group => $date)
-{
-    $sumConsumptionYesterday[$group] = 0;
-    foreach($date as $value)
-    {
-        $sumConsumptionYesterday[$group] += $value->totalConsumption;
-    }
-}
-
-$sumUptimeYesterday = array();
-
-foreach($yesterdayData as $group => $date)
-{
-    $sumUptimeYesterday[$group] = 0;
-    foreach($date as $value)
-    {
-        $sumUptimeYesterday[$group] += $value->totalUptime;
-    }
-}
-
-$sumCostYesterday = array();
-
-foreach($yesterdayData as $group => $date)
-{
-    $sumCostYesterday[$group] = 0;
-    foreach($date as $value)
-    {
-        $sumCostYesterday[$group] += $value->totalConsumption;
-    }
-}
-
+//////////////////////////////
+// Sum of all data per period Compare
 $sumConsumptionCompare = array();
 
-foreach($compareData as $group => $date)
-{
-    $sumConsumptionCompare[$group] = 0;
-    foreach($date as $value)
-    {
-        $sumConsumptionCompare[$group] += $value->totalConsumption;
+if (isset($compareData)) {
+    foreach ($compareData as $group => $date) {
+        foreach ($date as $value) {
+            $sumConsumptionCompare[$group] += $value->totalConsumption;
+        }
     }
 }
-
-$sumUptimeCompare = array();
-
-foreach($compareData as $group => $date)
-{
-    $sumUptimeCompare[$group] = 0;
-    foreach($date as $value)
-    {
-        $sumUptimeCompare[$group] += $value->totalUptime;
-    }
-}
-
-$sumCostCompare = array();
-
-foreach($compareData as $group => $date)
-{
-    $sumCostCompare[$group] = 0;
-    foreach($date as $value)
-    {
-        $sumCostCompare[$group] += $value->totalConsumption;
-    }
-}
+//////////////////////////////
 
 ?>

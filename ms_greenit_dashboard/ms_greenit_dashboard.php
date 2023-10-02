@@ -15,7 +15,7 @@ if (AJAX) {
     ob_start();
 }
 
-if(!isset($protectedPost['onglet'])){
+if (!isset($protectedPost['onglet'])) {
     $protectedPost['onglet'] = 1;
 }
 
@@ -25,8 +25,7 @@ require_once('class/diagram.class.php');
 $calculation = new Calculation;
 $diagram = new Diagram;
 
-if(!isset($protectedGet['cat']))
-{
+if (!isset($protectedGet['cat'])) {
     $protectedGet['cat'] = 'globalstats';
 }
 
@@ -35,17 +34,13 @@ require_once('data/config.php');
 
 // Data recovery
 require_once('data/title.php');
-if($protectedGet['cat'] == 'globalstats')
-{
+if ($protectedGet['cat'] == 'globalstats') {
     require_once('data/globalStats.php');
-}
-else if($protectedGet['cat'] == 'filteredstats')
-{
+} else if ($protectedGet['cat'] == 'filteredstats') {
     require_once('data/filteredSearch.php');
-    if(isset($protectedGet[strtolower(str_replace(" ", "_",$l->g(35)))])) require_once('data/filteredStats.php');
-}
-else if($protectedGet['cat'] == 'computertypestats')
-{
+    if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(35)))]))
+        require_once('data/filteredStats.php');
+} else if ($protectedGet['cat'] == 'computertypestats') {
     require_once('data/computerTypeStats.php');
 }
 
@@ -56,24 +51,17 @@ echo "<div class='col-md-10'>";
 
 require_once("components/title.php");
 
-if($protectedGet['cat'] == 'globalstats')
-{
+if ($protectedGet['cat'] == 'globalstats') {
     require_once("components/globalStats/yesterdayStats.php");
-    require_once("components/globalStats/costStats.php");    
-}
-else if ($protectedGet['cat'] == 'filteredstats')
-{
-    if(isset($protectedGet[strtolower(str_replace(" ", "_",$l->g(35)))]))
-    {
+    require_once("components/globalStats/costStats.php");
+} else if ($protectedGet['cat'] == 'filteredstats') {
+    if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(35)))])) {
         require_once("components/filteredStats/yesterdayStats.php");
         require_once("components/filteredStats/costStats.php");
     }
     require_once("components/filteredStats/filteredSearch.php");
-}
-else if ($protectedGet['cat'] == 'computertypestats')
-{
-    require_once("components/computerTypeStats/consumptionStats.php");
-    require_once("components/computerTypeStats/uptimeStats.php");
+} else if ($protectedGet['cat'] == 'computertypestats') {
+    require_once("components/computerTypeStats/yesterdayStats.php");
     require_once("components/computerTypeStats/costStats.php");
 }
 
