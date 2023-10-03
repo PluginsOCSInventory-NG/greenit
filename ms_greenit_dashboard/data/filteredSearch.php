@@ -35,6 +35,7 @@ $sql_filtered_search['SQL'] = '
     INNER JOIN accountinfo ON hardware.ID = accountinfo.hardware_id
     INNER JOIN greenit ON hardware.ID = greenit.HARDWARE_ID
     LEFT JOIN groups_cache ON hardware.ID = groups_cache.HARDWARE_ID
+    GROUP BY NAME
 ';
 
 if(
