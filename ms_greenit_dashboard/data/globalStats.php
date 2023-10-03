@@ -65,7 +65,6 @@ $compareDataResult = mysql2_query_secure($compareQuery, $_SESSION['OCS']["readSe
 
 //////////////////////////////
 // Format yesterday data
-$yesterdayData = array();
 while ($row = mysqli_fetch_object($yesterdayDataResult)) {
     $yesterdayData["GLOBAL"] = json_decode($row->DATA);
 }
@@ -73,7 +72,6 @@ while ($row = mysqli_fetch_object($yesterdayDataResult)) {
 
 //////////////////////////////
 // Format collect data
-$collectData = array();
 while ($row = mysqli_fetch_object($collectDataResult)) {
     $collectData[$row->DATE] = json_decode($row->DATA);
 }
@@ -81,7 +79,6 @@ while ($row = mysqli_fetch_object($collectDataResult)) {
 
 //////////////////////////////
 // Format compare data
-$compareData = array();
 while ($row = mysqli_fetch_object($compareDataResult)) {
     $compareData[$row->DATE] = json_decode($row->DATA);
 }
