@@ -14,13 +14,13 @@ if (isset($protectedPost['RESET'])) {
 if (isset($protectedPost['SUBMIT_FORM']))
     $tab_options['CACHE'] = 'RESET';
 
-if ($protectedPost['OS'] == "0")
+if (isset($protectedPost["OS"]) && $protectedPost['OS'] == "0")
     unset($_SESSION['GREENIT']['FILTER']['OS']);
-if ($protectedPost['GROUP'] == "0")
+if (isset($protectedPost["GROUP"]) && $protectedPost['GROUP'] == "0")
     unset($_SESSION['GREENIT']['FILTER']['GROUP']);
-if ($protectedPost['TAG'] == "0")
+if (isset($protectedPost["TAG"]) && $protectedPost['TAG'] == "0")
     unset($_SESSION['GREENIT']['FILTER']['TAG']);
-if ($protectedPost['ASSET'] == "0")
+if (isset($protectedPost["ASSET"]) && $protectedPost['ASSET'] == "0")
     unset($_SESSION['GREENIT']['FILTER']['ASSET']);
 
 if (is_defined($protectedPost['OS']) && $protectedPost['OS'] != "0")

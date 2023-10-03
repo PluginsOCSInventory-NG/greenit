@@ -13,6 +13,8 @@ $backgroundColor = $diagram->generateColorList(2, true);
 
 $label = "";
 $data = array();
+$data["CONSUMPTION"] = "";
+$data["COST"] = "";
 foreach ($manufacturers as $manufacturer) {
     if (isset($yesterdayData[$manufacturer])) {
         $label .= "'" . $manufacturer . "'";
