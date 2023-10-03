@@ -17,8 +17,10 @@ $labels = [
 $data = "";
 $string = "";
 foreach ($yesterdayData as $group => $value) {
-    $string .= '"' . str_replace(" " . $config->COST_UNIT, "", $calculation->CostFormat(floatval($value->totalConsumption), "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND)) . '"';
-
+    if (isset($yesterdayData[$group]->totalConsumption))
+        $string .= '"' . str_replace(" " . $config->COST_UNIT, "", $calculation->CostFormat($value, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND)) . '"';
+    else
+        $string .= "0";
     if (next($yesterdayData) == true)
         $string .= ", ";
 }
