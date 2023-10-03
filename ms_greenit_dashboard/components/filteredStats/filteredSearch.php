@@ -20,7 +20,7 @@ $tab_options_filtered_search['LIEN_CHAMP'][$l->g(35)] = 'NAME';
 
 echo open_form($form_name, '', '', 'form-horizontal');
 
-echo "<h4>" . $l->g(102104) . "</h4>";
+echo "<h4>" . $l->g(102800) . "</h4>";
 
 echo '
 <div class="form-group">
@@ -34,6 +34,9 @@ if (
     is_defined($_SESSION['GREENIT']['FILTER']['ASSET'])
 ) {
     msg_warning($l->g(767));
+    echo '
+    <a href="index.php?function=ms_greenit_dashboard&cat=filteredstats&' . strtolower(str_replace(" ", "_", $l->g(35))) . '=" class="btn btn-success">' . $l->g(102801) . '</a>
+    ';
 }
 
 ajaxtab_entete_fixe($list_fields_filtered_search, $default_fields_filtered_search, $tab_options_filtered_search, $list_col_cant_del_filtered_search);

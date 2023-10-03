@@ -15,9 +15,8 @@
 102101 machines dans le parc GreenIT sur
 102102 Statistiques globales
 102103 Statistiques filtrées
-102104 Recherche filtrée
-102105 Statistiques par type de machine
-102106 Statistiques par constructeur
+102104 Statistiques par type de machine
+102105 Statistiques par constructeur
 
 102600 Statistiques de la journée précédente
 102601 Consommation totale
@@ -36,3 +35,6 @@
 102705 jour(s)
 102706 Consommation
 102707 Coût
+
+102800 Recherche filtrée
+102801 Générer les Statistiques filtrées

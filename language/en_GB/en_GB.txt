@@ -15,9 +15,8 @@
 102101 machines in the GreenIT parc of
 102102 Global Statistics
 102103 Filtered Statistics
-102104 Filtered Search
-102105 Computer type Statistics
-102106 Manufacturer Statistics
+102104 Computer type Statistics
+102105 Manufacturer Statistics
 
 102600 Yesterday's Statistics
 102601 Total consumption
@@ -36,3 +35,6 @@
 102705 day(s)
 102706 Consumption
 102707 Cost
+
+102800 Filtered Search
+102801 Generate filtered stats
