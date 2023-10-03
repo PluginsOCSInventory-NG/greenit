@@ -64,7 +64,7 @@ $labelsSettings = array(
 );
 
 $diagram->createCanvas("histogram_collect_period", "6", "200");
-$diagram->createBarChart("histogram_collect_period", "", $labels, $labelsSettings, "bar");
+$diagram->createBarChart("histogram_collect_period", "bar", "", $labels, $labelsSettings);
 //////////////////////////////
 
 //////////////////////////////
@@ -91,7 +91,7 @@ $labelsSettings = array(
 );
 
 $diagram->createCanvas("histogram_compare_period", "6", "200");
-$diagram->createBarChart("histogram_compare_period", "", $labels, $labelsSettings, "bar");
+$diagram->createBarChart("histogram_compare_period", "bar", "", $labels, $labelsSettings);
 //////////////////////////////
 
 echo close_form();

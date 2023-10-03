@@ -33,7 +33,7 @@ $datasets = array(
 );
 
 $diagram->createCanvas("yesterday_cost_diagram", "4", "250");
-$diagram->createDoughnutChart("yesterday_cost_diagram", $l->g(102701) . ' (' . $config->COST_UNIT . ')', $labels, $datasets);
+$diagram->createRoundChart("yesterday_cost_diagram", "doughnut", $l->g(102701) . ' (' . $config->COST_UNIT . ')', $labels, $datasets);
 //////////////////////////////
 
 //////////////////////////////
@@ -64,7 +64,7 @@ $datasets = array(
 );
 
 $diagram->createCanvas("collect_cost_diagram", "4", "250");
-$diagram->createDoughnutChart("collect_cost_diagram", $l->g(102702) . ' ' . $config->COLLECT_INFO_PERIOD . ' ' . $l->g(102705) . ' (' . $config->COST_UNIT . ')', $labels, $datasets);
+$diagram->createRoundChart("collect_cost_diagram", "doughnut", $l->g(102702) . ' ' . $config->COLLECT_INFO_PERIOD . ' ' . $l->g(102705) . ' (' . $config->COST_UNIT . ')', $labels, $datasets);
 //////////////////////////////
 
 //////////////////////////////
@@ -95,7 +95,7 @@ $datasets = array(
 );
 
 $diagram->createCanvas("compare_cost_diagram", "4", "250");
-$diagram->createDoughnutChart("compare_cost_diagram", $l->g(102702) . ' ' . $config->COMPARE_INFO_PERIOD . ' ' . $l->g(102705) . ' (' . $config->COST_UNIT . ')', $labels, $datasets);
+$diagram->createRoundChart("compare_cost_diagram", "doughnut", $l->g(102702) . ' ' . $config->COMPARE_INFO_PERIOD . ' ' . $l->g(102705) . ' (' . $config->COST_UNIT . ')', $labels, $datasets);
 //////////////////////////////
 
 echo close_form();

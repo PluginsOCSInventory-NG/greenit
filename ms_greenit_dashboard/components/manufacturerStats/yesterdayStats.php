@@ -53,7 +53,7 @@ $datasets = array(
 );
 
 $diagram->createCanvas("histogram_total_consumption", "12", "200");
-$diagram->createBarChart("histogram_total_consumption", "", $labels, $datasets, "horizontalBar");
+$diagram->createBarChart("histogram_total_consumption", "horizontalBar", "", $labels, $datasets);
 //////////////////////////////
 
 echo '<hr>';

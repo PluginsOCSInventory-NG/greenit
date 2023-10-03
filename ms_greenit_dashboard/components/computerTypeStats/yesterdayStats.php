@@ -66,7 +66,7 @@ echo '
     <div class="col-md-3"></div>
 </div>
 ';
-$diagram->createBarChart("histogram_total_consumption", "", $labels, $datasets, "bar");
+$diagram->createBarChart("histogram_total_consumption", "bar", "", $labels, $datasets);
 //////////////////////////////
 
 echo '<hr>';

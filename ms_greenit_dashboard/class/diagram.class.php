@@ -3,7 +3,10 @@
 class Diagram
 {
 
-    public $colorsList = array(
+    /**
+     * List of color can be generate by the class
+     */
+    private $colorsList = array(
         "#1941A5",
         "#AFD8F8",
         "#F6BD0F",
@@ -26,6 +29,13 @@ class Diagram
         "#669900",
     );
 
+    /**
+     * Generate a list of color and return it
+     * 
+     * @param int $nb Define the number of the color will be generated
+     * @param bool $arrayMode Define the type of the return (string or array)
+     * 
+     */
     static public function generateColorList(int $nb, bool $arrayMode = false)
     {
         if ($arrayMode == false) {
@@ -50,6 +60,14 @@ class Diagram
         }
     }
 
+    /**
+     * Create a zone to draw charts
+     * 
+     * @param string $canvasName Define the name of the zone
+     * @param string $nbColumn Define the width in bootstrap grid column
+     * @param string $height Define the height of the zone (strange reaction with responsive charts)
+     * 
+     */
     public function createCanvas(string $canvasName, string $nbColumn, string $height)
     {
         ?>
@@ -59,7 +77,17 @@ class Diagram
         <?php
     }
 
-    public function createBarChart(string $canvasName, string $title, array $labels, array $datasets, string $type)
+    /**
+     * Create an horizontal or vertical bar chart
+     * 
+     * @param string $canvasName Identify the name of the zone where will be draw the chart
+     * @param string $type Define if it will be a horizontal or vertical bar chart
+     * @param string $title Define the title of the chart
+     * @param array $labels Define the labels of the chart
+     * @param array $datasets Define the data of the chart
+     * 
+     */
+    public function createBarChart(string $canvasName, string $type, string $title, array $labels, array $datasets)
     {
         require_once("require/charts/StatsChartsRenderer.php");
         $stats = new StatsChartsRenderer;
@@ -71,9 +99,6 @@ class Diagram
                     title: {
                         display: true,
                         text: "<?= $title ?>"
-                    },
-                    legend: {
-                        position: 'top'
                     },
                     animation: {
                         animateScale: true,
@@ -91,7 +116,7 @@ class Diagram
                             }
                         }]
                     },
-                    responsive: true
+                    responsive: true,
                 },
                 data: {
                     labels: [
@@ -121,62 +146,23 @@ class Diagram
         <?php
     }
 
-    public function createDoughnutChart(string $canvasName, string $title, array $labels, array $datasets)
+    /**
+     * Create a doughnut or pie chart
+     * 
+     * @param string $canvasName Identify the name of the zone where will be draw the chart
+     * @param string $title Define the title of the chart
+     * @param array $labels Define the labels of the chart
+     * @param array $datasets Define the data of the chart
+     * 
+     */
+    public function createRoundChart(string $canvasName, string $type, string $title, array $labels, array $datasets)
     {
         require_once("require/charts/StatsChartsRenderer.php");
         $stats = new StatsChartsRenderer;
         ?>
         <script>
             var config = {
-                type: 'doughnut',
-                options: {
-                    responsive: true,
-                    title: {
-                        display: true,
-                        text: "<?= $title ?>"
-                    },
-                    legend: {
-                        position: 'bottom'
-                    },
-                    animation: {
-                        animateScale: true,
-                        animateRotate: true
-                    },
-                },
-                data: {
-                    labels: [
-                        <?php
-                        foreach ($labels as $column) {
-                            echo $column . ", ";
-                        }
-                        ?>
-                    ],
-                    datasets: [
-                        <?php
-                        echo "{\n";
-                        foreach ($datasets as $key => $setting) {
-                            echo $key . ": " . $setting . ",";
-                        }
-                        echo "},\n";
-                        ?>
-                    ],
-                }
-            }
-
-            var ctx = document.getElementById("<?= $canvasName ?>").getContext("2d");
-            window.mySNMP = new Chart(ctx, config);
-        </script>
-        <?php
-    }
-
-    public function createPieChart(string $canvasName, string $title, array $labels, array $datasets)
-    {
-        require_once("require/charts/StatsChartsRenderer.php");
-        $stats = new StatsChartsRenderer;
-        ?>
-        <script>
-            var config = {
-                type: 'pie',
+                type: '<?= $type ?>',
                 options: {
                     responsive: true,
                     title: {
