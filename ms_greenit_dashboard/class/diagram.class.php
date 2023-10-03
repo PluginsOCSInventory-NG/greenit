@@ -59,14 +59,14 @@ class Diagram
         <?php
     }
 
-    public function createBarChart(string $canvasName, string $title, array $labels, array $datasets)
+    public function createBarChart(string $canvasName, string $title, array $labels, array $datasets, string $type)
     {
         require_once("require/charts/StatsChartsRenderer.php");
         $stats = new StatsChartsRenderer;
         ?>
         <script>
             var config = {
-                type: 'bar',
+                type: "<?= $type ?>",
                 options: {
                     title: {
                         display: true,

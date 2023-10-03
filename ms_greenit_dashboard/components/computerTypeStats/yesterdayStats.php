@@ -24,7 +24,7 @@ echo $table;
 
 //////////////////////////////
 // Show total consumption
-$labels = ["'" . $l->g(102601) . "'"];
+$labels = ["'" . $l->g(102601) . " (" . "kW/h" . ")'"];
 
 $backgroundColor = $diagram->generateColorList(2, true);
 
@@ -45,7 +45,7 @@ $datasets = array(
         "data" => "[
             '" . $data["CLIENTS"] . "'
             ]",
-        "label" => "'" . $l->g(102601) . " " . $l->g(102605) . " " . $l->g(102606) . " (" . "kW/h" . ")'",
+        "label" => "'" . $l->g(102601) . " " . $l->g(102605) . " " . $l->g(102606) . "'",
         "type" => "'bar'"
     ),
     "serverConsumption" => array(
@@ -53,7 +53,7 @@ $datasets = array(
         "data" => "[
             '" . $data["SERVERS"] . "'
             ]",
-        "label" => "'" . $l->g(102601) . " " . $l->g(102605) . " " . $l->g(102607) . " (" . "kW/h" . ")'",
+        "label" => "'" . $l->g(102601) . " " . $l->g(102605) . " " . $l->g(102607) . "'",
         "type" => "'bar'"
     ),
 );
@@ -66,7 +66,7 @@ echo '
     <div class="col-md-3"></div>
 </div>
 ';
-$diagram->createBarChart("histogram_total_consumption", "", $labels, $datasets);
+$diagram->createBarChart("histogram_total_consumption", "", $labels, $datasets, "bar");
 //////////////////////////////
 
 echo '<hr>';
