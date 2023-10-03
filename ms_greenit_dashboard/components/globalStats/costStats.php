@@ -25,7 +25,7 @@ $table = '
 <br>
 <div class="row">
     <div class="col-md-6" style="border: 1px solid #ddd; padding: 5px;">
-        <p style="font-size: 32px; font-weight:bold;">' . (isset($collectData) ? $calculation->CostFormat($sumConsumptionCollect / $numberDeviceInPeriod, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0') . '</p>
+        <p style="font-size: 32px; font-weight:bold;">' . (isset($collectData) ? $calculation->CostFormat($sumConsumptionCollect / $numberDeviceCollect, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0') . '</p>
         <p style="color:#333; font-size: 15px;">' . $l->g(102704) . " " . $config->COLLECT_INFO_PERIOD . " " . $l->g(102705) . '</p>
     </div>
     <div class="col-md-6" style="border: 1px solid #ddd; padding: 5px;">

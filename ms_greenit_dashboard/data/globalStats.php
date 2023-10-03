@@ -109,15 +109,17 @@ if (isset($compareData)) {
 
 //////////////////////////////
 // Get number of device of the collect period
-$nbDevicesInPeriod = "
+$nbDevicesCollect = "
     SELECT 
     COUNT(DISTINCT HARDWARE_ID) AS nbDevices 
     FROM greenit 
     WHERE 
     DATE BETWEEN '" . $collectDate->format("Y-m-d") . "' AND '" . $date->format("Y-m-d") . "'
 ";
-$nbDevicesInPeriodResult = mysql2_query_secure($nbDevicesInPeriod, $_SESSION['OCS']["readServer"]);
-$numberDeviceInPeriod = mysqli_fetch_object($nbDevicesInPeriodResult)->nbDevices;
+$nbDevicesCollectResult = mysql2_query_secure($nbDevicesCollect, $_SESSION['OCS']["readServer"]);
+$numberDeviceCollect = mysqli_fetch_object($nbDevicesCollectResult)->nbDevices;
+if ($numberDeviceCollect == 0)
+    $numberDeviceCollect = 1;
 //////////////////////////////
 
 //////////////////////////////
@@ -131,6 +133,8 @@ $nbDevicesCompare = "
 ";
 $nbDevicesCompareResult = mysql2_query_secure($nbDevicesCompare, $_SESSION['OCS']["readServer"]);
 $numberDeviceCompare = mysqli_fetch_object($nbDevicesCompareResult)->nbDevices;
+if ($numberDeviceCompare == 0)
+    $numberDeviceCompare = 1;
 //////////////////////////////
 
 ?>
