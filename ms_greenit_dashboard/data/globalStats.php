@@ -89,10 +89,10 @@ while ($row = mysqli_fetch_object($compareDataResult)) {
 
 //////////////////////////////
 // Average of Consumption of the collect period
-$sumConsumptionInPeriode = 0;
-if (isset($limitedData)) {
-    foreach ($limitedData as $key => $value) {
-        $sumConsumptionInPeriode += $value->totalConsumption;
+$sumConsumptionCollect = 0;
+if (isset($collectData)) {
+    foreach ($collectData as $key => $value) {
+        $sumConsumptionCollect += $value->totalConsumption;
     }
 }
 //////////////////////////////
