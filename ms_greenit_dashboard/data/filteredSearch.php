@@ -1,7 +1,6 @@
 <?php
 
-if (isset($protectedPost['RESET']))
-{
+if (isset($protectedPost['RESET'])) {
     unset($protectedPost['OS']);
     unset($protectedPost['GROUP']);
     unset($protectedPost['TAG']);
@@ -12,17 +11,26 @@ if (isset($protectedPost['RESET']))
     unset($_SESSION['GREENIT']['FILTER']['ASSET']);
 }
 
-if (isset($protectedPost['SUBMIT_FORM'])) $tab_options['CACHE'] = 'RESET';
+if (isset($protectedPost['SUBMIT_FORM']))
+    $tab_options['CACHE'] = 'RESET';
 
-if($protectedPost['OS'] == "0") unset($_SESSION['GREENIT']['FILTER']['OS']);
-if($protectedPost['GROUP'] == "0") unset($_SESSION['GREENIT']['FILTER']['GROUP']);
-if($protectedPost['TAG'] == "0") unset($_SESSION['GREENIT']['FILTER']['TAG']);
-if($protectedPost['ASSET'] == "0") unset($_SESSION['GREENIT']['FILTER']['ASSET']);
+if ($protectedPost['OS'] == "0")
+    unset($_SESSION['GREENIT']['FILTER']['OS']);
+if ($protectedPost['GROUP'] == "0")
+    unset($_SESSION['GREENIT']['FILTER']['GROUP']);
+if ($protectedPost['TAG'] == "0")
+    unset($_SESSION['GREENIT']['FILTER']['TAG']);
+if ($protectedPost['ASSET'] == "0")
+    unset($_SESSION['GREENIT']['FILTER']['ASSET']);
 
-if(is_defined($protectedPost['OS']) && $protectedPost['OS'] != "0") $_SESSION['GREENIT']['FILTER']['OS'] = $protectedPost['OS'];
-if(is_defined($protectedPost['GROUP']) && $protectedPost['GROUP'] != "0") $_SESSION['GREENIT']['FILTER']['GROUP'] = $protectedPost['GROUP'];
-if(is_defined($protectedPost['TAG']) && $protectedPost['TAG'] != "0") $_SESSION['GREENIT']['FILTER']['TAG'] = $protectedPost['TAG'];
-if(is_defined($protectedPost['ASSET']) && $protectedPost['ASSET'] != "0") $_SESSION['GREENIT']['FILTER']['ASSET'] = $protectedPost['ASSET'];
+if (is_defined($protectedPost['OS']) && $protectedPost['OS'] != "0")
+    $_SESSION['GREENIT']['FILTER']['OS'] = $protectedPost['OS'];
+if (is_defined($protectedPost['GROUP']) && $protectedPost['GROUP'] != "0")
+    $_SESSION['GREENIT']['FILTER']['GROUP'] = $protectedPost['GROUP'];
+if (is_defined($protectedPost['TAG']) && $protectedPost['TAG'] != "0")
+    $_SESSION['GREENIT']['FILTER']['TAG'] = $protectedPost['TAG'];
+if (is_defined($protectedPost['ASSET']) && $protectedPost['ASSET'] != "0")
+    $_SESSION['GREENIT']['FILTER']['ASSET'] = $protectedPost['ASSET'];
 
 $sql_filtered_search['SQL'] = '
     SELECT DISTINCT 
@@ -38,23 +46,25 @@ $sql_filtered_search['SQL'] = '
     GROUP BY NAME
 ';
 
-if(
+if (
     is_defined($_SESSION['GREENIT']['FILTER']['OS']) ||
     is_defined($_SESSION['GREENIT']['FILTER']['GROUP']) ||
     is_defined($_SESSION['GREENIT']['FILTER']['TAG']) ||
     is_defined($_SESSION['GREENIT']['FILTER']['ASSET'])
-)
-{   
+) {
     $sql_filtered_search['WHERE'] = [];
     $sql_filtered_search['SQL'] .= ' WHERE';
 
-    if(is_defined($_SESSION['GREENIT']['FILTER']['OS'])) array_push($sql_filtered_search['WHERE'], ' hardware.OSNAME="'.$_SESSION['GREENIT']['FILTER']['OS'].'" AND');
-    if(is_defined($_SESSION['GREENIT']['FILTER']['GROUP'])) array_push($sql_filtered_search['WHERE'], ' GROUP_ID="'.$_SESSION['GREENIT']['FILTER']['GROUP'].'" AND');
-    if(is_defined($_SESSION['GREENIT']['FILTER']['TAG'])) array_push($sql_filtered_search['WHERE'], ' accountinfo.TAG="'.$_SESSION['GREENIT']['FILTER']['TAG'].'" AND');
-    if(is_defined($_SESSION['GREENIT']['FILTER']['ASSET'])) array_push($sql_filtered_search['WHERE'], ' hardware.CATEGORY_ID="'.$_SESSION['GREENIT']['FILTER']['ASSET'].'" AND');
+    if (is_defined($_SESSION['GREENIT']['FILTER']['OS']))
+        array_push($sql_filtered_search['WHERE'], ' hardware.OSNAME="' . $_SESSION['GREENIT']['FILTER']['OS'] . '" AND');
+    if (is_defined($_SESSION['GREENIT']['FILTER']['GROUP']))
+        array_push($sql_filtered_search['WHERE'], ' GROUP_ID="' . $_SESSION['GREENIT']['FILTER']['GROUP'] . '" AND');
+    if (is_defined($_SESSION['GREENIT']['FILTER']['TAG']))
+        array_push($sql_filtered_search['WHERE'], ' accountinfo.TAG="' . $_SESSION['GREENIT']['FILTER']['TAG'] . '" AND');
+    if (is_defined($_SESSION['GREENIT']['FILTER']['ASSET']))
+        array_push($sql_filtered_search['WHERE'], ' hardware.CATEGORY_ID="' . $_SESSION['GREENIT']['FILTER']['ASSET'] . '" AND');
     array_push($sql_filtered_search['WHERE'], ' 1');
-    foreach($sql_filtered_search['WHERE'] as $args)
-    {
+    foreach ($sql_filtered_search['WHERE'] as $args) {
         $sql_filtered_search['SQL'] .= $args;
     }
 }
@@ -65,7 +75,7 @@ $result = mysql2_query_secure($query, $_SESSION['OCS']["readServer"]);
 $os = [
     0 => "-----",
 ];
-while($item = mysqli_fetch_array($result)){
+while ($item = mysqli_fetch_array($result)) {
     $os[$item['OSNAME']] = $item['OSNAME'];
 }
 
@@ -75,7 +85,7 @@ $result = mysql2_query_secure($query, $_SESSION['OCS']["readServer"]);
 $group = [
     0 => "-----",
 ];
-while($item = mysqli_fetch_array($result)){
+while ($item = mysqli_fetch_array($result)) {
     $group[$item['ID']] = $item['NAME'];
 }
 
@@ -85,7 +95,7 @@ $result = mysql2_query_secure($query, $_SESSION['OCS']["readServer"]);
 $tag = [
     0 => "-----",
 ];
-while($item = mysqli_fetch_array($result)){
+while ($item = mysqli_fetch_array($result)) {
     $tag[$item['TAG']] = $item['TAG'];
 }
 
@@ -95,7 +105,7 @@ $result = mysql2_query_secure($query, $_SESSION['OCS']["readServer"]);
 $asset = [
     0 => "-----",
 ];
-while($item = mysqli_fetch_array($result)){
+while ($item = mysqli_fetch_array($result)) {
     $asset[$item['ID']] = $item['CATEGORY_NAME'];
 }
 

@@ -10,10 +10,10 @@
 ################################################################################
 
 
- /**
-  * This file is used to build a table refering to the plugin and define its 
-  * default columns as well as SQL request.
-  */
+/**
+ * This file is used to build a table refering to the plugin and define its 
+ * default columns as well as SQL request.
+ */
 
 if (AJAX) {
     parse_str($protectedPost['ocs']['0'], $params);
@@ -53,7 +53,7 @@ $default_fields = $list_fields;
 
 // select columns for table display
 $sql = prepare_sql_tab($list_fields);
-$sql['SQL']  .= "FROM $table_name WHERE (hardware_id = $systemid)";
+$sql['SQL'] .= "FROM $table_name WHERE (hardware_id = $systemid)";
 
 array_push($sql['ARG'], $systemid);
 $tab_options['ARG_SQL'] = $sql['ARG'];
