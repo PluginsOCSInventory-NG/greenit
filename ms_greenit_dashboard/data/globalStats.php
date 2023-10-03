@@ -26,7 +26,7 @@ $compareData = array();
 //////////////////////////////
 
 //////////////////////////////
-// Get yesterday consumption of GreenIT parc
+// Get yesterday data of GreenIT parc
 $yesterdayQuery = "
     SELECT 
     DATA 
@@ -38,7 +38,7 @@ $yesterdayDataResult = mysql2_query_secure($yesterdayQuery, $_SESSION['OCS']["re
 //////////////////////////////
 
 //////////////////////////////
-// Get collect consumption of GreenIT parc
+// Get collect data of GreenIT parc
 $collectQuery = "
     SELECT 
     DATE, 
@@ -51,7 +51,7 @@ $collectDataResult = mysql2_query_secure($collectQuery, $_SESSION['OCS']["readSe
 //////////////////////////////
 
 //////////////////////////////
-// Get compare consumption of GreenIT parc
+// Get compare data of GreenIT parc
 $compareQuery = "
     SELECT 
     DATE, 
