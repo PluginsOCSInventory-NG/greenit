@@ -46,7 +46,7 @@ $datasets = array(
             '" . $data["CLIENTS"] . "'
             ]",
         "label" => "'" . $l->g(102601) . " " . $l->g(102605) . " " . $l->g(102606) . "'",
-        "type" => "'bar'"
+        "type" => "'horizontalBar'"
     ),
     "serverConsumption" => array(
         "backgroundColor" => $backgroundColor[1],
@@ -54,19 +54,19 @@ $datasets = array(
             '" . $data["SERVERS"] . "'
             ]",
         "label" => "'" . $l->g(102601) . " " . $l->g(102605) . " " . $l->g(102607) . "'",
-        "type" => "'bar'"
+        "type" => "'horizontalBar'"
     ),
 );
 echo '
 <div class="row">
-    <div class="col-md-3"></div>
+    <div class="col-md-2"></div>
 ';
-$diagram->createCanvas("histogram_total_consumption", "6", "200");
+$diagram->createCanvas("histogram_total_consumption", "8", "200");
 echo '
-    <div class="col-md-3"></div>
+    <div class="col-md-2"></div>
 </div>
 ';
-$diagram->createBarChart("histogram_total_consumption", "bar", "", $labels, $datasets);
+$diagram->createBarChart("histogram_total_consumption", "horizontalBar", "", $labels, $datasets);
 //////////////////////////////
 
 echo '<hr>';
