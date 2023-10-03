@@ -43,7 +43,6 @@ $sql_filtered_search['SQL'] = '
     INNER JOIN accountinfo ON hardware.ID = accountinfo.hardware_id
     INNER JOIN greenit ON hardware.ID = greenit.HARDWARE_ID
     LEFT JOIN groups_cache ON hardware.ID = groups_cache.HARDWARE_ID
-    GROUP BY NAME
 ';
 
 if (
@@ -68,6 +67,8 @@ if (
         $sql_filtered_search['SQL'] .= $args;
     }
 }
+
+$sql_filtered_search['SQL'] .= ' GROUP BY NAME';
 
 // OS filter
 $query = "SELECT OSNAME FROM hardware WHERE OSNAME LIKE '%Windows%' AND DEVICEID<>'_SYSTEMGROUP_' AND DEVICEID<>'_DOWNLOADGROUP_' GROUP BY OSNAME ORDER BY OSNAME";
