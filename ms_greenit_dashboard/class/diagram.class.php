@@ -73,7 +73,6 @@ class Diagram
                         text: "<?= $title ?>"
                     },
                     legend: {
-                        display: true,
                         position: 'top'
                     },
                     animation: {
@@ -81,6 +80,11 @@ class Diagram
                         animateRotate: true
                     },
                     scales: {
+                        xAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }],
                         yAxes: [{
                             ticks: {
                                 beginAtZero: true
