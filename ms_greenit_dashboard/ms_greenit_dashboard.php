@@ -66,7 +66,7 @@ if ($protectedGet['cat'] == 'globalstats') {
     require_once("components/computerTypeStats/yesterdayStats.php");
     require_once("components/computerTypeStats/costStats.php");
 } else if ($protectedGet['cat'] == 'manufacturerstats') {
-    require_once("components/manufacturerStats/yesterdayStats.php");
+    require_once("components/manufacturerStats/costStats.php");
 }
 
 echo "</div>";

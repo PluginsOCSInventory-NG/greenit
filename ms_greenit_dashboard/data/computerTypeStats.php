@@ -1,20 +1,20 @@
 <?php
 //////////////////////////////
 // Get yesterday date
-$date = new DateTime("NOW");
-$date->modify('-1 day');
+$Date = new DateTime("NOW");
+$Date->modify('-1 day');
 //////////////////////////////
 
 //////////////////////////////
 // Get collect date
 $collectDate = new DateTime("NOW");
-$collectDate->modify("-" . $config->COLLECT_INFO_PERIOD . " days");
+$collectDate->modify("-" . $config->COLLECT_INFO_PERIOD - 1 . " days");
 //////////////////////////////
 
 //////////////////////////////
 // Get compare date
 $compareDate = new DateTime("NOW");
-$compareDate->modify("-" . $config->COMPARE_INFO_PERIOD . " days");
+$compareDate->modify("-" . $config->COMPARE_INFO_PERIOD - 1 . " days");
 //////////////////////////////
 
 //////////////////////////////
@@ -32,7 +32,7 @@ $yesterdayClientQuery = "
     SUM(greenit.UPTIME) AS totalUptime 
     FROM greenit 
     INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
-    WHERE greenit.DATE='" . $date->format("Y-m-d") . "' 
+    WHERE greenit.DATE='" . $Date->format("Y-m-d") . "' 
     AND hardware.OSNAME LIKE '%Windows%' 
     AND hardware.OSNAME NOT IN (SELECT hardware.OSNAME FROM hardware WHERE hardware.OSNAME LIKE '%Windows Server%') 
 ";
@@ -54,7 +54,7 @@ $yesterdayServerQuery = "
     SUM(greenit.UPTIME) AS totalUptime 
     FROM greenit 
     INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
-    WHERE greenit.DATE='" . $date->format("Y-m-d") . "' 
+    WHERE greenit.DATE='" . $Date->format("Y-m-d") . "' 
     AND hardware.OSNAME LIKE '%Windows Server%' 
 ";
 $yesterdayServerDataResult = mysql2_query_secure($yesterdayServerQuery, $_SESSION['OCS']["readServer"]);
@@ -76,7 +76,7 @@ $collectClientQuery = "
     SUM(greenit.UPTIME) AS totalUptime 
     FROM greenit 
     INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
-    WHERE greenit.DATE BETWEEN '" . $collectDate->format("Y-m-d") . "' AND '" . $date->format("Y-m-d") . "' 
+    WHERE greenit.DATE BETWEEN '" . $collectDate->format("Y-m-d") . "' AND '" . $Date->format("Y-m-d") . "' 
     AND hardware.OSNAME LIKE '%Windows%' 
     AND hardware.OSNAME NOT IN (SELECT hardware.OSNAME FROM hardware WHERE hardware.OSNAME LIKE '%Windows Server%') 
     GROUP BY greenit.DATE
@@ -100,7 +100,7 @@ $collectServerQuery = "
     SUM(greenit.UPTIME) AS totalUptime 
     FROM greenit 
     INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
-    WHERE greenit.DATE BETWEEN '" . $collectDate->format("Y-m-d") . "' AND '" . $date->format("Y-m-d") . "' 
+    WHERE greenit.DATE BETWEEN '" . $collectDate->format("Y-m-d") . "' AND '" . $Date->format("Y-m-d") . "' 
     AND hardware.OSNAME LIKE '%Windows Server%' 
     GROUP BY greenit.DATE
 ";
@@ -123,7 +123,7 @@ $compareClientQuery = "
     SUM(greenit.UPTIME) AS totalUptime 
     FROM greenit 
     INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
-    WHERE greenit.DATE BETWEEN '" . $compareDate->format("Y-m-d") . "' AND '" . $date->format("Y-m-d") . "' 
+    WHERE greenit.DATE BETWEEN '" . $compareDate->format("Y-m-d") . "' AND '" . $Date->format("Y-m-d") . "' 
     AND hardware.OSNAME LIKE '%Windows%' 
     AND hardware.OSNAME NOT IN (SELECT hardware.OSNAME FROM hardware WHERE hardware.OSNAME LIKE '%Windows Server%') 
     GROUP BY greenit.DATE
@@ -147,7 +147,7 @@ $compareServerQuery = "
     SUM(greenit.UPTIME) AS totalUptime 
     FROM greenit 
     INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
-    WHERE greenit.DATE BETWEEN '" . $compareDate->format("Y-m-d") . "' AND '" . $date->format("Y-m-d") . "' 
+    WHERE greenit.DATE BETWEEN '" . $compareDate->format("Y-m-d") . "' AND '" . $Date->format("Y-m-d") . "' 
     AND hardware.OSNAME LIKE '%Windows Server%' 
     GROUP BY greenit.DATE
 ";

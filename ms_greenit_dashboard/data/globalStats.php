@@ -2,20 +2,20 @@
 
 //////////////////////////////
 // Get yesterday date
-$date = new DateTime("NOW");
-$date->modify('-1 day');
+$Date = new DateTime("NOW");
+$Date->modify('-1 day');
 //////////////////////////////
 
 //////////////////////////////
 // Get collect date
 $collectDate = new DateTime("NOW");
-$collectDate->modify("-" . $config->COLLECT_INFO_PERIOD . " days");
+$collectDate->modify("-" . $config->COLLECT_INFO_PERIOD - 1 . " days");
 //////////////////////////////
 
 //////////////////////////////
 // Get compare date
 $compareDate = new DateTime("NOW");
-$compareDate->modify("-" . $config->COMPARE_INFO_PERIOD . " days");
+$compareDate->modify("-" . $config->COMPARE_INFO_PERIOD - 1 . " days");
 //////////////////////////////
 
 //////////////////////////////
@@ -32,7 +32,7 @@ $yesterdayQuery = "
     DATA 
     FROM greenit_stats 
     WHERE 
-    DATE='" . $date->format("Y-m-d") . "'
+    DATE='" . $Date->format("Y-m-d") . "'
 ";
 $yesterdayDataResult = mysql2_query_secure($yesterdayQuery, $_SESSION['OCS']["readServer"]);
 //////////////////////////////
@@ -45,7 +45,7 @@ $collectQuery = "
     DATA 
     FROM greenit_stats 
     WHERE 
-    DATE BETWEEN '" . $collectDate->format("Y-m-d") . "' AND '" . $date->format("Y-m-d") . "'
+    DATE BETWEEN '" . $collectDate->format("Y-m-d") . "' AND '" . $Date->format("Y-m-d") . "'
 ";
 $collectDataResult = mysql2_query_secure($collectQuery, $_SESSION['OCS']["readServer"]);
 //////////////////////////////
@@ -58,7 +58,7 @@ $compareQuery = "
     DATA 
     FROM greenit_stats 
     WHERE 
-    DATE BETWEEN '" . $compareDate->format("Y-m-d") . "' AND '" . $date->format("Y-m-d") . "'
+    DATE BETWEEN '" . $compareDate->format("Y-m-d") . "' AND '" . $Date->format("Y-m-d") . "'
 ";
 $compareDataResult = mysql2_query_secure($compareQuery, $_SESSION['OCS']["readServer"]);
 //////////////////////////////
@@ -111,7 +111,7 @@ $nbDevicesCollect = "
     COUNT(DISTINCT HARDWARE_ID) AS nbDevices 
     FROM greenit 
     WHERE 
-    DATE BETWEEN '" . $collectDate->format("Y-m-d") . "' AND '" . $date->format("Y-m-d") . "'
+    DATE BETWEEN '" . $collectDate->format("Y-m-d") . "' AND '" . $Date->format("Y-m-d") . "'
 ";
 $nbDevicesCollectResult = mysql2_query_secure($nbDevicesCollect, $_SESSION['OCS']["readServer"]);
 $numberDeviceCollect = mysqli_fetch_object($nbDevicesCollectResult)->nbDevices;
@@ -126,7 +126,7 @@ $nbDevicesCompare = "
     COUNT(DISTINCT HARDWARE_ID) AS nbDevices 
     FROM greenit 
     WHERE 
-    DATE BETWEEN '" . $compareDate->format("Y-m-d") . "' AND '" . $date->format("Y-m-d") . "'
+    DATE BETWEEN '" . $compareDate->format("Y-m-d") . "' AND '" . $Date->format("Y-m-d") . "'
 ";
 $nbDevicesCompareResult = mysql2_query_secure($nbDevicesCompare, $_SESSION['OCS']["readServer"]);
 $numberDeviceCompare = mysqli_fetch_object($nbDevicesCompareResult)->nbDevices;
