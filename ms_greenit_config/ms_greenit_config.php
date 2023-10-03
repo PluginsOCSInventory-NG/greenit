@@ -15,25 +15,22 @@ if (AJAX) {
     ob_start();
 }
 
-if(!isset($protectedPost['onglet'])){
+if (!isset($protectedPost['onglet'])) {
     $protectedPost['onglet'] = 1;
 }
 
-if(
-    isset($protectedPost[strtoupper(str_replace(" ", "_",$l->g(102001)))]) &&
-    isset($protectedPost[strtoupper(str_replace(" ", "_",$l->g(102002)))]) &&
-    isset($protectedPost[strtoupper(str_replace(" ", "_",$l->g(102003)))]) &&
-    isset($protectedPost[strtoupper(str_replace(" ", "_",$l->g(102004)))]) &&
-    isset($protectedPost[strtoupper(str_replace(" ", "_",$l->g(102005)))]) &&
-    isset($protectedPost[strtoupper(str_replace(" ", "_",$l->g(102006)))]) &&
-    isset($protectedPost[strtoupper(str_replace(" ", "_",$l->g(102007)))])
-)
-{
+if (
+    isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102001)))]) &&
+    isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102002)))]) &&
+    isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102003)))]) &&
+    isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102004)))]) &&
+    isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102005)))]) &&
+    isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102006)))]) &&
+    isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102007)))])
+) {
     // Data insert
     require_once("data/updateDB.php");
-}
-else
-{
+} else {
     // Config recovery
     require_once("data/config.php");
 }

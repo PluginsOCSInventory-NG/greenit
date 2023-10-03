@@ -13,6 +13,8 @@ $backgroundColor = $diagram->generateColorList(2, true);
 
 $label = "";
 $data = array();
+$data["CONSUMPTION"] = "";
+$data["COST"] = "";
 foreach ($manufacturers as $manufacturer) {
     if (isset($yesterdayData[$manufacturer])) {
         $label .= "'" . $manufacturer . "'";
@@ -53,7 +55,7 @@ $datasets = array(
 );
 
 $diagram->createCanvas("histogram_total_consumption", "12", "200");
-$diagram->createBarChart("histogram_total_consumption", "", $labels, $datasets, "horizontalBar");
+$diagram->createBarChart("histogram_total_consumption", "horizontalBar", "", $labels, $datasets);
 //////////////////////////////
 
 echo '<hr>';

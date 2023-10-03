@@ -1,20 +1,31 @@
 <?php
-
+//////////////////////////////
+// Get yesterday date
 $date = new DateTime("NOW");
 $date->modify('-1 day');
+//////////////////////////////
 
+//////////////////////////////
+// Get collect date
 $collectDate = new DateTime("NOW");
 $collectDate->modify("-" . $config->COLLECT_INFO_PERIOD . " days");
+//////////////////////////////
 
+//////////////////////////////
+// Get compare date
 $compareDate = new DateTime("NOW");
 $compareDate->modify("-" . $config->COMPARE_INFO_PERIOD . " days");
+//////////////////////////////
 
+//////////////////////////////
+// Create data array
 $yesterdayData = array();
 $collectData = array();
 $compareData = array();
+//////////////////////////////
 
 //////////////////////////////
-// Get yesterday consumption of all Windows Clients
+// Get yesterday consumption of all Windows clients
 $yesterdayClientQuery = "
     SELECT 
     SUM(greenit.CONSUMPTION) AS totalConsumption, 
@@ -36,7 +47,7 @@ while ($row = mysqli_fetch_object($yesterdayClientDataResult)) {
 //////////////////////////////
 
 //////////////////////////////
-// Get yesterday consumption of all Windows Servers
+// Get yesterday consumption of all Windows servers
 $yesterdayServerQuery = "
     SELECT 
     SUM(greenit.CONSUMPTION) AS totalConsumption, 
@@ -57,7 +68,7 @@ while ($row = mysqli_fetch_object($yesterdayServerDataResult)) {
 //////////////////////////////
 
 //////////////////////////////
-// Get collect consumption of all Windows Clients
+// Get collect consumption of all Windows clients
 $collectClientQuery = "
     SELECT 
     greenit.DATE, 
@@ -81,7 +92,7 @@ while ($row = mysqli_fetch_object($collectClientDataResult)) {
 //////////////////////////////
 
 //////////////////////////////
-// Get collect consumption of all Windows Servers
+// Get collect consumption of all Windows servers
 $collectServerQuery = "
     SELECT 
     greenit.DATE, 
@@ -104,7 +115,7 @@ while ($row = mysqli_fetch_object($collectServerDataResult)) {
 //////////////////////////////
 
 //////////////////////////////
-// Get compare consumption of all Windows Clients
+// Get compare consumption of all Windows clients
 $compareClientQuery = "
     SELECT 
     greenit.DATE, 
@@ -128,7 +139,7 @@ while ($row = mysqli_fetch_object($compareClientDataResult)) {
 //////////////////////////////
 
 //////////////////////////////
-// Get compare consumption of all Windows Servers
+// Get compare consumption of all Windows servers
 $compareServerQuery = "
     SELECT 
     greenit.DATE, 

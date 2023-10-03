@@ -11,12 +11,12 @@ echo '
     <div class="col-md-2">
         <ul class="nav nav-pills nav-stacked">
 ';
-            foreach ($menu->getChildren() as $menu_elem) {
-                if (isset($protectedGet['cat']) && $protectedGet['cat'] == explode('=',$menu_elem->getUrl())[2]) {
-                    echo$menu_renderer->setActiveLink($menu_elem->getUrl());
-                }
-                echo $menu_renderer->renderElem($menu_elem);
-            }
+foreach ($menu->getChildren() as $menu_elem) {
+    if (isset($protectedGet['cat']) && $protectedGet['cat'] == explode('=', $menu_elem->getUrl())[2]) {
+        echo $menu_renderer->setActiveLink($menu_elem->getUrl());
+    }
+    echo $menu_renderer->renderElem($menu_elem);
+}
 echo '
         </ul>
     </div>
