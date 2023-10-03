@@ -2,20 +2,20 @@
 
 //////////////////////////////
 // Get yesterday date
-$date = new DateTime("NOW");
-$date->modify('-1 day');
+$Date = new DateTime("NOW");
+$Date->modify('-1 day');
 //////////////////////////////
 
 //////////////////////////////
 // Get collect date
 $collectDate = new DateTime("NOW");
-$collectDate->modify("-" . $config->COLLECT_INFO_PERIOD . " days");
+$collectDate->modify("-" . $config->COLLECT_INFO_PERIOD - 1 . " days");
 //////////////////////////////
 
 //////////////////////////////
 // Get compare date
 $compareDate = new DateTime("NOW");
-$compareDate->modify("-" . $config->COMPARE_INFO_PERIOD . " days");
+$compareDate->modify("-" . $config->COMPARE_INFO_PERIOD - 1 . " days");
 //////////////////////////////
 
 //////////////////////////////
@@ -34,7 +34,7 @@ $yesterdayQuery = "
     FROM greenit 
     INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
     WHERE 
-    greenit.DATE='" . $date->format("Y-m-d") . "' 
+    greenit.DATE='" . $Date->format("Y-m-d") . "' 
     AND hardware.NAME='" . $protectedGet[strtolower(str_replace(" ", "_", $l->g(35)))] . "' 
 ";
 $yesterdayDataResult = mysql2_query_secure($yesterdayQuery, $_SESSION['OCS']["readServer"]);
@@ -50,7 +50,7 @@ $collectQuery = "
     FROM greenit 
     INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
     WHERE 
-    greenit.DATE BETWEEN '" . $collectDate->format("Y-m-d") . "' AND '" . $date->format("Y-m-d") . "' 
+    greenit.DATE BETWEEN '" . $collectDate->format("Y-m-d") . "' AND '" . $Date->format("Y-m-d") . "' 
     AND hardware.NAME='" . $protectedGet[strtolower(str_replace(" ", "_", $l->g(35)))] . "' 
 ";
 $collectDataResult = mysql2_query_secure($collectQuery, $_SESSION['OCS']["readServer"]);
@@ -66,7 +66,7 @@ $compareQuery = "
     FROM greenit 
     INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
     WHERE 
-    greenit.DATE BETWEEN '" . $compareDate->format("Y-m-d") . "' AND '" . $date->format("Y-m-d") . "' 
+    greenit.DATE BETWEEN '" . $compareDate->format("Y-m-d") . "' AND '" . $Date->format("Y-m-d") . "' 
     AND hardware.NAME='" . $protectedGet[strtolower(str_replace(" ", "_", $l->g(35)))] . "'  
 ";
 $compareDataResult = mysql2_query_secure($compareQuery, $_SESSION['OCS']["readServer"]);

@@ -72,9 +72,9 @@ class CronStats
     {
         echo $this->LogMessage("INFO", "Executing delta mode. Please wait during the treatment...");
         echo $this->LogMessage("INFO", "Communinication with database system...");
-        $date = new DateTime("NOW");
-        $date->modify("-1 day");
-        $selectQuery = "SELECT CONSUMPTION,UPTIME FROM greenit WHERE DATE = '" . $date->format("Y-m-d") . "' ORDER BY UPTIME;";
+        $Date = new DateTime("NOW");
+        $Date->modify("-1 day");
+        $selectQuery = "SELECT CONSUMPTION,UPTIME FROM greenit WHERE DATE = '" . $Date->format("Y-m-d") . "' ORDER BY UPTIME;";
 
         $consumptionRegex = "/[0-9]+|[0-9]+[.,][0-9]+/";
 
@@ -83,27 +83,27 @@ class CronStats
         echo $this->LogMessage("INFO", "Getting values to insert...");
         if ($query = mysql2_query_secure($selectQuery, $_SESSION['OCS']["readServer"])) {
             foreach ($query as $values) {
-                if (!isset($consumptionCount[$date->format("Y-m-d")]))
-                    $consumptionCount[$date->format("Y-m-d")] = 0;
-                if (!isset($uptimeCount[$date->format("Y-m-d")]))
-                    $uptimeCount[$date->format("Y-m-d")] = 0;
+                if (!isset($consumptionCount[$Date->format("Y-m-d")]))
+                    $consumptionCount[$Date->format("Y-m-d")] = 0;
+                if (!isset($uptimeCount[$Date->format("Y-m-d")]))
+                    $uptimeCount[$Date->format("Y-m-d")] = 0;
 
                 preg_match($consumptionRegex, $values["CONSUMPTION"], $consumptionMatches);
                 preg_match($uptimeRegex, $values["UPTIME"], $uptimeMatches);
                 foreach ($consumptionMatches as $match) {
-                    if (isset($data[$date->format("Y-m-d")]["totalConsumption"]))
-                        $data[$date->format("Y-m-d")]["totalConsumption"] += floatval(str_replace(",", ".", $match));
+                    if (isset($data[$Date->format("Y-m-d")]["totalConsumption"]))
+                        $data[$Date->format("Y-m-d")]["totalConsumption"] += floatval(str_replace(",", ".", $match));
                     else
-                        $data[$date->format("Y-m-d")]["totalConsumption"] = floatval(str_replace(",", ".", $match));
-                    $consumptionCount[$date->format("Y-m-d")]++;
+                        $data[$Date->format("Y-m-d")]["totalConsumption"] = floatval(str_replace(",", ".", $match));
+                    $consumptionCount[$Date->format("Y-m-d")]++;
                 }
                 foreach ($uptimeMatches as $match) {
                     if ($values["CONSUMPTION"] != "VM detected") {
-                        if (isset($data[$date->format("Y-m-d")]["totalUptime"]))
-                            $data[$date->format("Y-m-d")]["totalUptime"] += intval($match);
+                        if (isset($data[$Date->format("Y-m-d")]["totalUptime"]))
+                            $data[$Date->format("Y-m-d")]["totalUptime"] += intval($match);
                         else
-                            $data[$date->format("Y-m-d")]["totalUptime"] = intval($match);
-                        $uptimeCount[$date->format("Y-m-d")]++;
+                            $data[$Date->format("Y-m-d")]["totalUptime"] = intval($match);
+                        $uptimeCount[$Date->format("Y-m-d")]++;
                     }
                 }
             }
