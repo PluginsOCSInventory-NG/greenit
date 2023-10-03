@@ -26,7 +26,7 @@ $compareData = array();
 //////////////////////////////
 
 //////////////////////////////
-// Get yesterday consumption of GreenIT parc
+// Get yesterday data of GreenIT parc
 $yesterdayQuery = "
     SELECT 
     DATA 
@@ -38,7 +38,7 @@ $yesterdayDataResult = mysql2_query_secure($yesterdayQuery, $_SESSION['OCS']["re
 //////////////////////////////
 
 //////////////////////////////
-// Get collect consumption of GreenIT parc
+// Get collect data of GreenIT parc
 $collectQuery = "
     SELECT 
     DATE, 
@@ -51,7 +51,7 @@ $collectDataResult = mysql2_query_secure($collectQuery, $_SESSION['OCS']["readSe
 //////////////////////////////
 
 //////////////////////////////
-// Get compare consumption of GreenIT parc
+// Get compare data of GreenIT parc
 $compareQuery = "
     SELECT 
     DATE, 
@@ -65,7 +65,6 @@ $compareDataResult = mysql2_query_secure($compareQuery, $_SESSION['OCS']["readSe
 
 //////////////////////////////
 // Format yesterday data
-$yesterdayData = array();
 while ($row = mysqli_fetch_object($yesterdayDataResult)) {
     $yesterdayData["GLOBAL"] = json_decode($row->DATA);
 }
@@ -73,7 +72,6 @@ while ($row = mysqli_fetch_object($yesterdayDataResult)) {
 
 //////////////////////////////
 // Format collect data
-$collectData = array();
 while ($row = mysqli_fetch_object($collectDataResult)) {
     $collectData[$row->DATE] = json_decode($row->DATA);
 }
@@ -81,7 +79,6 @@ while ($row = mysqli_fetch_object($collectDataResult)) {
 
 //////////////////////////////
 // Format compare data
-$compareData = array();
 while ($row = mysqli_fetch_object($compareDataResult)) {
     $compareData[$row->DATE] = json_decode($row->DATA);
 }
