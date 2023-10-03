@@ -3,21 +3,21 @@
 $form_name = "costStats";
 echo open_form($form_name, '', '', 'form-horizontal');
 
-echo "<h4>".$l->g(102700)."</h4>";
+echo "<h4>" . $l->g(102700) . "</h4>";
 
 $table = '
 <div class="row">
     <div class="col-md-4" style="border: 1px solid #ddd; padding: 5px;">
-        <p style="font-size: 32px; font-weight:bold;">'.(isset($yesterdayData) ? $calculation->CostFormat($yesterdayData[0]->totalConsumption, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0').'</p>
-        <p style="color:#333; font-size: 15px;">'.$l->g(102701).'</p>
+        <p style="font-size: 32px; font-weight:bold;">' . (isset($yesterdayData) ? $calculation->CostFormat($yesterdayData[0]->totalConsumption, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0') . '</p>
+        <p style="color:#333; font-size: 15px;">' . $l->g(102701) . '</p>
     </div>
     <div class="col-md-4" style="border: 1px solid #ddd; padding: 5px;">
-        <p style="font-size: 32px; font-weight:bold;">'.(isset($limitedData) ? $calculation->CostFormat($sumConsumptionInPeriode, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0').'</p>
-        <p style="color:#333; font-size: 15px;">'.$l->g(102702)." ".$config->COLLECT_INFO_PERIOD." ".$l->g(102705).'</p>
+        <p style="font-size: 32px; font-weight:bold;">' . (isset($limitedData) ? $calculation->CostFormat($sumConsumptionInPeriode, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0') . '</p>
+        <p style="color:#333; font-size: 15px;">' . $l->g(102702) . " " . $config->COLLECT_INFO_PERIOD . " " . $l->g(102705) . '</p>
     </div>
     <div class="col-md-4" style="border: 1px solid #ddd; padding: 5px;">
-        <p style="font-size: 32px; font-weight:bold;">'.(isset($limitedData) ? $calculation->CostFormat($sumConsumptionCompare, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0').'</p>
-        <p style="color:#333; font-size: 15px;">'.$l->g(102702)." ".$config->COMPARE_INFO_PERIOD." ".$l->g(102705).'</p>
+        <p style="font-size: 32px; font-weight:bold;">' . (isset($limitedData) ? $calculation->CostFormat($sumConsumptionCompare, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0') . '</p>
+        <p style="color:#333; font-size: 15px;">' . $l->g(102702) . " " . $config->COMPARE_INFO_PERIOD . " " . $l->g(102705) . '</p>
     </div>
 </div>
 ';
@@ -28,55 +28,55 @@ echo "<br>";
 
 // ****************************************** Global stats for collect period  ******************************************/
 
-$labels = ["'".$l->g(102702)." ".$config->COLLECT_INFO_PERIOD." ".$l->g(102705)."'"];
+$labels = ["'" . $l->g(102702) . " " . $config->COLLECT_INFO_PERIOD . " " . $l->g(102705) . "'"];
 
 $labelsSettings = array(
     "consumption" => array(
         "backgroundColor" => "'#1941A5'",
         "data" => "[
-            '".str_replace(" "."kW/h", "", $calculation->ConsumptionFormat($sumConsumptionInPeriode, "kW/h", $config->CONSUMPTION_ROUND))."'
+            '" . str_replace(" " . "kW/h", "", $calculation->ConsumptionFormat($sumConsumptionInPeriode, "kW/h", $config->CONSUMPTION_ROUND)) . "'
             ]",
-        "label" => "'".$l->g(102706)." ("."kW/h".")'",
+        "label" => "'" . $l->g(102706) . " (" . "kW/h" . ")'",
         "type" => "'bar'"
     ),
     "cost" => array(
         "backgroundColor" => "'#AFD8F8'",
         "data" => "[
-            '".str_replace(" ".$config->COST_UNIT, "", $calculation->CostFormat($sumConsumptionInPeriode, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND))."'
+            '" . str_replace(" " . $config->COST_UNIT, "", $calculation->CostFormat($sumConsumptionInPeriode, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND)) . "'
             ]",
-        "label" => "'".$l->g(102707)." (".$config->COST_UNIT.")'",
+        "label" => "'" . $l->g(102707) . " (" . $config->COST_UNIT . ")'",
         "type" => "'bar'"
     )
 );
 
 $diagram->createCanvas("histogram_collect_period", "6", "200");
-$diagram->createBarChart("histogram_collect_period", "", $labels, $labelsSettings);
+$diagram->createBarChart("histogram_collect_period", "", $labels, $labelsSettings, "bar");
 
 // ****************************************** Global stats for compare period  ******************************************/
 
-$labels = ["'".$l->g(102702)." ".$config->COMPARE_INFO_PERIOD." ".$l->g(102705)."'"];
+$labels = ["'" . $l->g(102702) . " " . $config->COMPARE_INFO_PERIOD . " " . $l->g(102705) . "'"];
 
 $labelsSettings = array(
     "consumption" => array(
         "backgroundColor" => "'#1941A5'",
         "data" => "[
-            '".str_replace(" "."kW/h", "", $calculation->ConsumptionFormat($sumConsumptionCompare, "kW/h", $config->CONSUMPTION_ROUND))."'
+            '" . str_replace(" " . "kW/h", "", $calculation->ConsumptionFormat($sumConsumptionCompare, "kW/h", $config->CONSUMPTION_ROUND)) . "'
             ]",
-        "label" => "'".$l->g(102706)." ("."kW/h".")'",
+        "label" => "'" . $l->g(102706) . " (" . "kW/h" . ")'",
         "type" => "'bar'"
     ),
     "cost" => array(
         "backgroundColor" => "'#AFD8F8'",
         "data" => "[
-            '".str_replace(" ".$config->COST_UNIT, "", $calculation->CostFormat($sumConsumptionCompare, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND))."'
+            '" . str_replace(" " . $config->COST_UNIT, "", $calculation->CostFormat($sumConsumptionCompare, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND)) . "'
             ]",
-        "label" => "'".$l->g(102707)." (".$config->COST_UNIT.")'",
+        "label" => "'" . $l->g(102707) . " (" . $config->COST_UNIT . ")'",
         "type" => "'bar'"
     )
 );
 
 $diagram->createCanvas("histogram_compare_period", "6", "200");
-$diagram->createBarChart("histogram_compare_period", "", $labels, $labelsSettings);
+$diagram->createBarChart("histogram_compare_period", "", $labels, $labelsSettings, "bar");
 
 echo close_form();
 

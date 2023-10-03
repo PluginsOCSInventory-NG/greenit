@@ -15,14 +15,14 @@ $labels = [
 ];
 
 $data = "";
-$string = "";
 foreach ($yesterdayData as $group => $value) {
-    $string .= '"' . str_replace(" " . $config->COST_UNIT, "", $calculation->CostFormat(floatval($value->totalConsumption), "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND)) . '"';
-
+    if (isset($yesterdayData[$group]->totalConsumption))
+        $data .= '"' . str_replace(" " . $config->COST_UNIT, "", $calculation->CostFormat($yesterdayData[$group]->totalConsumption, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND)) . '"';
+    else
+        $data .= "0";
     if (next($yesterdayData) == true)
-        $string .= ", ";
+        $data .= ", ";
 }
-$data = $string;
 
 $backgroundColor = $diagram->generateColorList($nbLabels);
 

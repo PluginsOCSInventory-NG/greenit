@@ -150,8 +150,7 @@ while ($row = mysqli_fetch_object($compareServerDataResult)) {
 }
 //////////////////////////////
 
-if (count($yesterdayData) == 0)
-    $yesterdayData = null;
+
 if (count($collectData) == 0)
     $collectData = null;
 if (count($compareData) == 0)
@@ -163,6 +162,7 @@ $sumConsumptionCollect = array();
 
 if (isset($collectData)) {
     foreach ($collectData as $group => $date) {
+        $sumConsumptionCollect[$group] = 0;
         foreach ($date as $value) {
             $sumConsumptionCollect[$group] += $value->totalConsumption;
         }
@@ -176,6 +176,7 @@ $sumConsumptionCompare = array();
 
 if (isset($compareData)) {
     foreach ($compareData as $group => $date) {
+        $sumConsumptionCompare[$group] = 0;
         foreach ($date as $value) {
             $sumConsumptionCompare[$group] += $value->totalConsumption;
         }
