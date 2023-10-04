@@ -52,8 +52,6 @@ if (
 
 ajaxtab_entete_fixe($list_fields_filtered_search, $default_fields_filtered_search, $tab_options_filtered_search, $list_col_cant_del_filtered_search);
 
-//////////////////////////////
-// Filter
 echo '
         <button type="button" data-toggle="collapse" data-target="#filter" class="btn">' . $l->g(735) . '</button>
         <div id="filter" class="collapse">
@@ -150,7 +148,6 @@ echo '
     </div>
 </div>
 ';
-//////////////////////////////
 
 echo close_form();
 
