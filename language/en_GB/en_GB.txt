@@ -15,8 +15,9 @@
 102101 machines in the GreenIT parc of
 102102 Global Statistics
 102103 Filtered Statistics
-102104 OS Statistics
-102105 Manufacturer Statistics
+102104 Operating system Statistics
+102105 Computer type Statistics
+102106 Manufacturer Statistics
 
 102600 Yesterday's Statistics
 102601 Total consumption
