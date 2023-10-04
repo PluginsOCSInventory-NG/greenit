@@ -61,7 +61,7 @@ echo '
 <div class="row">
     <div class="col-md-2"></div>
 ';
-$diagram->createCanvas("histogram_total_consumption", "8", "150");
+$diagram->createCanvas("histogram_total_consumption", "8", "125");
 echo '
     <div class="col-md-2"></div>
 </div>
