@@ -161,12 +161,6 @@ while ($row = mysqli_fetch_object($compareServerDataResult)) {
 }
 //////////////////////////////
 
-
-if (count($collectData) == 0)
-    $collectData = null;
-if (count($compareData) == 0)
-    $compareData = null;
-
 //////////////////////////////
 // Sum of all data per period Collect
 $sumConsumptionCollect = array();

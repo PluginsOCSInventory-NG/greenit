@@ -16,10 +16,7 @@ $labels = [
 
 $data = "";
 foreach ($yesterdayData as $group => $value) {
-    if (isset($yesterdayData[$group]->totalConsumption))
-        $data .= '"' . str_replace(" " . $config->COST_UNIT, "", $calculation->CostFormat($yesterdayData[$group]->totalConsumption, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND)) . '"';
-    else
-        $data .= "0";
+    $data .= '"' . str_replace(" " . $config->COST_UNIT, "", (isset($yesterdayData[$group]->totalConsumption) && $yesterdayData[$group]->totalConsumption != NULL ? $calculation->CostFormat($yesterdayData[$group]->totalConsumption, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : 0)) . '"';
     if (next($yesterdayData) == true)
         $data .= ", ";
 }
@@ -46,14 +43,14 @@ $labels = [
 ];
 
 $data = "";
-$string = "";
-foreach ($sumConsumptionCollect as $group => $value) {
-    $string .= '"' . str_replace(" " . $config->COST_UNIT, "", $calculation->CostFormat($value, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND)) . '"';
-
-    if (next($sumConsumptionCollect) == true)
-        $string .= ", ";
-}
-$data = $string;
+if (is_defined($sumConsumptionCollect)) {
+    foreach ($sumConsumptionCollect as $group => $value) {
+        $data .= '"' . str_replace(" " . $config->COST_UNIT, "", (isset($value) && $value != NULL ? $calculation->CostFormat($value, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : "0")) . '"';
+        if (next($sumConsumptionCollect) == true)
+            $data .= ", ";
+    }
+} else
+    $data = '"0","0"';
 
 $backgroundColor = $diagram->generateColorList($nbLabels);
 
@@ -77,14 +74,15 @@ $labels = [
 ];
 
 $data = "";
-$string = "";
-foreach ($sumConsumptionCompare as $group => $value) {
-    $string .= '"' . str_replace(" " . $config->COST_UNIT, "", $calculation->CostFormat($value, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND)) . '"';
+if (is_defined($sumConsumptionCollect)) {
+    foreach ($sumConsumptionCompare as $group => $value) {
+        $data .= '"' . str_replace(" " . $config->COST_UNIT, "", (isset($value) && $value != NULL ? $calculation->CostFormat($value, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : "0")) . '"';
 
-    if (next($sumConsumptionCompare) == true)
-        $string .= ", ";
-}
-$data = $string;
+        if (next($sumConsumptionCompare) == true)
+            $data .= ", ";
+    }
+} else
+    $data = '"0","0"';
 
 $backgroundColor = $diagram->generateColorList($nbLabels);
 

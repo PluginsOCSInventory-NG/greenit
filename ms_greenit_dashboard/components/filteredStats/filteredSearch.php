@@ -1,6 +1,9 @@
 <?php
 
 $form_name = "filteredSearch";
+
+//////////////////////////////
+// Table settings
 $table_name = $form_name;
 $tab_options_filtered_search = $protectedPost;
 $tab_options_filtered_search['form_name'] = $form_name;
@@ -17,6 +20,7 @@ $default_fields_filtered_search = $list_fields_filtered_search;
 
 $tab_options_filtered_search['LIEN_LBL'][$l->g(23)] = 'index.php?function=ms_greenit_dashboard&cat=filteredstats&' . strtolower(str_replace(" ", "_", $l->g(23))) . '=';
 $tab_options_filtered_search['LIEN_CHAMP'][$l->g(23)] = 'NAME';
+//////////////////////////////
 
 echo open_form($form_name, '', '', 'form-horizontal');
 
@@ -27,6 +31,8 @@ echo '
     <div class="col-sm-12">
 ';
 
+//////////////////////////////
+// Show generate filtered stats + warning message about filter on
 if (
     is_defined($_SESSION['GREENIT']['FILTER']['OS']) ||
     is_defined($_SESSION['GREENIT']['FILTER']['GROUP']) ||
@@ -46,21 +52,21 @@ if (
 
 ajaxtab_entete_fixe($list_fields_filtered_search, $default_fields_filtered_search, $tab_options_filtered_search, $list_col_cant_del_filtered_search);
 
-// ****************************************** FILTER ******************************************/
+//////////////////////////////
+// Filter
 echo '
         <button type="button" data-toggle="collapse" data-target="#filter" class="btn">' . $l->g(735) . '</button>
         <div id="filter" class="collapse">
 ';
 
-// FILTER OS/GROUP/TAG/ASSET
-
+//////////////////////////////
 // OS
 echo '
-        <div class="form-group">
-            <label class="control-label col-sm-2" for="OS">' . $l->g(25) . '</label>
-            <div class="col-sm-3">
-                <select name="OS" id="OS" class="form-control">
-';
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="OS">' . $l->g(25) . '</label>
+                <div class="col-sm-3">
+                    <select name="OS" id="OS" class="form-control">
+    ';
 foreach ($os as $key => $name) {
     if (isset($_SESSION['GREENIT']['FILTER']['OS']) && $_SESSION['GREENIT']['FILTER']['OS'] == $key) {
         echo "<option value='" . $key . "' selected>" . $name . "</option>";
@@ -69,16 +75,18 @@ foreach ($os as $key => $name) {
     }
 }
 echo '
-                </select>
-            </div>
-';
+                    </select>
+                </div>
+    ';
+//////////////////////////////
 
+//////////////////////////////
 // GROUP
 echo '
-            <label class="control-label col-sm-2" for="GROUP">' . $l->g(583) . '</label>
-            <div class="col-sm-3">
-                <select name="GROUP" id="GROUP" class="form-control">
-';
+                <label class="control-label col-sm-2" for="GROUP">' . $l->g(583) . '</label>
+                <div class="col-sm-3">
+                    <select name="GROUP" id="GROUP" class="form-control">
+    ';
 foreach ($group as $key => $name) {
     if (isset($_SESSION['GREENIT']['FILTER']['GROUP']) && $_SESSION['GREENIT']['FILTER']['GROUP'] == $key) {
         echo "<option value='" . $key . "' selected>" . $name . "</option>";
@@ -87,18 +95,20 @@ foreach ($group as $key => $name) {
     }
 }
 echo '
-                </select>
+                    </select>
+                </div>
             </div>
-        </div>
-';
+    ';
+//////////////////////////////
 
+//////////////////////////////
 // TAG
 echo '
-        <div class="form-group">
-            <label class="control-label col-sm-2" for="TAG">' . $l->g(1425) . '</label>
-            <div class="col-sm-3">
-                <select name="TAG" id="TAG" class="form-control">
-';
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="TAG">' . $l->g(1425) . '</label>
+                <div class="col-sm-3">
+                    <select name="TAG" id="TAG" class="form-control">
+    ';
 foreach ($tag as $key => $name) {
     if (isset($_SESSION['GREENIT']['FILTER']['TAG']) && $_SESSION['GREENIT']['FILTER']['TAG'] == $key) {
         echo "<option value='" . $key . "' selected>" . $name . "</option>";
@@ -107,16 +117,18 @@ foreach ($tag as $key => $name) {
     }
 }
 echo '
-                </select>
-            </div>
-';
+                    </select>
+                </div>
+    ';
+//////////////////////////////
 
+//////////////////////////////
 // ASSET CATEGORY
 echo '
-            <label class="control-label col-sm-2" for="ASSET">' . $l->g(2132) . '</label>
-            <div class="col-sm-3">
-                <select name="ASSET" id="ASSET" class="form-control">
-';
+                <label class="control-label col-sm-2" for="ASSET">' . $l->g(2132) . '</label>
+                <div class="col-sm-3">
+                    <select name="ASSET" id="ASSET" class="form-control">
+    ';
 foreach ($asset as $key => $name) {
     if (isset($_SESSION['GREENIT']['FILTER']['ASSET']) && $_SESSION['GREENIT']['FILTER']['ASSET'] == $key) {
         echo "<option value='" . $key . "' selected>" . $name . "</option>";
@@ -125,11 +137,12 @@ foreach ($asset as $key => $name) {
     }
 }
 echo '
-                </select>
+                    </select>
+                </div>
             </div>
-        </div>
-';
-// END FILTER OS/GROUP/TAG/ASSET
+    ';
+//////////////////////////////
+
 
 echo '
         <input type="submit" class="btn btn-success" value="' . $l->g(393) . '" name="SUBMIT_FORM">
@@ -137,6 +150,7 @@ echo '
     </div>
 </div>
 ';
+//////////////////////////////
 
 echo close_form();
 
