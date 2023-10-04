@@ -10,7 +10,7 @@ echo "<h4>" . $l->g(102700) . "</h4>";
 $table = '
 <div class="row">
     <div class="col-md-4" style="border: 1px solid #ddd; padding: 5px;">
-        <p style="font-size: 32px; font-weight:bold;">' . (isset($yesterdayData) ? $calculation->CostFormat($yesterdayData[0]->totalConsumption, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0') . '</p>
+        <p style="font-size: 32px; font-weight:bold;">' . (isset($yesterdayData["FILTERED"]) && $yesterdayData["FILTERED"] != NULL ? $calculation->CostFormat($yesterdayData["FILTERED"]->totalConsumption, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0') . '</p>
         <p style="color:#333; font-size: 15px;">' . $l->g(102701) . '</p>
     </div>
     <div class="col-md-4" style="border: 1px solid #ddd; padding: 5px;">

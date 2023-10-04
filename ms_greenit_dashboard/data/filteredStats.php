@@ -75,7 +75,7 @@ $compareDataResult = mysql2_query_secure($compareQuery, $_SESSION['OCS']["readSe
 //////////////////////////////
 // Format yesterday data
 while ($row = mysqli_fetch_object($yesterdayDataResult)) {
-    $yesterdayData[] = (object) array(
+    $yesterdayData["FILTERED"] = (object) array(
         "totalConsumption" => $row->CONSUMPTION,
         "totalUptime" => $row->UPTIME,
     );
