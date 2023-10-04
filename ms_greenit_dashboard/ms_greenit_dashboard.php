@@ -38,7 +38,10 @@ if ($protectedGet['cat'] == 'globalstats') {
     require_once('data/globalStats.php');
 } else if ($protectedGet['cat'] == 'filteredstats') {
     require_once('data/filteredSearch.php');
-    if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(35)))]))
+    if (
+        isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))]) ||
+        isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))])
+    )
         require_once('data/filteredStats.php');
 } else if ($protectedGet['cat'] == 'computertypestats') {
     require_once('data/computerTypeStats.php');
@@ -57,7 +60,10 @@ if ($protectedGet['cat'] == 'globalstats') {
     require_once("components/globalStats/yesterdayStats.php");
     require_once("components/globalStats/costStats.php");
 } else if ($protectedGet['cat'] == 'filteredstats') {
-    if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(35)))])) {
+    if (
+        isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))]) ||
+        isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))])
+    ) {
         require_once("components/filteredStats/yesterdayStats.php");
         require_once("components/filteredStats/costStats.php");
     }

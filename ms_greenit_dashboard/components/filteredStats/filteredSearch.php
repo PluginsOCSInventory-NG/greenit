@@ -7,7 +7,7 @@ $tab_options_filtered_search['form_name'] = $form_name;
 $tab_options_filtered_search['table_name'] = $table_name;
 
 $list_fields_filtered_search = array(
-    $l->g(35) => 'NAME',
+    $l->g(23) => 'NAME',
     $l->g(190) . ' ' . strtoupper($l->g(1425)) => 'TAG',
     $l->g(25) => 'OS_NAME',
 );
@@ -15,8 +15,8 @@ $list_fields_filtered_search = array(
 $list_col_cant_del_filtered_search = $list_fields_filtered_search;
 $default_fields_filtered_search = $list_fields_filtered_search;
 
-$tab_options_filtered_search['LIEN_LBL'][$l->g(35)] = 'index.php?function=ms_greenit_dashboard&cat=filteredstats&' . strtolower(str_replace(" ", "_", $l->g(35))) . '=';
-$tab_options_filtered_search['LIEN_CHAMP'][$l->g(35)] = 'NAME';
+$tab_options_filtered_search['LIEN_LBL'][$l->g(23)] = 'index.php?function=ms_greenit_dashboard&cat=filteredstats&' . strtolower(str_replace(" ", "_", $l->g(23))) . '=';
+$tab_options_filtered_search['LIEN_CHAMP'][$l->g(23)] = 'NAME';
 
 echo open_form($form_name, '', '', 'form-horizontal');
 
@@ -35,7 +35,12 @@ if (
 ) {
     msg_warning($l->g(767));
     echo '
-    <a href="index.php?function=ms_greenit_dashboard&cat=filteredstats&' . strtolower(str_replace(" ", "_", $l->g(35))) . '=" class="btn btn-success">' . $l->g(102801) . '</a>
+        <a 
+            href="index.php?function=ms_greenit_dashboard&cat=filteredstats&' . strtolower(str_replace(" ", "_", $l->g(729))) . '=' . $computers . '" 
+            class="btn btn-success"
+        >
+            ' . $l->g(102801) . '
+        </a>
     ';
 }
 

@@ -27,53 +27,38 @@ $compareData = array();
 
 //////////////////////////////
 // Get yesterday data of filtered GreenIT parc
-$yesterdayQuery = "
-    SELECT 
-    greenit.CONSUMPTION, 
-    greenit.UPTIME 
-    FROM greenit 
-    INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
-    WHERE 
-    greenit.DATE='" . $Date->format("Y-m-d") . "' 
-    AND hardware.NAME='" . $protectedGet[strtolower(str_replace(" ", "_", $l->g(35)))] . "' 
-";
+if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))])) {
+    $yesterdayQuery = "
+        SELECT 
+        greenit.CONSUMPTION, 
+        greenit.UPTIME 
+        FROM greenit 
+        INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
+        WHERE 
+        greenit.DATE='" . $Date->format("Y-m-d") . "' 
+        AND hardware.NAME='" . $protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))] . "' 
+    ";
+} else if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))])) {
+    $computersData = explode(",", $protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))]);
+    $yesterdayQuery = "
+        SELECT 
+        SUM(greenit.CONSUMPTION) AS CONSUMPTION, 
+        SUM(greenit.UPTIME) AS UPTIME 
+        FROM greenit 
+        INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
+        WHERE 
+        greenit.DATE='" . $Date->format("Y-m-d") . "' 
+    ";
+    $yesterdayQuery .= "AND (";
+    foreach ($computersData as $computerName) {
+        $yesterdayQuery .= "hardware.NAME='" . $computerName . "'";
+        if (next($computersData))
+            $yesterdayQuery .= " OR ";
+    }
+    reset($computersData);
+    $yesterdayQuery .= ")";
+}
 $yesterdayDataResult = mysql2_query_secure($yesterdayQuery, $_SESSION['OCS']["readServer"]);
-//////////////////////////////
-
-//////////////////////////////
-// Get collect data of filtered GreenIT parc
-$collectQuery = "
-    SELECT 
-    greenit.DATE, 
-    greenit.CONSUMPTION, 
-    greenit.UPTIME 
-    FROM greenit 
-    INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
-    WHERE 
-    greenit.DATE BETWEEN '" . $collectDate->format("Y-m-d") . "' AND '" . $Date->format("Y-m-d") . "' 
-    AND hardware.NAME='" . $protectedGet[strtolower(str_replace(" ", "_", $l->g(35)))] . "' 
-";
-$collectDataResult = mysql2_query_secure($collectQuery, $_SESSION['OCS']["readServer"]);
-//////////////////////////////
-
-//////////////////////////////
-// Get compare data of filtered GreenIT parc
-$compareQuery = "
-    SELECT 
-    greenit.DATE, 
-    greenit.CONSUMPTION, 
-    greenit.UPTIME 
-    FROM greenit 
-    INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
-    WHERE 
-    greenit.DATE BETWEEN '" . $compareDate->format("Y-m-d") . "' AND '" . $Date->format("Y-m-d") . "' 
-    AND hardware.NAME='" . $protectedGet[strtolower(str_replace(" ", "_", $l->g(35)))] . "'  
-";
-$compareDataResult = mysql2_query_secure($compareQuery, $_SESSION['OCS']["readServer"]);
-//////////////////////////////
-
-//////////////////////////////
-// Format yesterday data
 while ($row = mysqli_fetch_object($yesterdayDataResult)) {
     $yesterdayData["FILTERED"] = (object) array(
         "totalConsumption" => $row->CONSUMPTION,
@@ -83,7 +68,41 @@ while ($row = mysqli_fetch_object($yesterdayDataResult)) {
 //////////////////////////////
 
 //////////////////////////////
-// Format collect data
+// Get collect data of filtered GreenIT parc
+if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))])) {
+    $collectQuery = "
+        SELECT 
+        greenit.DATE, 
+        greenit.CONSUMPTION, 
+        greenit.UPTIME 
+        FROM greenit 
+        INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
+        WHERE 
+        greenit.DATE BETWEEN '" . $collectDate->format("Y-m-d") . "' AND '" . $Date->format("Y-m-d") . "' 
+        AND hardware.NAME='" . $protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))] . "' 
+    ";
+} else if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))])) {
+    $computersData = explode(",", $protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))]);
+    $collectQuery = "
+        SELECT 
+        greenit.DATE, 
+        SUM(greenit.CONSUMPTION) AS CONSUMPTION, 
+        SUM(greenit.UPTIME) AS UPTIME 
+        FROM greenit 
+        INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
+        WHERE 
+        greenit.DATE BETWEEN '" . $collectDate->format("Y-m-d") . "' AND '" . $Date->format("Y-m-d") . "' 
+    ";
+    $collectQuery .= "AND (";
+    foreach ($computersData as $computerName) {
+        $collectQuery .= "hardware.NAME='" . $computerName . "'";
+        if (next($computersData))
+            $collectQuery .= " OR ";
+    }
+    reset($computersData);
+    $collectQuery .= ")";
+}
+$collectDataResult = mysql2_query_secure($collectQuery, $_SESSION['OCS']["readServer"]);
 while ($row = mysqli_fetch_object($collectDataResult)) {
     $collectData[$row->DATE] = (object) array(
         "totalConsumption" => $row->CONSUMPTION,
@@ -93,7 +112,41 @@ while ($row = mysqli_fetch_object($collectDataResult)) {
 //////////////////////////////
 
 //////////////////////////////
-// Format compare data
+// Get compare data of filtered GreenIT parc
+if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))])) {
+    $compareQuery = "
+    SELECT 
+    greenit.DATE, 
+    greenit.CONSUMPTION, 
+    greenit.UPTIME 
+    FROM greenit 
+    INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
+    WHERE 
+    greenit.DATE BETWEEN '" . $compareDate->format("Y-m-d") . "' AND '" . $Date->format("Y-m-d") . "' 
+    AND hardware.NAME='" . $protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))] . "'  
+";
+} else if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))])) {
+    $computersData = explode(",", $protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))]);
+    $compareQuery = "
+        SELECT 
+        greenit.DATE, 
+        SUM(greenit.CONSUMPTION) AS CONSUMPTION, 
+        SUM(greenit.UPTIME) AS UPTIME 
+        FROM greenit 
+        INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
+        WHERE 
+        greenit.DATE BETWEEN '" . $compareDate->format("Y-m-d") . "' AND '" . $Date->format("Y-m-d") . "' 
+    ";
+    $compareQuery .= "AND (";
+    foreach ($computersData as $computerName) {
+        $compareQuery .= "hardware.NAME='" . $computerName . "'";
+        if (next($computersData))
+            $compareQuery .= " OR ";
+    }
+    reset($computersData);
+    $compareQuery .= ")";
+}
+$compareDataResult = mysql2_query_secure($compareQuery, $_SESSION['OCS']["readServer"]);
 while ($row = mysqli_fetch_object($compareDataResult)) {
     $compareData[$row->DATE] = (object) array(
         "totalConsumption" => $row->CONSUMPTION,
