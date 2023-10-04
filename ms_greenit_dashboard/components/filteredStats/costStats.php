@@ -33,9 +33,11 @@ echo "<br>";
 // Show cost of device between collect period diagram
 $labels = ["'" . $l->g(102702) . " " . $config->COLLECT_INFO_PERIOD . " " . $l->g(102705) . "'"];
 
+$backgroundColor = $diagram->generateColorList(2, true);
+
 $labelsSettings = array(
     "consumption" => array(
-        "backgroundColor" => "'#1941A5'",
+        "backgroundColor" => $backgroundColor[0],
         "data" => "[
             '" . str_replace(" " . "kW/h", "", (isset($collectData) ? $calculation->ConsumptionFormat($sumConsumptionCollect, "kW/h", $config->CONSUMPTION_ROUND) : "0")) . "'
             ]",
@@ -43,7 +45,7 @@ $labelsSettings = array(
         "type" => "'bar'"
     ),
     "cost" => array(
-        "backgroundColor" => "'#AFD8F8'",
+        "backgroundColor" => $backgroundColor[1],
         "data" => "[
             '" . str_replace(" " . $config->COST_UNIT, "", (isset($collectData) ? $calculation->CostFormat($sumConsumptionCollect, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : "0")) . "'
             ]",
@@ -60,9 +62,11 @@ $diagram->createBarChart("histogram_collect_period", "bar", "", $labels, $labels
 // Show cost of devices between compare period diagram
 $labels = ["'" . $l->g(102702) . " " . $config->COMPARE_INFO_PERIOD . " " . $l->g(102705) . "'"];
 
+$backgroundColor = $diagram->generateColorList(2, true);
+
 $labelsSettings = array(
     "consumption" => array(
-        "backgroundColor" => "'#1941A5'",
+        "backgroundColor" => $backgroundColor[0],
         "data" => "[
             '" . str_replace(" " . "kW/h", "", (isset($collectData) ? $calculation->ConsumptionFormat($sumConsumptionCompare, "kW/h", $config->CONSUMPTION_ROUND) : "0")) . "'
             ]",
@@ -70,7 +74,7 @@ $labelsSettings = array(
         "type" => "'bar'"
     ),
     "cost" => array(
-        "backgroundColor" => "'#AFD8F8'",
+        "backgroundColor" => $backgroundColor[1],
         "data" => "[
             '" . str_replace(" " . $config->COST_UNIT, "", (isset($collectData) ? $calculation->CostFormat($sumConsumptionCompare, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : "0")) . "'
             ]",
