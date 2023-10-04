@@ -37,7 +37,7 @@ $labelsSettings = array(
     "consumption" => array(
         "backgroundColor" => "'#1941A5'",
         "data" => "[
-            '" . str_replace(" " . "kW/h", "", $calculation->ConsumptionFormat($sumConsumptionCollect, "kW/h", $config->CONSUMPTION_ROUND)) . "'
+            '" . str_replace(" " . "kW/h", "", (isset($collectData) ? $calculation->ConsumptionFormat($sumConsumptionCollect, "kW/h", $config->CONSUMPTION_ROUND) : "0")) . "'
             ]",
         "label" => "'" . $l->g(102706) . " (" . "kW/h" . ")'",
         "type" => "'bar'"
@@ -45,7 +45,7 @@ $labelsSettings = array(
     "cost" => array(
         "backgroundColor" => "'#AFD8F8'",
         "data" => "[
-            '" . str_replace(" " . $config->COST_UNIT, "", $calculation->CostFormat($sumConsumptionCollect, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND)) . "'
+            '" . str_replace(" " . $config->COST_UNIT, "", (isset($collectData) ? $calculation->CostFormat($sumConsumptionCollect, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : "0")) . "'
             ]",
         "label" => "'" . $l->g(102707) . " (" . $config->COST_UNIT . ")'",
         "type" => "'bar'"
@@ -64,7 +64,7 @@ $labelsSettings = array(
     "consumption" => array(
         "backgroundColor" => "'#1941A5'",
         "data" => "[
-            '" . str_replace(" " . "kW/h", "", $calculation->ConsumptionFormat($sumConsumptionCompare, "kW/h", $config->CONSUMPTION_ROUND)) . "'
+            '" . str_replace(" " . "kW/h", "", (isset($collectData) ? $calculation->ConsumptionFormat($sumConsumptionCompare, "kW/h", $config->CONSUMPTION_ROUND) : "0")) . "'
             ]",
         "label" => "'" . $l->g(102706) . " (" . "kW/h" . ")'",
         "type" => "'bar'"
@@ -72,7 +72,7 @@ $labelsSettings = array(
     "cost" => array(
         "backgroundColor" => "'#AFD8F8'",
         "data" => "[
-            '" . str_replace(" " . $config->COST_UNIT, "", $calculation->CostFormat($sumConsumptionCompare, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND)) . "'
+            '" . str_replace(" " . $config->COST_UNIT, "", (isset($collectData) ? $calculation->CostFormat($sumConsumptionCompare, "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : "0")) . "'
             ]",
         "label" => "'" . $l->g(102707) . " (" . $config->COST_UNIT . ")'",
         "type" => "'bar'"
