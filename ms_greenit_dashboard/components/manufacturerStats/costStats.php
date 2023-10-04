@@ -158,4 +158,4 @@ $diagram->createBarChart("compare_cost_diagram", "bar", $l->g(102702) . ' ' . $c
 
 echo close_form();
 
-?>)
+?>
