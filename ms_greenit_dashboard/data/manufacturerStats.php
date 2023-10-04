@@ -1,19 +1,31 @@
 <?php
 
+//////////////////////////////
+// Get yesterday date
 $Date = new DateTime("NOW");
 $Date->modify('-1 day');
+//////////////////////////////
 
+//////////////////////////////
+// Get collect date
 $collectDate = new DateTime("NOW");
 $collectDate->modify("-" . $config->COLLECT_INFO_PERIOD - 1 . " days");
+//////////////////////////////
 
+//////////////////////////////
+// Get compare date
 $compareDate = new DateTime("NOW");
 $compareDate->modify("-" . $config->COMPARE_INFO_PERIOD - 1 . " days");
+//////////////////////////////
 
+//////////////////////////////
+// Create data array
 $manufacturers = array();
-
 $yesterdayData = array();
 $collectData = array();
 $compareData = array();
+//////////////////////////////
+
 
 //////////////////////////////
 // Get manufacturer
