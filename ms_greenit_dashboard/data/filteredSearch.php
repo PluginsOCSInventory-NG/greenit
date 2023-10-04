@@ -6,7 +6,7 @@ if (isset($protectedPost['RESET'])) {
     if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))]))
         unset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))]);
     if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))]))
-        $protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))];
+        unset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))]);
     unset($protectedPost['OS']);
     unset($protectedPost['GROUP']);
     unset($protectedPost['TAG']);
@@ -24,7 +24,7 @@ if (isset($protectedPost['SUBMIT_FORM'])) {
     if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))]))
         unset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))]);
     if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))]))
-        $protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))];
+        unset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))]);
     $tab_options['CACHE'] = 'RESET';
 }
 //////////////////////////////
