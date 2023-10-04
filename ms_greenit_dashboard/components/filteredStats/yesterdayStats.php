@@ -5,6 +5,8 @@ echo open_form($form_name, '', '', 'form-horizontal');
 
 echo "<h4>" . $l->g(102600) . "</h4>";
 
+//////////////////////////////
+// Show yesterday stats
 $table = '
 <div class="row">
     <div class="col-md-6" style="border: 1px solid #ddd; padding: 5px;">
@@ -19,7 +21,10 @@ $table = '
 ';
 
 echo $table;
+//////////////////////////////
+
 echo "<hr>";
+
 echo close_form();
 
 ?>
