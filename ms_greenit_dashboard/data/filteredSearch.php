@@ -3,7 +3,10 @@
 //////////////////////////////
 // If reset button clicked, reset session variables
 if (isset($protectedPost['RESET'])) {
-    unset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))]);
+    if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))]))
+        unset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))]);
+    if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))]))
+        $protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))];
     unset($protectedPost['OS']);
     unset($protectedPost['GROUP']);
     unset($protectedPost['TAG']);
@@ -18,7 +21,10 @@ if (isset($protectedPost['RESET'])) {
 //////////////////////////////
 // If formular submited, reset cache
 if (isset($protectedPost['SUBMIT_FORM'])) {
-    unset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))]);
+    if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))]))
+        unset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))]);
+    if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))]))
+        $protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))];
     $tab_options['CACHE'] = 'RESET';
 }
 //////////////////////////////
