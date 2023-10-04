@@ -8,9 +8,9 @@
     <label>g(102103)</label>
     <url>index.php?function=ms_greenit_dashboard&amp;cat=filteredstats</url>
   </menu-elem>
-  <menu-elem id="computertypestats">
+  <menu-elem id="osstats">
     <label>g(102104)</label>
-    <url>index.php?function=ms_greenit_dashboard&amp;cat=computertypestats</url>
+    <url>index.php?function=ms_greenit_dashboard&amp;cat=osstats</url>
   </menu-elem>
   <menu-elem id="manufacturerstats">
     <label>g(102105)</label>
