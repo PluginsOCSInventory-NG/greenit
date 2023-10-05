@@ -72,31 +72,31 @@ class CronStats
     {
         echo $this->LogMessage("INFO", "Executing delta mode. Processing...");
         echo $this->LogMessage("INFO", "Communication with database system...");
-        $Date = new DateTime("NOW");
-        echo $this->LogMessage("INFO", "Executing delta mode. Processing...");
-        echo $this->LogMessage("INFO", "Communication with database system...");
         $date = new DateTime("NOW");
-        $Date->modify("-1 day");
+        $date->modify("-1 day");
         $dateString = $date->format("Y-m-d");
         $selectQuery = "SELECT CONSUMPTION,UPTIME FROM greenit WHERE DATE = '%s' ORDER BY UPTIME;";
 
         echo $this->LogMessage("INFO", "Getting values to insert...");
 
-        if($query = mysql2_query_secure($selectQuery, $_SESSION['OCS']["readServer"], $dateString))
-        {
-            foreach ($query as $values)
-            {
-                if(!isset($consumptionCount[$date->format("Y-m-d")])) $consumptionCount[$date->format("Y-m-d")] = 0;
-                if(!isset($uptimeCount[$date->format("Y-m-d")])) $uptimeCount[$date->format("Y-m-d")] = 0;
-    
-                if(isset($data[$date->format("Y-m-d")]["totalConsumption"])) $data[$date->format("Y-m-d")]["totalConsumption"] += floatval($values["CONSUMPTION"]);
-                else $data[$date->format("Y-m-d")]["totalConsumption"] = floatval($values["CONSUMPTION"]);
+        if ($query = mysql2_query_secure($selectQuery, $_SESSION['OCS']["readServer"], $dateString)) {
+            foreach ($query as $values) {
+                if (!isset($consumptionCount[$date->format("Y-m-d")]))
+                    $consumptionCount[$date->format("Y-m-d")] = 0;
+                if (!isset($uptimeCount[$date->format("Y-m-d")]))
+                    $uptimeCount[$date->format("Y-m-d")] = 0;
+
+                if (isset($data[$date->format("Y-m-d")]["totalConsumption"]))
+                    $data[$date->format("Y-m-d")]["totalConsumption"] += floatval($values["CONSUMPTION"]);
+                else
+                    $data[$date->format("Y-m-d")]["totalConsumption"] = floatval($values["CONSUMPTION"]);
                 $consumptionCount[$date->format("Y-m-d")]++;
-    
-                if($values["CONSUMPTION"] != "VM detected")
-                {
-                    if(isset($data[$date->format("Y-m-d")]["totalUptime"])) $data[$date->format("Y-m-d")]["totalUptime"] += intval($values["UPTIME"]);
-                    else $data[$date->format("Y-m-d")]["totalUptime"] = intval($values["UPTIME"]);
+
+                if ($values["CONSUMPTION"] != "VM detected") {
+                    if (isset($data[$date->format("Y-m-d")]["totalUptime"]))
+                        $data[$date->format("Y-m-d")]["totalUptime"] += intval($values["UPTIME"]);
+                    else
+                        $data[$date->format("Y-m-d")]["totalUptime"] = intval($values["UPTIME"]);
                     $uptimeCount[$date->format("Y-m-d")]++;
                 }
             }
@@ -129,21 +129,24 @@ class CronStats
         echo $this->LogMessage("INFO", "Communication with database system...");
         $selectQuery = "SELECT DATE,CONSUMPTION,UPTIME FROM greenit ORDER BY DATE;";
         echo $this->LogMessage("INFO", "Getting values to insert...");
-        if($query = mysql2_query_secure($selectQuery, $_SESSION['OCS']["readServer"]))
-        {
-            foreach ($query as $values)
-            {
-                if(!isset($consumptionCount[$values["DATE"]])) $consumptionCount[$values["DATE"]] = 0;
-                if(!isset($uptimeCount[$values["DATE"]])) $uptimeCount[$values["DATE"]] = 0;
-    
-                if(isset($data[$values["DATE"]]["totalConsumption"])) $data[$values["DATE"]]["totalConsumption"] += floatval($values["CONSUMPTION"]);
-                else $data[$values["DATE"]]["totalConsumption"] = floatval($values["CONSUMPTION"]);
+        if ($query = mysql2_query_secure($selectQuery, $_SESSION['OCS']["readServer"])) {
+            foreach ($query as $values) {
+                if (!isset($consumptionCount[$values["DATE"]]))
+                    $consumptionCount[$values["DATE"]] = 0;
+                if (!isset($uptimeCount[$values["DATE"]]))
+                    $uptimeCount[$values["DATE"]] = 0;
+
+                if (isset($data[$values["DATE"]]["totalConsumption"]))
+                    $data[$values["DATE"]]["totalConsumption"] += floatval($values["CONSUMPTION"]);
+                else
+                    $data[$values["DATE"]]["totalConsumption"] = floatval($values["CONSUMPTION"]);
                 $consumptionCount[$values["DATE"]]++;
-    
-                if($values["CONSUMPTION"] != "VM detected")
-                {
-                    if(isset($data[$values["DATE"]]["totalUptime"])) $data[$values["DATE"]]["totalUptime"] += intval($values["UPTIME"]);
-                    else $data[$values["DATE"]]["totalUptime"] = intval($values["UPTIME"]);
+
+                if ($values["CONSUMPTION"] != "VM detected") {
+                    if (isset($data[$values["DATE"]]["totalUptime"]))
+                        $data[$values["DATE"]]["totalUptime"] += intval($values["UPTIME"]);
+                    else
+                        $data[$values["DATE"]]["totalUptime"] = intval($values["UPTIME"]);
                     $uptimeCount[$values["DATE"]]++;
                 }
             }
