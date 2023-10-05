@@ -36,8 +36,8 @@ To install the plugin on your server :
 - Set the crontab :
     - Use the command `$ crontab -e` in the server terminal
     - Add those two crontabs :
-        - `0 5 * * 1 php /usr/share/ocsinventory-reports/ocsreports/extensions/greenit/script/cron_stats.php --mode full`
-        - `0 * * * * php /usr/share/ocsinventory-reports/ocsreports/extensions/greenit/script/cron_stats.php --mode delta`
+        - `0 5 * * 1 php /<ocsreports folder>/extensions/greenit/script/cron_stats.php --mode full`
+        - `0 5 * * * php /<ocsreports folder>/extensions/greenit/script/cron_stats.php --mode delta`
     
-> *NOTE : Those two crontabs are default one. You are allow to change the execution time. (By default, every Mondays at 5 a.m for full mode and every hours for delta mode)*
+> *NOTE : Those two crontabs are default one. You are allow to change the execution time. (By default, every Mondays at 5 a.m for full mode and every days for delta mode)*
     
