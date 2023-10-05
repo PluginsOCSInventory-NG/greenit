@@ -12,10 +12,10 @@
     <label>g(102104)</label>
     <url>index.php?function=ms_greenit_dashboard&amp;cat=osstats</url>
   </menu-elem>
-  <!-- <menu-elem id="computerstatsstats">
+  <menu-elem id="computerstatsstats">
     <label>g(102105)</label>
     <url>index.php?function=ms_greenit_dashboard&amp;cat=computertypestats</url>
-  </menu-elem> -->
+  </menu-elem>
   <menu-elem id="manufacturerstats">
     <label>g(102106)</label>
     <url>index.php?function=ms_greenit_dashboard&amp;cat=manufacturerstats</url>
