@@ -1,26 +1,41 @@
-80700 Consommation d'énergie
-80701 Gestionnaire GreenIT
-80702 Statistiques du jour
-80703 Consommation totale
-80704 Consommation moyenne
-80705 Temps de fonctionnement total
-80706 Temps de fonctionnement moyen
-80707 Statistiques du coût de consommation
-80708 Coût du jour
-80709 Coût de consommation pour les derniers
-80710 Coût moyen par appareil
-80711 Coût moyen par appareil pour les derniers
-80712 jour(s)
-80713 Consommation
-80714 Coût
+100000 GreenIT
 
-80715 GreenIT
-80716 Période de collecte des données (en jours)
-80717 Précision décimale de la consommation
-80718 Précision décimale du coût
-80719 Unité de coût
-80720 Coût du kilowatt
-80721 Format du temps de fonctionnement
-80722 Confirmer
+101000 La configuration a été mise à jour
 
-80723 La configuration a été mise à jour
+102000 Consommation d'énergie
+102001 Période de collecte des données (en jours)
+102002 Data comparator period (in days)
+102003 Précision décimale de la consommation
+102004 Précision décimale du coût
+102005 Unité de coût
+102006 Coût du kilowatt
+102007 Format du temps de fonctionnement
+
+102100 Gestionnaire GreenIT
+102101 machines dans le parc GreenIT sur
+102102 Statistiques globales
+102103 Statistiques filtrées
+102104 Statistiques par système d'exploitation
+102105 Statistiques par type de machine
+102106 Statistiques par constructeur
+
+102600 Statistiques de la journée précédente
+102601 Consommation totale
+102602 Consommation moyenne
+102603 Temps de fonctionnement total
+102604 Temps de fonctionnement moyen
+102605 pour
+102606 Clients Windows
+102607 serveurs Windows
+
+102700 Statistiques du coût de consommation
+102701 Coût de la journée précédente
+102702 Coût de consommation pour les derniers
+102703 Coût moyen par appareil
+102704 Coût moyen par appareil pour les derniers
+102705 jour(s)
+102706 Consommation
+102707 Coût
+
+102800 Recherche filtrée
+102801 Générer les Statistiques filtrées

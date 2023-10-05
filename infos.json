@@ -1,13 +1,13 @@
 {
     "displayName" : "Green IT",
     "author" : ["Antoine ROBIN"],
-    "contributor" : ["Léa DROGUET, Gilles DUBOIS"],
+    "contributor" : [],
     "supportedAgent" : ["Windows"],
-    "version" : "1.0",
+    "version" : "1.1",
     "licence" : "GPLv2",
     "description" : 
         {
             "en" : "Gather power consumption information",
-            "fr" : "Rassemble des informations de consommation électrique"
+            "fr" : "Rassemble des informations de consommation électique"
         }
     }
