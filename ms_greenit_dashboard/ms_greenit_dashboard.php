@@ -45,7 +45,8 @@ if ($protectedGet['cat'] == 'globalstats') {
         require_once('data/filteredStats.php');
 } else if ($protectedGet['cat'] == 'osstats') {
     require_once('data/osStats.php');
-    // } else if ($protectedGet['cat'] == 'computertypestats') { require_once('data/computertypeStats.php');
+} else if ($protectedGet['cat'] == 'computertypestats') {
+    require_once('data/computertypeStats.php');
 } else if ($protectedGet['cat'] == 'manufacturerstats') {
     require_once('data/manufacturerStats.php');
 }
@@ -72,7 +73,8 @@ if ($protectedGet['cat'] == 'globalstats') {
 } else if ($protectedGet['cat'] == 'osstats') {
     require_once("components/osStats/yesterdayStats.php");
     require_once("components/osStats/costStats.php");
-    // } else if ($protectedGet['cat'] == 'computertypestats') {
+} else if ($protectedGet['cat'] == 'computertypestats') {
+    require_once("components/computerTypeStats/costStats.php");
 } else if ($protectedGet['cat'] == 'manufacturerstats') {
     require_once("components/manufacturerStats/costStats.php");
 }

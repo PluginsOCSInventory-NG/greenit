@@ -75,7 +75,7 @@ $collectManufacturerQuery = "
     INNER JOIN bios ON greenit.HARDWARE_ID=bios.HARDWARE_ID 
     WHERE 
     greenit.DATE BETWEEN '" . $collectDate->format("Y-m-d") . "' AND '" . $Date->format("Y-m-d") . "'
-    GROUP BY greenit.DATE, MANUFACTURER
+    GROUP BY MANUFACTURER, greenit.DATE
 ";
 $collectManufacturerDataResult = mysql2_query_secure($collectManufacturerQuery, $_SESSION['OCS']["readServer"]);
 
@@ -118,7 +118,7 @@ $compareManufacturerQuery = "
     INNER JOIN bios ON greenit.HARDWARE_ID=bios.HARDWARE_ID 
     WHERE 
     greenit.DATE BETWEEN '" . $compareDate->format("Y-m-d") . "' AND '" . $Date->format("Y-m-d") . "'
-    GROUP BY greenit.DATE, MANUFACTURER
+    GROUP BY MANUFACTURER, greenit.DATE
 ";
 $compareManufacturerDataResult = mysql2_query_secure($compareManufacturerQuery, $_SESSION['OCS']["readServer"]);
 

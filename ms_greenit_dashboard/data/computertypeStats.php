@@ -27,7 +27,7 @@ $compareData = array();
 //////////////////////////////
 
 //////////////////////////////
-// Get coputer type
+// Get compter type
 $computersTypeQuery = "
     SELECT 
     (
@@ -117,16 +117,141 @@ $yesterdayComputerTypeQuery = "
 $yesterdayComputerTypeDataResult = mysql2_query_secure($yesterdayComputerTypeQuery, $_SESSION['OCS']['readServer']);
 $yesterdayData = array();
 while ($row = mysqli_fetch_object($yesterdayComputerTypeDataResult)) {
-    foreach ($computersType as $computerType)
-        $yesterdayData[$computerType] = (object) array(
-            "TYPE" => $row->COMPUTER_TYPE,
-            "totalConsumption" => $row->totalConsumption,
-            "totalUptime" => $row->totalUptime,
-        );
+    $yesterdayData[$row->COMPUTER_TYPE] = (object) array(
+        "totalConsumption" => $row->totalConsumption,
+        "totalUptime" => $row->totalUptime,
+    );
 }
-echo "<pre style='text-align: left;'>";
-var_dump($yesterdayData);
-echo "</pre>";
+//////////////////////////////
+
+//////////////////////////////
+// Get collect data of filtered GreenIT parc
+$collectComputerTypeQuery = "
+    SELECT 
+    (
+        CASE
+        
+        WHEN (
+            bios.type LIKE '%Desktop%' OR 
+            bios.type LIKE '%Elitedesk%' OR 
+            bios.type LIKE '%Mini Tower%' OR
+            bios.type LIKE '%ProLient%' OR
+            bios.type LIKE '%Precision%' OR
+            bios.type LIKE '%All in One%'
+        )
+        THEN 'Desktop'
+
+        WHEN (
+            bios.type LIKE '%LapTop%' OR 
+            bios.type LIKE '%Portable%' OR
+            bios.type LIKE '%Notebook%'
+        )
+        THEN 'LapTop'
+        
+        WHEN (
+            bios.type <> 'Desktop' OR
+            bios.type <> 'LapTop'
+        )
+        THEN 'Other'
+        
+        ELSE bios.type
+        
+        END
+    ) AS COMPUTER_TYPE, 
+    greenit.DATE, 
+    SUM(greenit.CONSUMPTION) AS totalConsumption,
+    SUM(greenit.UPTIME) AS totalUptime
+    FROM greenit
+    INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
+    INNER JOIN bios ON greenit.HARDWARE_ID=bios.HARDWARE_ID
+    WHERE greenit.DATE BETWEEN '" . $collectDate->format("Y-m-d") . "' AND '" . $Date->format("Y-m-d") . "'
+    GROUP BY COMPUTER_TYPE, greenit.DATE
+";
+$collectComputerTypeDataResult = mysql2_query_secure($collectComputerTypeQuery, $_SESSION['OCS']['readServer']);
+
+$collectData = array();
+while ($row = mysqli_fetch_object($collectComputerTypeDataResult)) {
+    $collectData[$row->COMPUTER_TYPE][$row->DATE] = (object) array(
+        "totalConsumption" => $row->totalConsumption,
+        "totalUptime" => $row->totalUptime,
+    );
+}
+
+$sumConsumptionCollect = array();
+
+if (isset($collectData)) {
+    foreach ($collectData as $group => $date) {
+        $sumConsumptionCollect[$group] = 0;
+        foreach ($date as $value) {
+            $sumConsumptionCollect[$group] += $value->totalConsumption;
+        }
+    }
+}
+//////////////////////////////
+
+//////////////////////////////
+// Get compare data of filtered GreenIT parc
+$compareComputerTypeQuery = "
+    SELECT 
+    (
+        CASE
+        
+        WHEN (
+            bios.type LIKE '%Desktop%' OR 
+            bios.type LIKE '%Elitedesk%' OR 
+            bios.type LIKE '%Mini Tower%' OR
+            bios.type LIKE '%ProLient%' OR
+            bios.type LIKE '%Precision%' OR
+            bios.type LIKE '%All in One%'
+        )
+        THEN 'Desktop'
+
+        WHEN (
+            bios.type LIKE '%LapTop%' OR 
+            bios.type LIKE '%Portable%' OR
+            bios.type LIKE '%Notebook%'
+        )
+        THEN 'LapTop'
+        
+        WHEN (
+            bios.type <> 'Desktop' OR
+            bios.type <> 'LapTop'
+        )
+        THEN 'Other'
+        
+        ELSE bios.type
+        
+        END
+    ) AS COMPUTER_TYPE, 
+    greenit.DATE, 
+    SUM(greenit.CONSUMPTION) AS totalConsumption,
+    SUM(greenit.UPTIME) AS totalUptime
+    FROM greenit
+    INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
+    INNER JOIN bios ON greenit.HARDWARE_ID=bios.HARDWARE_ID
+    WHERE greenit.DATE BETWEEN '" . $compareDate->format("Y-m-d") . "' AND '" . $Date->format("Y-m-d") . "'
+    GROUP BY COMPUTER_TYPE, greenit.DATE
+";
+$compareComputerTypeDataResult = mysql2_query_secure($compareComputerTypeQuery, $_SESSION['OCS']['readServer']);
+
+$compareData = array();
+while ($row = mysqli_fetch_object($compareComputerTypeDataResult)) {
+    $compareData[$row->COMPUTER_TYPE][$row->DATE] = (object) array(
+        "totalConsumption" => $row->totalConsumption,
+        "totalUptime" => $row->totalUptime,
+    );
+}
+
+$sumConsumptionCompare = array();
+
+if (isset($compareData)) {
+    foreach ($compareData as $group => $date) {
+        $sumConsumptionCompare[$group] = 0;
+        foreach ($date as $value) {
+            $sumConsumptionCompare[$group] += $value->totalConsumption;
+        }
+    }
+}
 //////////////////////////////
 
 ?>
