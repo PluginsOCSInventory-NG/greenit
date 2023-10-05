@@ -144,7 +144,7 @@ echo '
 
 echo '
         <input type="submit" class="btn btn-success" value="' . $l->g(393) . '" name="SUBMIT_FORM">
-        <input type="submit" class="btn btn-danger" value="' . $l->g(396) . '" name="RESET">
+        <input type="submit" class="btn btn-danger" value="' . $l->g(41) . '" name="RESET">
     </div>
 </div>
 ';
