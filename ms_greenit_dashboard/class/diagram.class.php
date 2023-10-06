@@ -97,8 +97,9 @@ class Diagram
                 type: "<?= $type ?>",
                 options: {
                     title: {
-                        display: true,
-                        text: "<?= $title ?>"
+                        display: <?= $title == "" ? "false" : "true" ?>,
+                        text: "<?= $title ?>",
+                        position: 'bottom'
                     },
                     animation: {
                         animateScale: true,
