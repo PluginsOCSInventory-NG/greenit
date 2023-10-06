@@ -175,4 +175,52 @@ if (isset($compareData)) {
 }
 //////////////////////////////
 
+//////////////////////////////
+// Get number of device of the collect period
+$nbDevicesCollect = "
+    SELECT 
+    COUNT(DISTINCT HARDWARE_ID) AS nbDevices 
+    FROM greenit 
+    INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
+    WHERE 
+    DATE BETWEEN '" . $collectDate->format("Y-m-d") . "' AND '" . $Date->format("Y-m-d") . "'
+";
+$nbDevicesCollect .= "AND (";
+foreach ($computersData as $computerName) {
+    $nbDevicesCollect .= "hardware.NAME='" . $computerName . "'";
+    if (next($computersData))
+        $nbDevicesCollect .= " OR ";
+}
+reset($computersData);
+$nbDevicesCollect .= ")";
+$nbDevicesCollectResult = mysql2_query_secure($nbDevicesCollect, $_SESSION['OCS']["readServer"]);
+$numberDeviceCollect = mysqli_fetch_object($nbDevicesCollectResult)->nbDevices;
+if ($numberDeviceCollect == 0)
+    $numberDeviceCollect = 1;
+//////////////////////////////
+
+//////////////////////////////
+// Get number fo devices of the compare period
+$nbDevicesCompare = "
+    SELECT 
+    COUNT(DISTINCT HARDWARE_ID) AS nbDevices 
+    FROM greenit 
+    INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
+    WHERE 
+    DATE BETWEEN '" . $compareDate->format("Y-m-d") . "' AND '" . $Date->format("Y-m-d") . "'
+";
+$nbDevicesCompare .= "AND (";
+foreach ($computersData as $computerName) {
+    $nbDevicesCompare .= "hardware.NAME='" . $computerName . "'";
+    if (next($computersData))
+        $nbDevicesCompare .= " OR ";
+}
+reset($computersData);
+$nbDevicesCompare .= ")";
+$nbDevicesCompareResult = mysql2_query_secure($nbDevicesCompare, $_SESSION['OCS']["readServer"]);
+$numberDeviceCompare = mysqli_fetch_object($nbDevicesCompareResult)->nbDevices;
+if ($numberDeviceCompare == 0)
+    $numberDeviceCompare = 1;
+//////////////////////////////
+
 ?>

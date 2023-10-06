@@ -4,8 +4,9 @@ $form_name = "costStats";
 echo open_form($form_name, '', '', 'form-horizontal');
 
 echo "<h4>" . $l->g(102700) . "</h4>";
+
 //////////////////////////////
-// Show cost number data
+// Show average cost number data
 $table = '';
 
 $table .= '
