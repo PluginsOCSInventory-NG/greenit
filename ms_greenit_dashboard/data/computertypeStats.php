@@ -224,7 +224,7 @@ $nbDevicesCollectQuery = "
     FROM greenit 
     INNER JOIN bios ON greenit.HARDWARE_ID=bios.HARDWARE_ID
     WHERE 
-    DATE BETWEEN '" . $collectDate->format("Y-m-d") . "' AND '" . $Date->format("Y-m-d") . "'
+    greenit.DATE BETWEEN '" . $collectDate->format("Y-m-d") . "' AND '" . $Date->format("Y-m-d") . "'
     GROUP BY COMPUTER_TYPE
 ";
 $nbDevicesCollectResult = mysql2_query_secure($nbDevicesCollectQuery, $_SESSION['OCS']["readServer"]);
@@ -338,7 +338,7 @@ $nbDevicesCompareQuery = "
     FROM greenit 
     INNER JOIN bios ON greenit.HARDWARE_ID=bios.HARDWARE_ID
     WHERE 
-    DATE BETWEEN '" . $compareDate->format("Y-m-d") . "' AND '" . $Date->format("Y-m-d") . "'
+    greenit.DATE BETWEEN '" . $compareDate->format("Y-m-d") . "' AND '" . $Date->format("Y-m-d") . "'
     GROUP BY COMPUTER_TYPE
 ";
 $nbDevicesCompareResult = mysql2_query_secure($nbDevicesCompareQuery, $_SESSION['OCS']["readServer"]);
