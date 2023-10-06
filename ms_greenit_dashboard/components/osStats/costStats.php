@@ -29,7 +29,7 @@ $datasets = array(
     "backgroundColor" => "[" . $backgroundColor . "]"
 );
 
-$diagram->createCanvas("yesterday_cost_diagram", "4", "250");
+$diagram->createCanvas("yesterday_cost_diagram", "4", "300");
 $diagram->createRoundChart("yesterday_cost_diagram", "doughnut", $l->g(102701) . ' (' . $config->COST_UNIT . ')', $labels, $datasets);
 //////////////////////////////
 
@@ -60,7 +60,7 @@ $datasets = array(
     "backgroundColor" => "[" . $backgroundColor . "]"
 );
 
-$diagram->createCanvas("collect_cost_diagram", "4", "250");
+$diagram->createCanvas("collect_cost_diagram", "4", "300");
 $diagram->createRoundChart("collect_cost_diagram", "doughnut", $l->g(102702) . ' ' . $config->COLLECT_INFO_PERIOD . ' ' . $l->g(102705) . ' (' . $config->COST_UNIT . ')', $labels, $datasets);
 //////////////////////////////
 
@@ -92,7 +92,7 @@ $datasets = array(
     "backgroundColor" => "[" . $backgroundColor . "]"
 );
 
-$diagram->createCanvas("compare_cost_diagram", "4", "250");
+$diagram->createCanvas("compare_cost_diagram", "4", "300");
 $diagram->createRoundChart("compare_cost_diagram", "doughnut", $l->g(102702) . ' ' . $config->COMPARE_INFO_PERIOD . ' ' . $l->g(102705) . ' (' . $config->COST_UNIT . ')', $labels, $datasets);
 //////////////////////////////
 
