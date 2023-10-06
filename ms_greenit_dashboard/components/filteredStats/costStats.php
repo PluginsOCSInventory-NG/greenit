@@ -42,8 +42,6 @@ if (isset($computersData)) {
 echo $table;
 //////////////////////////////
 
-echo "<br>";
-
 //////////////////////////////
 // Show cost of device between collect period diagram
 $labels = ["'" . $l->g(102702) . " " . $config->COLLECT_INFO_PERIOD . " " . $l->g(102705) . "'"];
@@ -69,7 +67,7 @@ $labelsSettings = array(
     )
 );
 
-$diagram->createCanvas("histogram_collect_period", "6", "200");
+$diagram->createCanvas("histogram_collect_period", "6", "225");
 $diagram->createBarChart("histogram_collect_period", "bar", "", $labels, $labelsSettings);
 //////////////////////////////
 
@@ -98,7 +96,7 @@ $labelsSettings = array(
     )
 );
 
-$diagram->createCanvas("histogram_compare_period", "6", "200");
+$diagram->createCanvas("histogram_compare_period", "6", "225");
 $diagram->createBarChart("histogram_compare_period", "bar", "", $labels, $labelsSettings);
 //////////////////////////////
 
