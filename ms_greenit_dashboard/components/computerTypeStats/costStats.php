@@ -88,7 +88,7 @@ $datasets = array(
     )
 );
 
-$diagram->createCanvas("yesterday_cost_diagram", "4", "475");
+$diagram->createCanvas("yesterday_cost_diagram", "4", "425");
 $diagram->createBarChart("yesterday_cost_diagram", "bar", $l->g(102701) . ' (' . $config->COST_UNIT . ')', $labels, $datasets);
 //////////////////////////////
 
@@ -137,7 +137,7 @@ $datasets = array(
     )
 );
 
-$diagram->createCanvas("collect_cost_diagram", "4", "475");
+$diagram->createCanvas("collect_cost_diagram", "4", "425");
 $diagram->createBarChart("collect_cost_diagram", "bar", $l->g(102702) . ' ' . $config->COLLECT_INFO_PERIOD . ' ' . $l->g(102705) . ' (' . $config->COST_UNIT . ')', $labels, $datasets);
 //////////////////////////////
 
@@ -186,7 +186,7 @@ $datasets = array(
     )
 );
 
-$diagram->createCanvas("compare_cost_diagram", "4", "475");
+$diagram->createCanvas("compare_cost_diagram", "4", "425");
 $diagram->createBarChart("compare_cost_diagram", "bar", $l->g(102702) . ' ' . $config->COMPARE_INFO_PERIOD . ' ' . $l->g(102705) . ' (' . $config->COST_UNIT . ')', $labels, $datasets);
 //////////////////////////////
 
