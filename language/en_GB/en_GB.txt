@@ -36,6 +36,9 @@
 102705 day(s)
 102706 Consumption
 102707 Cost
+102708 Average cost per
+102709 device
+102710 for last
 
 102800 Filtered Search
 102801 Generate filtered stats

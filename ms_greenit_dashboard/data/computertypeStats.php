@@ -187,6 +187,55 @@ if (isset($collectData)) {
         }
     }
 }
+
+$nbDevicesCollectQuery = "
+    SELECT 
+    COUNT(DISTINCT greenit.HARDWARE_ID) AS COUNT,
+    (
+        CASE
+        
+        WHEN (
+            bios.type LIKE '%Desktop%' OR 
+            bios.type LIKE '%Elitedesk%' OR 
+            bios.type LIKE '%Mini Tower%' OR
+            bios.type LIKE '%ProLient%' OR
+            bios.type LIKE '%Precision%' OR
+            bios.type LIKE '%All in One%'
+        )
+        THEN 'Desktop'
+
+        WHEN (
+            bios.type LIKE '%LapTop%' OR 
+            bios.type LIKE '%Portable%' OR
+            bios.type LIKE '%Notebook%'
+        )
+        THEN 'LapTop'
+        
+        WHEN (
+            bios.type <> 'Desktop' OR
+            bios.type <> 'LapTop'
+        )
+        THEN 'Other'
+        
+        ELSE bios.type
+        
+        END
+    ) AS COMPUTER_TYPE 
+    FROM greenit 
+    INNER JOIN bios ON greenit.HARDWARE_ID=bios.HARDWARE_ID
+    WHERE 
+    DATE BETWEEN '" . $collectDate->format("Y-m-d") . "' AND '" . $Date->format("Y-m-d") . "'
+    GROUP BY COMPUTER_TYPE
+";
+$nbDevicesCollectResult = mysql2_query_secure($nbDevicesCollectQuery, $_SESSION['OCS']["readServer"]);
+$nbDevicesCollect = array();
+while ($row = mysqli_fetch_object($nbDevicesCollectResult)) {
+    $nbDevicesCollect[$row->COMPUTER_TYPE] = $row->COUNT;
+}
+foreach ($nbDevicesCollect as $group => $value) {
+    if ($value == 0)
+        $value = 1;
+}
 //////////////////////////////
 
 //////////////////////////////
@@ -252,6 +301,53 @@ if (isset($compareData)) {
         }
     }
 }
-//////////////////////////////
 
-?>
+$nbDevicesCompareQuery = "
+    SELECT 
+    COUNT(DISTINCT greenit.HARDWARE_ID) AS COUNT,
+    (
+        CASE
+        
+        WHEN (
+            bios.type LIKE '%Desktop%' OR 
+            bios.type LIKE '%Elitedesk%' OR 
+            bios.type LIKE '%Mini Tower%' OR
+            bios.type LIKE '%ProLient%' OR
+            bios.type LIKE '%Precision%' OR
+            bios.type LIKE '%All in One%'
+        )
+        THEN 'Desktop'
+
+        WHEN (
+            bios.type LIKE '%LapTop%' OR 
+            bios.type LIKE '%Portable%' OR
+            bios.type LIKE '%Notebook%'
+        )
+        THEN 'LapTop'
+        
+        WHEN (
+            bios.type <> 'Desktop' OR
+            bios.type <> 'LapTop'
+        )
+        THEN 'Other'
+        
+        ELSE bios.type
+        
+        END
+    ) AS COMPUTER_TYPE 
+    FROM greenit 
+    INNER JOIN bios ON greenit.HARDWARE_ID=bios.HARDWARE_ID
+    WHERE 
+    DATE BETWEEN '" . $compareDate->format("Y-m-d") . "' AND '" . $Date->format("Y-m-d") . "'
+    GROUP BY COMPUTER_TYPE
+";
+$nbDevicesCompareResult = mysql2_query_secure($nbDevicesCompareQuery, $_SESSION['OCS']["readServer"]);
+$nbDevicesCompare = array();
+while ($row = mysqli_fetch_object($nbDevicesCompareResult)) {
+    $nbDevicesCompare[$row->COMPUTER_TYPE] = $row->COUNT;
+}
+foreach ($nbDevicesCompare as $group => $value) {
+    if ($value == 0)
+        $value = 1;
+}
+//////////////////////////////

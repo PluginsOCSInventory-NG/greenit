@@ -4,6 +4,39 @@ $form_name = "costStats";
 echo open_form($form_name, '', '', 'form-horizontal');
 
 echo "<h4>" . $l->g(102700) . "</h4>";
+//////////////////////////////
+// Show cost number data
+$table = '';
+
+$table .= '
+<div class="row">
+';
+foreach ($computersType as $computerType) {
+    $table .= '
+    <div class="col-md-4" style="border: 1px solid #ddd; padding: 5px;">
+        <p style="font-size: 32px; font-weight:bold;">' . (isset($collectData) ? $calculation->CostFormat($sumConsumptionCollect[$computerType] / $nbDevicesCollect[$computerType], "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0') . '</p>
+        <p style="color:#333; font-size: 15px;">' . $l->g(102708) . " " . $computerType . " " . $l->g(102709) . " " . " " . $l->g(102710) . " " . $config->COLLECT_INFO_PERIOD . " " . $l->g(102705) . '</p>
+    </div>
+    ';
+}
+$table .= '
+</div>
+<br>
+<div class="row">
+';
+foreach ($computersType as $computerType) {
+    $table .= '
+    <div class="col-md-4" style="border: 1px solid #ddd; padding: 5px;">
+        <p style="font-size: 32px; font-weight:bold;">' . (isset($collectData) ? $calculation->CostFormat($sumConsumptionCompare[$computerType] / $nbDevicesCompare[$computerType], "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0') . '</p>
+        <p style="color:#333; font-size: 15px;">' . $l->g(102708) . " " . $computerType . " " . $l->g(102709) . " " . " " . $l->g(102710) . " " . $config->COMPARE_INFO_PERIOD . " " . $l->g(102705) . '</p>
+    </div>
+    ';
+}
+$table .= '
+</div>
+';
+echo $table;
+//////////////////////////////
 
 //////////////////////////////
 // Show cost per period D-1
@@ -42,7 +75,7 @@ $datasets = array(
             " . $data["CONSUMPTION"] . "
             ]",
         "label" => "'" . $l->g(102706) . " (" . "kW/h" . ")'",
-        "type" => "'horizontalBar'",
+        "type" => "'bar'",
     ),
     "computerTypeCost" => array(
         "backgroundColor" => $backgroundColor[1],
@@ -50,12 +83,12 @@ $datasets = array(
                 " . $data["COST"] . "
                 ]",
         "label" => "'" . $l->g(102707) . " (" . $config->COST_UNIT . ")'",
-        "type" => "'horizontalBar'",
+        "type" => "'bar'",
     )
 );
 
-$diagram->createCanvas("yesterday_cost_diagram", "12", "75");
-$diagram->createBarChart("yesterday_cost_diagram", "horizontalBar", $l->g(102701) . ' (' . $config->COST_UNIT . ')', $labels, $datasets);
+$diagram->createCanvas("yesterday_cost_diagram", "4", "300");
+$diagram->createBarChart("yesterday_cost_diagram", "bar", $l->g(102701) . ' (' . $config->COST_UNIT . ')', $labels, $datasets);
 //////////////////////////////
 
 //////////////////////////////
@@ -91,7 +124,7 @@ $datasets = array(
             " . $data["CONSUMPTION"] . "
             ]",
         "label" => "'" . $l->g(102706) . " (" . "kW/h" . ")'",
-        "type" => "'horizontalBar'",
+        "type" => "'bar'",
     ),
     "computerTypeCost" => array(
         "backgroundColor" => $backgroundColor[1],
@@ -99,12 +132,12 @@ $datasets = array(
                 " . $data["COST"] . "
                 ]",
         "label" => "'" . $l->g(102707) . " (" . $config->COST_UNIT . ")'",
-        "type" => "'horizontalBar'",
+        "type" => "'bar'",
     )
 );
 
-$diagram->createCanvas("collect_cost_diagram", "12", "75");
-$diagram->createBarChart("collect_cost_diagram", "horizontalBar", $l->g(102702) . ' ' . $config->COLLECT_INFO_PERIOD . ' ' . $l->g(102705) . ' (' . $config->COST_UNIT . ')', $labels, $datasets);
+$diagram->createCanvas("collect_cost_diagram", "4", "300");
+$diagram->createBarChart("collect_cost_diagram", "bar", $l->g(102702) . ' ' . $config->COLLECT_INFO_PERIOD . ' ' . $l->g(102705) . ' (' . $config->COST_UNIT . ')', $labels, $datasets);
 //////////////////////////////
 
 //////////////////////////////
@@ -140,7 +173,7 @@ $datasets = array(
             " . $data["CONSUMPTION"] . "
             ]",
         "label" => "'" . $l->g(102706) . " (" . "kW/h" . ")'",
-        "type" => "'horizontalBar'",
+        "type" => "'bar'",
     ),
     "computerTypeCost" => array(
         "backgroundColor" => $backgroundColor[1],
@@ -148,12 +181,12 @@ $datasets = array(
                 " . $data["COST"] . "
                 ]",
         "label" => "'" . $l->g(102707) . " (" . $config->COST_UNIT . ")'",
-        "type" => "'horizontalBar'",
+        "type" => "'bar'",
     )
 );
 
-$diagram->createCanvas("compare_cost_diagram", "12", "75");
-$diagram->createBarChart("compare_cost_diagram", "horizontalBar", $l->g(102702) . ' ' . $config->COMPARE_INFO_PERIOD . ' ' . $l->g(102705) . ' (' . $config->COST_UNIT . ')', $labels, $datasets);
+$diagram->createCanvas("compare_cost_diagram", "4", "300");
+$diagram->createBarChart("compare_cost_diagram", "bar", $l->g(102702) . ' ' . $config->COMPARE_INFO_PERIOD . ' ' . $l->g(102705) . ' (' . $config->COST_UNIT . ')', $labels, $datasets);
 //////////////////////////////
 
 echo close_form();
