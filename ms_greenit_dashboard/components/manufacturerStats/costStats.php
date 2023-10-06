@@ -6,6 +6,31 @@ echo open_form($form_name, '', '', 'form-horizontal');
 echo "<h4>" . $l->g(102700) . "</h4>";
 
 //////////////////////////////
+// Show average cost number data
+$table = '';
+
+$table .= '
+<div class="row">
+<div class="col-md-1"></div>
+';
+foreach ($compareManufacturers as $manufacturer) {
+    $table .= '
+    <div class="col-md-2" style="border: 1px solid #ddd; padding: 5px;">
+    <p style="font-size: 32px; font-weight:bold;">' . (isset($compareData[$manufacturer]->totalConsumption) ? $calculation->CostFormat($compareData[$manufacturer]->totalConsumption / $nbDevicesCompare[$manufacturer], "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0') . '</p>
+    <p style="color:#333; font-size: 15px;">' . $l->g(102708) . " " . $manufacturer . " " . $l->g(102709) . " " . " " . $l->g(102710) . " " . $config->COMPARE_INFO_PERIOD . " " . $l->g(102705) . '</p>
+    </div>
+    ';
+}
+$table .= '
+<div class="col-md-1"></div>
+</div>
+';
+echo $table;
+//////////////////////////////
+
+echo "<br>";
+
+//////////////////////////////
 // Show cost per period D-1
 $labels = array();
 
@@ -15,7 +40,7 @@ $label = "";
 $data = array();
 $data["CONSUMPTION"] = "";
 $data["COST"] = "";
-foreach ($manufacturers as $manufacturer) {
+foreach ($yesterdayManufacturers as $manufacturer) {
     if (isset($yesterdayData[$manufacturer])) {
         $label .= "'" . $manufacturer . "'";
         if (isset($yesterdayData[$manufacturer]->totalConsumption)) {
@@ -42,7 +67,7 @@ $datasets = array(
             " . $data["CONSUMPTION"] . "
             ]",
         "label" => "'" . $l->g(102706) . " (" . "kW/h" . ")'",
-        "type" => "'bar'",
+        "type" => "'horizontalBar'",
     ),
     "manufacturerCost" => array(
         "backgroundColor" => $backgroundColor[1],
@@ -50,12 +75,12 @@ $datasets = array(
                 " . $data["COST"] . "
                 ]",
         "label" => "'" . $l->g(102707) . " (" . $config->COST_UNIT . ")'",
-        "type" => "'bar'",
+        "type" => "'horizontalBar'",
     )
 );
 
-$diagram->createCanvas("yesterday_cost_diagram", "4", "700");
-$diagram->createBarChart("yesterday_cost_diagram", "bar", $l->g(102701) . ' (' . $config->COST_UNIT . ')', $labels, $datasets);
+$diagram->createCanvas("yesterday_cost_diagram", "4", "550");
+$diagram->createBarChart("yesterday_cost_diagram", "horizontalBar", $l->g(102701) . " " . $l->g(102711) . ' (' . $config->COST_UNIT . ')', $labels, $datasets);
 //////////////////////////////
 
 //////////////////////////////
@@ -68,12 +93,16 @@ $label = "";
 $data = array();
 $data["CONSUMPTION"] = "";
 $data["COST"] = "";
-foreach ($manufacturers as $manufacturer) {
+foreach ($collectManufacturers as $manufacturer) {
     if (isset($collectData[$manufacturer])) {
         $label .= "'" . $manufacturer . "'";
-        $data["CONSUMPTION"] .= "'" . str_replace(" " . "kW/h", "", (isset($sumConsumptionCollect[$manufacturer]) && $sumConsumptionCollect[$manufacturer] != NULL ? $calculation->ConsumptionFormat($sumConsumptionCollect[$manufacturer], "kW/h", $config->CONSUMPTION_ROUND) : '0')) . "'";
-        $data["COST"] .= "'" . str_replace(" " . $config->COST_UNIT, "", (isset($sumConsumptionCollect[$manufacturer]) && $sumConsumptionCollect[$manufacturer] != NULL ? $calculation->CostFormat($sumConsumptionCollect[$manufacturer], "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0')) . "'";
-
+        if (isset($collectData[$manufacturer]->totalConsumption)) {
+            $data["CONSUMPTION"] .= "'" . str_replace(" " . "kW/h", "", $calculation->ConsumptionFormat(floatval($collectData[$manufacturer]->totalConsumption), "kW/h", $config->CONSUMPTION_ROUND)) . "'";
+            $data["COST"] .= "'" . str_replace(" " . $config->COST_UNIT, "", $calculation->CostFormat(floatval($collectData[$manufacturer]->totalConsumption), "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND)) . "'";
+        } else {
+            $data["CONSUMPTION"] .= 0;
+            $data["COST"] .= 0;
+        }
         if (next($collectData) == true) {
             $label .= ", ";
             $data["CONSUMPTION"] .= ", ";
@@ -91,7 +120,7 @@ $datasets = array(
             " . $data["CONSUMPTION"] . "
             ]",
         "label" => "'" . $l->g(102706) . " (" . "kW/h" . ")'",
-        "type" => "'bar'",
+        "type" => "'horizontalBar'",
     ),
     "manufacturerCost" => array(
         "backgroundColor" => $backgroundColor[1],
@@ -99,12 +128,12 @@ $datasets = array(
                 " . $data["COST"] . "
                 ]",
         "label" => "'" . $l->g(102707) . " (" . $config->COST_UNIT . ")'",
-        "type" => "'bar'",
+        "type" => "'horizontalBar'",
     )
 );
 
-$diagram->createCanvas("collect_cost_diagram", "4", "700");
-$diagram->createBarChart("collect_cost_diagram", "bar", $l->g(102702) . ' ' . $config->COLLECT_INFO_PERIOD . ' ' . $l->g(102705) . ' (' . $config->COST_UNIT . ')', $labels, $datasets);
+$diagram->createCanvas("collect_cost_diagram", "4", "550");
+$diagram->createBarChart("collect_cost_diagram", "horizontalBar", $l->g(102702) . ' ' . $config->COLLECT_INFO_PERIOD . ' ' . $l->g(102705) . ' ' . $l->g(102711) . ' (' . $config->COST_UNIT . ')', $labels, $datasets);
 //////////////////////////////
 
 //////////////////////////////
@@ -117,12 +146,16 @@ $label = "";
 $data = array();
 $data["CONSUMPTION"] = "";
 $data["COST"] = "";
-foreach ($manufacturers as $manufacturer) {
+foreach ($compareManufacturers as $manufacturer) {
     if (isset($compareData[$manufacturer])) {
         $label .= "'" . $manufacturer . "'";
-        $data["CONSUMPTION"] .= "'" . str_replace(" " . "kW/h", "", (isset($sumConsumptionCompare[$manufacturer]) && $sumConsumptionCompare[$manufacturer] != NULL ? $calculation->ConsumptionFormat($sumConsumptionCompare[$manufacturer], "kW/h", $config->CONSUMPTION_ROUND) : '0')) . "'";
-        $data["COST"] .= "'" . str_replace(" " . $config->COST_UNIT, "", (isset($sumConsumptionCompare[$manufacturer]) && $sumConsumptionCompare[$manufacturer] != NULL ? $calculation->CostFormat($sumConsumptionCompare[$manufacturer], "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0')) . "'";
-
+        if (isset($compareData[$manufacturer]->totalConsumption)) {
+            $data["CONSUMPTION"] .= "'" . str_replace(" " . "kW/h", "", $calculation->ConsumptionFormat(floatval($compareData[$manufacturer]->totalConsumption), "kW/h", $config->CONSUMPTION_ROUND)) . "'";
+            $data["COST"] .= "'" . str_replace(" " . $config->COST_UNIT, "", $calculation->CostFormat(floatval($compareData[$manufacturer]->totalConsumption), "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND)) . "'";
+        } else {
+            $data["CONSUMPTION"] .= 0;
+            $data["COST"] .= 0;
+        }
         if (next($compareData) == true) {
             $label .= ", ";
             $data["CONSUMPTION"] .= ", ";
@@ -140,7 +173,7 @@ $datasets = array(
             " . $data["CONSUMPTION"] . "
             ]",
         "label" => "'" . $l->g(102706) . " (" . "kW/h" . ")'",
-        "type" => "'bar'",
+        "type" => "'horizontalBar'",
     ),
     "manufacturerCost" => array(
         "backgroundColor" => $backgroundColor[1],
@@ -148,12 +181,12 @@ $datasets = array(
                 " . $data["COST"] . "
                 ]",
         "label" => "'" . $l->g(102707) . " (" . $config->COST_UNIT . ")'",
-        "type" => "'bar'",
+        "type" => "'horizontalBar'",
     )
 );
 
-$diagram->createCanvas("compare_cost_diagram", "4", "700");
-$diagram->createBarChart("compare_cost_diagram", "bar", $l->g(102702) . ' ' . $config->COMPARE_INFO_PERIOD . ' ' . $l->g(102705) . ' (' . $config->COST_UNIT . ')', $labels, $datasets);
+$diagram->createCanvas("compare_cost_diagram", "4", "550");
+$diagram->createBarChart("compare_cost_diagram", "horizontalBar", $l->g(102702) . ' ' . $config->COMPARE_INFO_PERIOD . ' ' . $l->g(102705) . ' ' . $l->g(102711) . ' (' . $config->COST_UNIT . ')', $labels, $datasets);
 //////////////////////////////
 
 echo close_form();

@@ -38,7 +38,8 @@
 102707 Coût
 102708 Coût moyen par
 102709 machine
-102710 pour les derniers
+102710 pour les derniersa
+102711 des 5 plus gros consomateurs
 
 102800 Recherche filtrée
 102801 Générer les Statistiques filtrées
