@@ -12,7 +12,7 @@
 102007 Uptime format
 
 102100 GreenIT manager
-102101 machines in the GreenIT parc of
+102101 device(s) in the GreenIT parc of
 102102 Global Statistics
 102103 Filtered Statistics
 102104 Operating system Statistics
@@ -21,9 +21,9 @@
 
 102600 Yesterday's Statistics
 102601 Total consumption
-102602 Consumption average
+102602 Consumption average per device
 102603 Total uptime
-102604 Uptime average
+102604 Uptime average per device
 102605 for
 102606 Windows clients
 102607 Windows servers

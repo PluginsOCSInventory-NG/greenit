@@ -21,9 +21,9 @@
 
 102600 Statistiques de la journée précédente
 102601 Consommation totale
-102602 Consommation moyenne
+102602 Consommation moyenne par machine
 102603 Temps de fonctionnement total
-102604 Temps de fonctionnement moyen
+102604 Temps de fonctionnement moyen par machine
 102605 pour
 102606 Clients Windows
 102607 serveurs Windows

@@ -16,7 +16,7 @@ foreach ($computersType as $computerType) {
     $table .= '
     <div class="col-md-4" style="border: 1px solid #ddd; padding: 5px;">
         <p style="font-size: 32px; font-weight:bold;">' . (isset($collectData) ? $calculation->CostFormat($sumConsumptionCollect[$computerType] / $nbDevicesCollect[$computerType], "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0') . '</p>
-        <p style="color:#333; font-size: 15px;">' . $l->g(102708) . " " . $computerType . " " . $l->g(102709) . " " . " " . $l->g(102710) . " " . $config->COLLECT_INFO_PERIOD . " " . $l->g(102705) . '</p>
+        <p style="color:#333; font-size: 15px;">' . $l->g(102708) . " " . $computerType . " " . $l->g(102709) . " " . $config->COLLECT_INFO_PERIOD . " " . $l->g(102705) . '</p>
     </div>
     ';
 }
@@ -29,7 +29,7 @@ foreach ($computersType as $computerType) {
     $table .= '
     <div class="col-md-4" style="border: 1px solid #ddd; padding: 5px;">
         <p style="font-size: 32px; font-weight:bold;">' . (isset($collectData) ? $calculation->CostFormat($sumConsumptionCompare[$computerType] / $nbDevicesCompare[$computerType], "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0') . '</p>
-        <p style="color:#333; font-size: 15px;">' . $l->g(102708) . " " . $computerType . " " . $l->g(102709) . " " . " " . $l->g(102710) . " " . $config->COMPARE_INFO_PERIOD . " " . $l->g(102705) . '</p>
+        <p style="color:#333; font-size: 15px;">' . $l->g(102708) . " " . $computerType . " " . $l->g(102709) . " " . $config->COMPARE_INFO_PERIOD . " " . $l->g(102705) . '</p>
     </div>
     ';
 }
