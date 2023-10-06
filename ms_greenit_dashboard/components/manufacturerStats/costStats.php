@@ -17,7 +17,7 @@ foreach ($compareManufacturers as $manufacturer) {
     $table .= '
     <div class="col-md-2" style="border: 1px solid #ddd; padding: 5px;">
     <p style="font-size: 32px; font-weight:bold;">' . (isset($compareData[$manufacturer]->totalConsumption) ? $calculation->CostFormat($compareData[$manufacturer]->totalConsumption / $nbDevicesCompare[$manufacturer], "W/h", $config->KILOWATT_COST, $config->COST_UNIT, $config->COST_ROUND) : '0') . '</p>
-    <p style="color:#333; font-size: 15px;">' . $l->g(102708) . " " . $manufacturer . " " . $l->g(102709) . " " . " " . $l->g(102710) . " " . $config->COMPARE_INFO_PERIOD . " " . $l->g(102705) . '</p>
+    <p style="color:#333; font-size: 15px;">' . $l->g(102708) . " " . $manufacturer . " " . $l->g(102709) . " " . $config->COMPARE_INFO_PERIOD . " " . $l->g(102705) . '</p>
     </div>
     ';
 }

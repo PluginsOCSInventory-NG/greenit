@@ -37,9 +37,8 @@
 102706 Consumption
 102707 Cost
 102708 Average cost of
-102709 devices
-102710 for last
-102711 of 5 largest consumers
+102709 for last
+102710 of 5 largest consumers
 
 102800 Filtered Search
 102801 Generate filtered stats

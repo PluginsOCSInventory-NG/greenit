@@ -36,10 +36,9 @@
 102705 jour(s)
 102706 Consommation
 102707 Coût
-102708 Coût moyen des machines
-102709 
-102710 pour les dernier
-102711 des 5 plus gros consomateurs
+102708 Coût moyen de
+102709 pour les dernier
+102710 des 5 plus gros consomateurs
 
 102800 Recherche filtrée
 102801 Générer les Statistiques filtrées
