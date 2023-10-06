@@ -30,7 +30,7 @@
 
 102700 Statistiques du coût de consommation
 102701 Coût de la journée précédente
-102702 Coût de consommation pour les derniers
+102702 Coût pour les derniers
 102703 Coût moyen par appareil
 102704 Coût moyen par appareil pour les derniers
 102705 jour(s)
