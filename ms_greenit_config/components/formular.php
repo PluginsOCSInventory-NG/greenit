@@ -8,14 +8,14 @@ $uptimeFormat = [
 ];
 
 $consumptionType = [
-    "0" => $l->g(102012),
-    "1" => $l->g(102013),
-    "2" => $l->g(102014),
-    "3" => $l->g(102015),
-    "4" => $l->g(102016),
-    "5" => $l->g(102017),
-    "6" => $l->g(102018),
-    "7" => $l->g(102019),
+    "PX_ELE_I_TTES_TRANCHES" => $l->g(102012),
+    "PX_ELE_I_IA" => $l->g(102013),
+    "PX_ELE_I_IB" => $l->g(102014),
+    "PX_ELE_I_IC" => $l->g(102015),
+    "PX_ELE_I_ID" => $l->g(102016),
+    "PX_ELE_I_IE" => $l->g(102017),
+    "PX_ELE_I_IF" => $l->g(102018),
+    "PX_ELE_I_IG" => $l->g(102019),
 ];
 
 $form_name = "configuration";

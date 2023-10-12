@@ -31,10 +31,14 @@ if (
 ) {
     // Data insert
     require_once("data/updateDB.php");
+    require_once("data/config.php");
+    require_once("data/api.php");
 } else {
     // Config recovery
     require_once("data/config.php");
 }
+
+
 
 // Start display page
 echo '
