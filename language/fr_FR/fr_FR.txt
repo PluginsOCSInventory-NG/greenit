@@ -3,13 +3,24 @@
 101000 La configuration a été mise à jour
 
 102000 Consommation d'énergie
-102001 Période de collecte des données (en jours)
-102002 Data comparator period (in days)
-102003 Précision décimale de la consommation
-102004 Précision décimale du coût
-102005 Unité de coût
-102006 Coût du kilowatt
+102001 Paramètre de l'interface
+102002 Période de collecte des données (en jours)
+102003 Data comparator period (in days)
+102004 Précision décimale de la consommation
+102005 Précision décimale du coût
+102006 Unité de coût
 102007 Format du temps de fonctionnement
+102008 Configuration de l'API
+102009 Clé API
+102010 Type de consommation
+102011 Tranche par défaut
+102012 Tranche IA (Consommation < 20 MWh/an)
+102013 Tranche IB (20 < Consommation < 500 MWh/an)
+102014 Tranche IC (500 < Consommation < 2000 MWh/an)
+102015 Tranche ID (2 < Consommation < 20 GWh/an)
+102016 Tranche IE (20 < Consommation < 70 GWh/an)
+102017 Tranche IF (70 < Consommation < 150 GWh/an)
+102018 Tranche IG (150 < Consommation GWh/an)
 
 102100 Gestionnaire GreenIT
 102101 machines dans le parc GreenIT sur

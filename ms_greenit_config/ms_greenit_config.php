@@ -20,13 +20,14 @@ if (!isset($protectedPost['onglet'])) {
 }
 
 if (
-    isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102001)))]) &&
     isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102002)))]) &&
     isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102003)))]) &&
     isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102004)))]) &&
     isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102005)))]) &&
     isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102006)))]) &&
-    isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102007)))])
+    isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102007)))]) &&
+    isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102009)))]) &&
+    isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102011)))])
 ) {
     // Data insert
     require_once("data/updateDB.php");

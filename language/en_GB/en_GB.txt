@@ -3,13 +3,25 @@
 101000 Configuration has been updated
 
 102000 Power consumption
-102001 Data collection period (in days)
-102002 Data comparator period (in days)
-102003 Consumption decimal precision
-102004 Cost decimal precision
-102005 Cost unit
-102006 Kilowatt cost
+102001 Interface's settings
+102002 Data collection period (in days)
+102003 Data comparator period (in days)
+102004 Consumption decimal precision
+102005 Cost decimal precision
+102006 Cost unit
 102007 Uptime format
+102008 API configuration
+102009 API key
+102010 Insert your API key
+102011 Consumption type
+102012 Default slice
+102013 IA Slice (Consumption < 20 MWh/year)
+102014 IB Slice (20 < Consumption < 500 MWh/year)
+102015 IC Slice (500 < Consumption < 2000 MWh/year)
+102016 ID Slice (2 < Consumption < 20 GWh/year)
+102017 IE Slice (20 < Consumption < 70 GWh/year)
+102018 IF Slice (70 < Consumption < 150 GWh/year)
+102019 IG Slice (150 < Consumption GWh/year)
 
 102100 GreenIT manager
 102101 device(s) in the GreenIT parc of
