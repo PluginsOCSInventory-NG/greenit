@@ -12,15 +12,17 @@
 102007 Format du temps de fonctionnement
 102008 Configuration de l'API
 102009 Clé API
-102010 Type de consommation
-102011 Tranche par défaut
-102012 Tranche IA (Consommation < 20 MWh/an)
-102013 Tranche IB (20 < Consommation < 500 MWh/an)
-102014 Tranche IC (500 < Consommation < 2000 MWh/an)
-102015 Tranche ID (2 < Consommation < 20 GWh/an)
-102016 Tranche IE (20 < Consommation < 70 GWh/an)
-102017 Tranche IF (70 < Consommation < 150 GWh/an)
-102018 Tranche IG (150 < Consommation GWh/an)
+102010 Test d'appel API
+102011 Inserez votre clé API
+102012 Type de consommation
+102013 Tranche par défaut
+102014 Tranche IA (Consommation < 20 MWh/an)
+102015 Tranche IB (20 < Consommation < 500 MWh/an)
+102016 Tranche IC (500 < Consommation < 2000 MWh/an)
+102017 Tranche ID (2 < Consommation < 20 GWh/an)
+102018 Tranche IE (20 < Consommation < 70 GWh/an)
+102019 Tranche IF (70 < Consommation < 150 GWh/an)
+102020 Tranche IG (150 < Consommation GWh/an)
 
 102100 Gestionnaire GreenIT
 102101 machines dans le parc GreenIT sur

@@ -10,7 +10,7 @@ $insertQuery = "
     COST_UNIT='" . $protectedPost[strtoupper(str_replace(" ", "_", $l->g(102006)))] . "',
     UPTIME_FORMAT='" . $protectedPost[strtoupper(str_replace(" ", "_", $l->g(102007)))] . "',
     API_KEY='" . $protectedPost[strtoupper(str_replace(" ", "_", $l->g(102009)))] . "',
-    CONSUMPTION_TYPE='" . $protectedPost[strtoupper(str_replace(" ", "_", $l->g(102011)))] . "'
+    CONSUMPTION_TYPE='" . $protectedPost[strtoupper(str_replace(" ", "_", $l->g(102012)))] . "'
     WHERE ID='1';
 ";
 mysql2_query_secure($insertQuery, $_SESSION['OCS']["writeServer"]);

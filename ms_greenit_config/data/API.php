@@ -20,12 +20,7 @@ $response = curl_exec($request);
 $response = json_decode($response);
 curl_close($request);
 
-if (
-    $response == 0 ||
-    $response->detail == 'Invalid token header. No credentials provided.'
-) {
-    $kilowattCost = 0;
-} else {
+if (curl_getinfo($request, CURLINFO_HTTP_CODE) == 200) {
     $Date = new DateTime("NOW");
     while ($Date->format("Y-m-01") != $response[0]->period) {
         $Date->modify("-1 month");
@@ -34,6 +29,8 @@ if (
         if ($group->name == $config->CONSUMPTION_TYPE)
             $kilowattCost = $group->electricity_price / 100;
     }
+} else {
+    $kilowattCost = 0;
 }
 
 $insertQuery = "

@@ -20,6 +20,7 @@ if (!isset($protectedPost['onglet'])) {
 }
 
 if (
+    isset($protectedPost['SUBMIT_FORM']) &&
     isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102002)))]) &&
     isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102003)))]) &&
     isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102004)))]) &&
@@ -27,12 +28,15 @@ if (
     isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102006)))]) &&
     isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102007)))]) &&
     isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102009)))]) &&
-    isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102011)))])
+    isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102012)))])
 ) {
     // Data insert
     require_once("data/updateDB.php");
     require_once("data/config.php");
-    require_once("data/api.php");
+    require_once("data/API.php");
+} else if (isset($protectedPost['TEST_API'])) {
+    require_once("data/config.php");
+    require_once("data/testAPI.php");
 } else {
     // Config recovery
     require_once("data/config.php");

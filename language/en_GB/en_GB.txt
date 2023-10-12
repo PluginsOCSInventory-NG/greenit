@@ -1,6 +1,8 @@
 100000 GreenIT
 
 101000 Configuration has been updated
+101001 API successfully called
+101002 API unsuccessfully called
 
 102000 Power consumption
 102001 Interface's settings
@@ -12,16 +14,17 @@
 102007 Uptime format
 102008 API configuration
 102009 API key
-102010 Insert your API key
-102011 Consumption type
-102012 Default slice
-102013 IA Slice (Consumption < 20 MWh/year)
-102014 IB Slice (20 < Consumption < 500 MWh/year)
-102015 IC Slice (500 < Consumption < 2000 MWh/year)
-102016 ID Slice (2 < Consumption < 20 GWh/year)
-102017 IE Slice (20 < Consumption < 70 GWh/year)
-102018 IF Slice (70 < Consumption < 150 GWh/year)
-102019 IG Slice (150 < Consumption GWh/year)
+102010 Call API test
+102011 Insert your API key
+102012 Consumption type
+102013 Default slice
+102014 IA Slice (Consumption < 20 MWh/year)
+102015 IB Slice (20 < Consumption < 500 MWh/year)
+102016 IC Slice (500 < Consumption < 2000 MWh/year)
+102017 ID Slice (2 < Consumption < 20 GWh/year)
+102018 IE Slice (20 < Consumption < 70 GWh/year)
+102019 IF Slice (70 < Consumption < 150 GWh/year)
+102020 IG Slice (150 < Consumption GWh/year)
 
 102100 GreenIT manager
 102101 device(s) in the GreenIT parc of
