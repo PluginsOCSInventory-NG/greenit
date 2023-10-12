@@ -33,11 +33,13 @@ function extension_install_greenit()
         `COST_UNIT` varchar(255) NOT NULL,
         `KILOWATT_COST` FLOAT NOT NULL,
         `UPTIME_FORMAT` VARCHAR(255) NOT NULL,
+        `API_KEY` VARCHAR(255) NOT NULL,
+        `CONSUMPTION_TYPE` INTEGER NOT NULL,
         PRIMARY KEY (ID)) ENGINE=INNODB;"
     );
 
     $commonObject->sqlQuery(
-        "INSERT INTO `greenit_config` (COLLECT_INFO_PERIOD,COMPARE_INFO_PERIOD,CONSUMPTION_ROUND,COST_ROUND,COST_UNIT,KILOWATT_COST,UPTIME_FORMAT) VALUES ('30','365','2','2','€','','h-m-s');"
+        "INSERT INTO `greenit_config` (COLLECT_INFO_PERIOD,COMPARE_INFO_PERIOD,CONSUMPTION_ROUND,COST_ROUND,COST_UNIT,KILOWATT_COST,UPTIME_FORMAT,API_KEY,CONSUMPTION_TYPE) VALUES ('30','365','2','2','€','','h-m-s', '', '0');"
     );
 
     $commonObject->sqlQuery(
