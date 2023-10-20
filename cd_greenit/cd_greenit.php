@@ -44,7 +44,7 @@ echo open_form($form_name);
 $list_fields = array(
     'Date' => 'DATE',
     'Comsumption (W/h)' => 'CONSUMPTION',
-    'Uptime' => 'UPTIME',
+    'Uptime (s)' => 'UPTIME',
 );
 
 // columns to include at any time and default columns
