@@ -10,86 +10,81 @@
 //====================================================================================
 
 if (AJAX) {
-    parse_str($protectedPost['ocs']['0'], $params);
+    parse_str($protectedPost["ocs"]["0"], $params);
     $protectedPost += $params;
     ob_start();
 }
 
-if (!isset($protectedPost['onglet'])) {
-    $protectedPost['onglet'] = 1;
-}
+require_once("views/globalStats.class.php");
+require_once("views/filteredStats.class.php");
+require_once("views/osStats.class.php");
+require_once("views/computerTypeStats.class.php");
+require_once("views/manufacturerStats.class.php");
 
-require_once("class/calculation.class.php");
-require_once('class/diagram.class.php');
+if (!isset($protectedGet["cat"]))
+    $protectedGet["cat"] = "globalstats";
 
-$calculation = new Calculation;
-$diagram = new Diagram;
-
-if (!isset($protectedGet['cat'])) {
-    $protectedGet['cat'] = 'globalstats';
-}
-
-// Config recovery
-require_once('data/config.php');
-
-// Data recovery
-require_once('data/title.php');
-if ($protectedGet['cat'] == 'globalstats') {
-    require_once('data/globalStats.php');
-} else if ($protectedGet['cat'] == 'filteredstats') {
-    require_once('data/filteredSearch.php');
-    if (
-        isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))]) ||
-        isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))])
-    )
-        require_once('data/filteredStats.php');
-} else if ($protectedGet['cat'] == 'osstats') {
-    require_once('data/osStats.php');
-} else if ($protectedGet['cat'] == 'computertypestats') {
-    require_once('data/computertypeStats.php');
-} else if ($protectedGet['cat'] == 'manufacturerstats') {
-    require_once('data/manufacturerStats.php');
-}
-
-// Start display page
-require_once("components/greenitMenu.php");
-
-echo "<div class='col-md-10'>";
-
-require_once("components/title.php");
-
-if ($protectedGet['cat'] == 'globalstats') {
-    require_once("components/globalStats/yesterdayStats.php");
-    require_once("components/globalStats/costStats.php");
-} else if ($protectedGet['cat'] == 'filteredstats') {
-    if (
-        isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))]) ||
-        isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))])
-    ) {
-        require_once("components/filteredStats/yesterdayStats.php");
-        require_once("components/filteredStats/costStats.php");
+if ($protectedGet["cat"]) {
+    switch ($protectedGet["cat"]) {
+        case "globalstats":
+            $view = new GlobalStatsView();
+            break;
+        case "filteredstats":
+            $view = new FilteredStatsView();
+            break;
+        case "osstats":
+            $view = new OSStatsView();
+            break;
+        case "computertypestats":
+            $view = new ComputerTypeStatsView();
+            break;
+        case "manufacturerstats":
+            $view = new ManufacturerStatsView();
+            break;
+        default:
+            msg_error("Error 404");
+            break;
     }
-    require_once("components/filteredStats/filteredSearch.php");
-} else if ($protectedGet['cat'] == 'osstats') {
-    require_once("components/osStats/yesterdayStats.php");
-    require_once("components/osStats/costStats.php");
-} else if ($protectedGet['cat'] == 'computertypestats') {
-    require_once("components/computerTypeStats/costStats.php");
-} else if ($protectedGet['cat'] == 'manufacturerstats') {
-    require_once("components/manufacturerStats/costStats.php");
 }
 
-echo "</div>";
+if (isset($view)) {
+    echo "
+        <div class='row'>
+            <div class='col-md-2'>
+    ";
+    $view->ShowTitle();
+    $view->ShowMenu();
+    echo "
+            </div>
+            <div class='col-md-10'>
+    ";
+    if ($protectedGet["cat"] == "filteredstats") {
+        $view->ShowFilteredSearch();
+        if (isset($protectedGet["computers"]) || isset($protectedGet["computers"])) {
+            $view->ShowYesterdayStats();
+            $view->ShowComparatorStats();
+        }
+    } else {
+        $view->ShowYesterdayStats();
+        $view->ShowComparatorStats();
+    }
+    echo "
+            </div>
+        </div>
+    ";
+}
 
 if (AJAX) {
     ob_end_clean();
-    tab_req(
-        $list_fields_filtered_search,
-        $default_fields_filtered_search,
-        $list_col_cant_del_filtered_search,
-        $sql_filtered_search['SQL'],
-        $tab_options_filtered_search
-    );
+    if ($protectedGet["cat"] == "filteredstats") {
+        tab_req(
+            $list_fields_filtered_search,
+            $default_fields_filtered_search,
+            $list_col_cant_del_filtered_search,
+            $sql_filtered_search['SQL'],
+            $tab_options_filtered_search
+        );
+    }
 }
 
 ?>

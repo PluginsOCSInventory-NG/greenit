@@ -1,19 +1,21 @@
 100000 GreenIT
 
-101000 La configuration a été mise à jour
+101000 La configuration à été mise à jour
+101001 Test API réussi
+101002 Échec du test API
 
 102000 Consommation d'énergie
 102001 Paramètre de l'interface
 102002 Période de collecte des données (en jours)
-102003 Data comparator period (in days)
+102003 Période de comparaison des données (en jours)
 102004 Précision décimale de la consommation
 102005 Précision décimale du coût
 102006 Unité de coût
 102007 Format du temps de fonctionnement
 102008 Configuration de l'API
 102009 Clé API
-102010 Test d'appel API
-102011 Inserez votre clé API
+102010 Test API
+102011 Insérez votre clé API
 102012 Type de consommation
 102013 Tranche par défaut
 102014 Tranche IA (Consommation < 20 MWh/an)
@@ -25,33 +27,40 @@
 102020 Tranche IG (150 < Consommation GWh/an)
 
 102100 Gestionnaire GreenIT
-102101 machines dans le parc GreenIT sur
-102102 Statistiques globales
-102103 Statistiques filtrées
-102104 Statistiques par système d'exploitation
-102105 Statistiques par type de machine
-102106 Statistiques par constructeur
+102101 machine(s) dont 
+102102 machine(s) virtuelle(s) dans le parc GreenIT sur
+102103 Statistiques globales
+102104 Statistiques filtrées
+102105 Statistiques par système d'exploitation
+102106 Statistiques par type de machine
+102107 Statistiques par constructeur
 
 102600 Statistiques de la journée précédente
 102601 Consommation totale
 102602 Consommation moyenne par machine
 102603 Temps de fonctionnement total
 102604 Temps de fonctionnement moyen par machine
-102605 pour
-102606 Clients Windows
-102607 serveurs Windows
+102605 Coût total
+102606 Moyenne de coût par machine 
 
-102700 Statistiques du coût de consommation
+102700 Comparateur de statistiques
 102701 Coût de la journée précédente
 102702 Coût pour les derniers
-102703 Coût moyen par appareil
+102703 Coût moyen de
 102704 Coût moyen par appareil pour les derniers
-102705 jour(s)
-102706 Consommation
-102707 Coût
-102708 Coût moyen de
-102709 pour les dernier
-102710 des 5 plus gros consomateurs
+102705 pour les derniers
+102706 jour(s)
+102707 des 5 plus gros consomateurs
+102708 Consommation totale de la journée précédente (kW/h)
+102709 Temps de fonctionnement total de la journée précédente pour les clients Windows
+102710 Temps de fonctionnement total de la journée précédente pour les servers Windows
 
-102800 Recherche filtrée
-102801 Générer les Statistiques filtrées
+102800 Consommation
+102801 Coût
+102802 Consommation totale pour les clients Windows
+102803 Consommation totale pour les servers Windows
+102804 Clients Windows
+102805 Servers Windows
+
+102900 Recherche filtrée
+102901 Générer les Statistiques filtrées
