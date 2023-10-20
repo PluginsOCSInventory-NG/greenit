@@ -18,7 +18,7 @@ function extension_install_greenit()
         `ID` INTEGER NOT NULL AUTO_INCREMENT,
         `HARDWARE_ID` INTEGER NOT NULL,
         `DATE` DATE NOT NULL,
-        `CONSUMPTION` DOUBLE NOT NULL,
+        `CONSUMPTION` VARCHAR(255) NOT NULL,
         `UPTIME` INTEGER NOT NULL,
         PRIMARY KEY (ID,HARDWARE_ID)) ENGINE=INNODB;"
     );
@@ -45,6 +45,7 @@ function extension_install_greenit()
     $commonObject->sqlQuery(
         "CREATE TABLE IF NOT EXISTS `greenit_stats` (
         `ID` INTEGER NOT NULL AUTO_INCREMENT,
+        `TYPE` VARCHAR(255) NOT NULL, 
         `DATE` DATE NOT NULL,
         `DATA` JSON NOT NULL,
         CHECK (JSON_VALID(DATA)),
