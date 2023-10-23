@@ -20,7 +20,7 @@ class OSStatsView extends View
     private object $compareData;
 
     /**
-     * Constructor of the view which define evrything the view need to work
+     * Constructor of the view which define everything the view need to work
      */
     function __construct()
     {

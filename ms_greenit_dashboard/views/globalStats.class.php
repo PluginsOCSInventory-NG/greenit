@@ -2,6 +2,12 @@
 
 require_once(__DIR__ . "/../../config/view.class.php");
 
+/**
+ * GlobalStats view
+ * 
+ * @version Release: 1.0
+ * @since Class available since Release 2.0
+ */
 class GlobalStatsView extends View
 {
     /**
@@ -20,7 +26,7 @@ class GlobalStatsView extends View
     private object $compareData;
 
     /**
-     * Constructor of the view which define evrything the view need to work
+     * Constructor of the view which define everything the view need to work
      */
     function __construct()
     {
