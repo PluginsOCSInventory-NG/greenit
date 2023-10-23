@@ -46,22 +46,20 @@ class GlobalStatsView extends View
         ", false);
         $this->collectData = $this->data->GetGreenITData("
             SELECT 
-            DATE, 
             DATA 
             FROM greenit_stats 
             WHERE 
             TYPE = 'GLOBAL_COLLECT_TOTAL_STATS' 
             AND DATE = '0000-00-00'
-            ", true);
+            ", false);
         $this->compareData = $this->data->GetGreenITData("
             SELECT 
-            DATE, 
             DATA 
             FROM greenit_stats 
             WHERE 
             TYPE = 'GLOBAL_COMPARE_TOTAL_STATS' 
             AND DATE = '0000-00-00'
-        ", true);
+        ", false);
     }
 
     /**
@@ -126,22 +124,22 @@ class GlobalStatsView extends View
         $table = "
             <div class='row'>
                 <div class='col-md-6' style='border-right: 1px solid #ddd;'>
-                    <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->collectData) && $this->collectData->return != false ? $this->calculation->CostFormat($this->collectData->{"0000-00-00"}->totalConsumption, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
+                    <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->collectData) && $this->collectData->return != false ? $this->calculation->CostFormat($this->collectData->totalConsumption, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
                     <p style='color:#333; font-size: 15px;'>" . $l->g(102702) . " " . $this->config->GetCollectInfoPeriod() . " " . $l->g(102706) . "</p>
                 </div>
                 <div class='col-md-6'>
-                    <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->compareData) && $this->compareData->return != false ? $this->calculation->CostFormat($this->compareData->{"0000-00-00"}->totalConsumption, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
+                    <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->compareData) && $this->compareData->return != false ? $this->calculation->CostFormat($this->compareData->totalConsumption, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
                     <p style='color:#333; font-size: 15px;'>" . $l->g(102702) . " " . $this->config->GetCompareInfoPeriod() . " " . $l->g(102706) . "</p>
                 </div>                
             </div>
             <br>
             <div class='row'>
                 <div class='col-md-6' style='border-right: 1px solid #ddd;'>
-                    <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->collectData) && $this->collectData->return != false ? $this->calculation->CostFormat($this->collectData->{"0000-00-00"}->totalConsumption / $this->collectData->{"0000-00-00"}->totalMachines, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
+                    <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->collectData) && $this->collectData->return != false ? $this->calculation->CostFormat($this->collectData->totalConsumption / $this->collectData->totalMachines, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
                     <p style='color:#333; font-size: 15px;'>" . $l->g(102704) . " " . $this->config->GetCollectInfoPeriod() . " " . $l->g(102706) . "</p>
                 </div>
                 <div class='col-md-6'>
-                    <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->compareData) && $this->compareData->return != false ? $this->calculation->CostFormat($this->compareData->{"0000-00-00"}->totalConsumption / $this->compareData->{"0000-00-00"}->totalMachines, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
+                    <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->compareData) && $this->compareData->return != false ? $this->calculation->CostFormat($this->compareData->totalConsumption / $this->compareData->totalMachines, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
                     <p style='color:#333; font-size: 15px;'>" . $l->g(102704) . " " . $this->config->GetCompareInfoPeriod() . " " . $l->g(102706) . "</p>
                 </div>
             </div>
@@ -151,8 +149,8 @@ class GlobalStatsView extends View
         $labels = [$l->g(102702) . " " . $this->config->GetCollectInfoPeriod() . " " . $l->g(102706)];
         $backgroundColor = $this->diagram->GenerateColorList(2, true);
         $data = array(
-            "CONSUMPTION" => str_replace(" " . "kW/h", "", (isset($this->collectData) && $this->collectData->return != false ? $this->calculation->ConsumptionFormat($this->collectData->{"0000-00-00"}->totalConsumption, $this->config->GetConsumptionRound()) : "0")),
-            "COST" => str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->collectData) && $this->collectData->return != false ? $this->calculation->CostFormat($this->collectData->{"0000-00-00"}->totalConsumption, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0"))
+            "CONSUMPTION" => str_replace(" " . "kW/h", "", (isset($this->collectData) && $this->collectData->return != false ? $this->calculation->ConsumptionFormat($this->collectData->totalConsumption, $this->config->GetConsumptionRound()) : "0")),
+            "COST" => str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->collectData) && $this->collectData->return != false ? $this->calculation->CostFormat($this->collectData->totalConsumption, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0"))
         );
         $datasets = array(
             "consumption" => array(
@@ -172,8 +170,8 @@ class GlobalStatsView extends View
         $labels = [$l->g(102702) . " " . $this->config->GetCompareInfoPeriod() . " " . $l->g(102706)];
         $backgroundColor = $this->diagram->GenerateColorList(2, true);
         $data = array(
-            "CONSUMPTION" => str_replace(" " . "kW/h", "", (isset($this->compareData) && $this->compareData->return != false ? $this->calculation->ConsumptionFormat($this->compareData->{"0000-00-00"}->totalConsumption, $this->config->GetConsumptionRound()) : "0")),
-            "COST" => str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->compareData) && $this->compareData->return != false ? $this->calculation->CostFormat($this->compareData->{"0000-00-00"}->totalConsumption, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0"))
+            "CONSUMPTION" => str_replace(" " . "kW/h", "", (isset($this->compareData) && $this->compareData->return != false ? $this->calculation->ConsumptionFormat($this->compareData->totalConsumption, $this->config->GetConsumptionRound()) : "0")),
+            "COST" => str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->compareData) && $this->compareData->return != false ? $this->calculation->CostFormat($this->compareData->totalConsumption, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0"))
         );
         $datasets = array(
             "consumption" => array(

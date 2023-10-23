@@ -34,36 +34,58 @@ class OSStatsView extends View
         $this->collectData = new stdClass();
         $this->compareData = new stdClass();
 
-        $this->yesterdayData->CLIENTS = $this->data->GetGreenITData("
+        $this->yesterdayData->clients = $this->data->GetGreenITData("
             SELECT 
             DATA 
             FROM greenit_stats 
             WHERE 
-            DATE = '" . $this->config->GetYesterdayDate() . "'
+            TYPE = 'OSSTATS_CLIENTS' 
+            AND DATE='" . $this->config->GetYesterdayDate() . "'
         ", false);
-        $this->yesterdayData->SERVERS = $this->data->GetGreenITData("
+        $this->yesterdayData->servers = $this->data->GetGreenITData("
             SELECT 
             DATA 
             FROM greenit_stats 
             WHERE 
-            DATE = '" . $this->config->GetYesterdayDate() . "'
+            TYPE = 'OSSTATS_SERVERS' 
+            AND DATE='" . $this->config->GetYesterdayDate() . "'
         ", false);
-        $this->collectData = $this->data->GetGreenITData("
+        $this->collectData->clients = $this->data->GetGreenITData("
             SELECT 
             DATE, 
             DATA 
             FROM greenit_stats 
             WHERE 
-            DATE BETWEEN '" . $this->config->GetCollectDate() . "' AND '" . $this->config->GetYesterdayDate() . "'
-        ", true);
-        $this->compareData = $this->data->GetGreenITData("
+            TYPE = 'OS_COLLECT_TOTAL_STATS_CLIENTS' 
+            AND DATE = '0000-00-00'
+        ", false);
+        $this->collectData->servers = $this->data->GetGreenITData("
             SELECT 
             DATE, 
             DATA 
             FROM greenit_stats 
             WHERE 
-            DATE BETWEEN '" . $this->config->GetCompareDate() . "' AND '" . $this->config->GetYesterdayDate() . "'
-        ", true);
+            TYPE = 'OS_COLLECT_TOTAL_STATS_SERVERS' 
+            AND DATE = '0000-00-00'
+        ", false);
+        $this->compareData->clients = $this->data->GetGreenITData("
+            SELECT 
+            DATE, 
+            DATA 
+            FROM greenit_stats 
+            WHERE 
+            TYPE = 'OS_COMPARE_TOTAL_STATS_CLIENTS' 
+            AND DATE = '0000-00-00'
+        ", false);
+        $this->compareData->servers = $this->data->GetGreenITData("
+            SELECT 
+            DATE, 
+            DATA 
+            FROM greenit_stats 
+            WHERE 
+            TYPE = 'OS_COMPARE_TOTAL_STATS_SERVERS' 
+            AND DATE = '0000-00-00'
+        ", false);
     }
 
     /**
@@ -89,11 +111,11 @@ class OSStatsView extends View
         $table = "
             <div class='row'>
                 <div class='col-md-6' style='border-right: 1px solid #ddd;'>
-                    <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->yesterdayData->CLIENTS) && $this->yesterdayData->CLIENTS->RETURN != false ? $this->calculation->TimeFormat($this->yesterdayData->CLIENTS->totalUptime, $this->config->GetUptimeFormat()) : "0") . "</p>
+                    <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->yesterdayData->clients) && $this->yesterdayData->clients->return != false ? $this->calculation->TimeFormat($this->yesterdayData->clients->totalUptime, $this->config->GetUptimeFormat()) : "0") . "</p>
                     <p style='color:#333; font-size: 15px;'>" . $l->g(102709) . "</p>
                 </div>
                 <div class='col-md-6'>
-                    <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->yesterdayData->SERVERS) && $this->yesterdayData->SERVERS->RETURN != false ? $this->calculation->TimeFormat($this->yesterdayData->SERVERS->totalUptime, $this->config->GetUptimeFormat()) : "0") . "</p>
+                    <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->yesterdayData->servers) && $this->yesterdayData->servers->return != false ? $this->calculation->TimeFormat($this->yesterdayData->servers->totalUptime, $this->config->GetUptimeFormat()) : "0") . "</p>
                     <p style='color:#333; font-size: 15px;'>" . $l->g(102710) . "</p>
                 </div>
             </div>
@@ -109,8 +131,8 @@ class OSStatsView extends View
         $labels = [$l->g(102708)];
         $backgroundColor = $this->diagram->GenerateColorList(2, true);
         $data = array();
-        $data["CLIENTS"] = str_replace(" kW/h", "", (isset($this->yesterdayData->CLIENTS) && $this->yesterdayData->CLIENTS->RETURN != false ? $this->calculation->ConsumptionFormat(floatval($this->yesterdayData->CLIENTS->totalConsumption), "kW/h", $this->config->GetConsumptionRound()) : "0"));
-        $data["SERVERS"] = str_replace(" kW/h", "", (isset($this->yesterdayData->SERVERS) && $this->yesterdayData->SERVERS->RETURN != false ? $this->calculation->ConsumptionFormat(floatval($this->yesterdayData->SERVERS->totalConsumption), "kW/h", $this->config->GetConsumptionRound()) : "0"));
+        $data["CLIENTS"] = str_replace(" kW/h", "", (isset($this->yesterdayData->clients) && $this->yesterdayData->clients->return != false ? $this->calculation->ConsumptionFormat(floatval($this->yesterdayData->clients->totalConsumption), $this->config->GetConsumptionRound()) : "0"));
+        $data["SERVERS"] = str_replace(" kW/h", "", (isset($this->yesterdayData->servers) && $this->yesterdayData->servers->return != false ? $this->calculation->ConsumptionFormat(floatval($this->yesterdayData->servers->totalConsumption), $this->config->GetConsumptionRound()) : "0"));
         $datasets = array(
             "clientConsumption" => array(
                 "backgroundColor" => $backgroundColor[0],
@@ -143,8 +165,8 @@ class OSStatsView extends View
         ];
         $backgroundColor = $this->diagram->GenerateColorList(2, false);
         $data = array();
-        $data["CLIENTS"] = str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->yesterdayData->CLIENTS) && $this->yesterdayData->CLIENTS->RETURN != false ? $this->calculation->CostFormat($this->yesterdayData->CLIENTS->totalConsumption, "W/h", $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : 0));
-        $data["SERVERS"] = str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->yesterdayData->SERVERS) && $this->yesterdayData->SERVERS->RETURN != false ? $this->calculation->CostFormat($this->yesterdayData->SERVERS->totalConsumption, "W/h", $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : 0));
+        $data["CLIENTS"] = str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->yesterdayData->clients) && $this->yesterdayData->clients->return != false ? $this->calculation->CostFormat($this->yesterdayData->clients->totalConsumption, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : 0));
+        $data["SERVERS"] = str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->yesterdayData->servers) && $this->yesterdayData->servers->return != false ? $this->calculation->CostFormat($this->yesterdayData->servers->totalConsumption, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : 0));
         $datasets = array(
             "label" => '"' . $l->g(102701) . ' (' . $this->config->GetCostUnit() . ')"',
             "data" => "["
@@ -164,8 +186,8 @@ class OSStatsView extends View
         ];
         $backgroundColor = $this->diagram->GenerateColorList(2, false);
         $data = array();
-        $data["CLIENTS"] = str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->yesterdayData->CLIENTS) && $this->yesterdayData->CLIENTS->RETURN != false ? $this->calculation->CostFormat($this->yesterdayData->CLIENTS->totalConsumption, "W/h", $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : 0));
-        $data["SERVERS"] = str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->yesterdayData->SERVERS) && $this->yesterdayData->SERVERS->RETURN != false ? $this->calculation->CostFormat($this->yesterdayData->SERVERS->totalConsumption, "W/h", $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : 0));
+        $data["CLIENTS"] = str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->collectData->clients) && $this->collectData->clients->return != false ? $this->calculation->CostFormat($this->collectData->clients->totalConsumption, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : 0));
+        $data["SERVERS"] = str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->collectData->servers) && $this->collectData->servers->return != false ? $this->calculation->CostFormat($this->collectData->servers->totalConsumption, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : 0));
         $datasets = array(
             "label" => "'" . $l->g(102702) . " " . $this->config->GetCollectInfoPeriod() . " " . $l->g(102706) . " (" . $this->config->GetCostUnit() . ")'",
             "data" => "["
@@ -185,8 +207,8 @@ class OSStatsView extends View
         ];
         $backgroundColor = $this->diagram->GenerateColorList(2, false);
         $data = array();
-        $data["CLIENTS"] = str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->yesterdayData->CLIENTS) && $this->yesterdayData->CLIENTS->RETURN != false ? $this->calculation->CostFormat($this->yesterdayData->CLIENTS->totalConsumption, "W/h", $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : 0));
-        $data["SERVERS"] = str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->yesterdayData->SERVERS) && $this->yesterdayData->SERVERS->RETURN != false ? $this->calculation->CostFormat($this->yesterdayData->SERVERS->totalConsumption, "W/h", $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : 0));
+        $data["CLIENTS"] = str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->compareData->clients) && $this->compareData->clients->return != false ? $this->calculation->CostFormat($this->compareData->clients->totalConsumption, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : 0));
+        $data["SERVERS"] = str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->compareData->servers) && $this->compareData->servers->return != false ? $this->calculation->CostFormat($this->compareData->servers->totalConsumption, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : 0));
         $datasets = array(
             "label" => "'" . $l->g(102702) . " " . $this->config->GetCompareInfoPeriod() . " " . $l->g(102706) . " (" . $this->config->GetCostUnit() . ")'",
             "data" => "["
