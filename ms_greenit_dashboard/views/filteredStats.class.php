@@ -354,9 +354,9 @@ class FilteredStatsView extends View
             $compareQuery .= ")";
         }
 
-        $this->yesterdayData = $this->data->GetFilteredGreenITData($yesterdayQuery, false);
-        $this->collectData = $this->data->GetFilteredGreenITData($collectQuery, true);
-        $this->compareData = $this->data->GetFilteredGreenITData($compareQuery, true);
+        $this->yesterdayData = $this->data->GetFilteredGreenITData($yesterdayQuery);
+        $this->collectData = $this->data->GetFilteredGreenITData($collectQuery);
+        $this->compareData = $this->data->GetFilteredGreenITData($compareQuery);
 
     }
 
@@ -584,6 +584,7 @@ class FilteredStatsView extends View
     public function ShowYesterdayStats(): void
     {
         global $l;
+        global $protectedGet;
 
         echo "<h4>" . $l->g(102600) . "</h4>";
 
@@ -604,21 +605,25 @@ class FilteredStatsView extends View
                 
             </div>
             <br>
-            <div class='row'>
-                <div class='col-md-4' style='border-right: 1px solid #ddd;'>
-                    <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->yesterdayData) && $this->yesterdayData->return != false ? $this->calculation->ConsumptionFormat($this->yesterdayData->consumptionAverage, $this->config->GetConsumptionRound()) : "0") . "</p>
-                    <p style='color:#333; font-size: 15px;'>" . $l->g(102602) . "</p>
-                </div>
-                <div class='col-md-4' style='border-right: 1px solid #ddd;'>
-                    <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->yesterdayData) && $this->yesterdayData->return != false ? $this->calculation->TimeFormat($this->yesterdayData->uptimeAverage, $this->config->GetUptimeFormat()) : "0") . "</p>
-                    <p style='color:#333; font-size: 15px;'>" . $l->g(102604) . "</p>
-                </div>
-                <div class='col-md-4'>
-                    <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->yesterdayData) && $this->yesterdayData->return != false ? $this->calculation->CostFormat($this->yesterdayData->totalConsumption / $this->yesterdayData->totalMachines, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
-                    <p style='color:#333; font-size: 15px;'>" . $l->g(102606) . "</p>
-                </div>
-            </div>
         ";
+        if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))])) {
+            $table .= "
+                <div class='row'>
+                    <div class='col-md-4' style='border-right: 1px solid #ddd;'>
+                        <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->yesterdayData) && $this->yesterdayData->return != false ? $this->calculation->ConsumptionFormat($this->yesterdayData->consumptionAverage, $this->config->GetConsumptionRound()) : "0") . "</p>
+                        <p style='color:#333; font-size: 15px;'>" . $l->g(102602) . "</p>
+                    </div>
+                    <div class='col-md-4' style='border-right: 1px solid #ddd;'>
+                        <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->yesterdayData) && $this->yesterdayData->return != false ? $this->calculation->TimeFormat($this->yesterdayData->uptimeAverage, $this->config->GetUptimeFormat()) : "0") . "</p>
+                        <p style='color:#333; font-size: 15px;'>" . $l->g(102604) . "</p>
+                    </div>
+                    <div class='col-md-4'>
+                        <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->yesterdayData) && $this->yesterdayData->return != false ? $this->calculation->CostFormat($this->yesterdayData->totalConsumption / $this->yesterdayData->totalMachines, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
+                        <p style='color:#333; font-size: 15px;'>" . $l->g(102606) . "</p>
+                    </div>
+                </div>
+            ";
+        }
         echo $table;
 
         echo "<hr>";
@@ -632,6 +637,7 @@ class FilteredStatsView extends View
     public function ShowComparatorStats(): void
     {
         global $l;
+        global $protectedGet;
 
         echo "<h4>" . $l->g(102700) . "</h4>";
 
@@ -647,17 +653,21 @@ class FilteredStatsView extends View
                 </div>                
             </div>
             <br>
-            <div class='row'>
-                <div class='col-md-6' style='border-right: 1px solid #ddd;'>
-                    <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->collectData) && $this->collectData->return != false ? $this->calculation->CostFormat($this->collectData->totalConsumption / $this->collectData->totalMachines, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
-                    <p style='color:#333; font-size: 15px;'>" . $l->g(102704) . " " . $this->config->GetCollectInfoPeriod() . " " . $l->g(102706) . "</p>
-                </div>
-                <div class='col-md-6'>
-                    <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->compareData) && $this->compareData->return != false ? $this->calculation->CostFormat($this->compareData->totalConsumption / $this->compareData->totalMachines, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
-                    <p style='color:#333; font-size: 15px;'>" . $l->g(102704) . " " . $this->config->GetCompareInfoPeriod() . " " . $l->g(102706) . "</p>
-                </div>
-            </div>
         ";
+        if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))])) {
+            $table .= "
+                <div class='row'>
+                    <div class='col-md-6' style='border-right: 1px solid #ddd;'>
+                        <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->collectData) && $this->collectData->return != false ? $this->calculation->CostFormat($this->collectData->totalConsumption / $this->collectData->totalMachines, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
+                        <p style='color:#333; font-size: 15px;'>" . $l->g(102704) . " " . $this->config->GetCollectInfoPeriod() . " " . $l->g(102706) . "</p>
+                    </div>
+                    <div class='col-md-6'>
+                        <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->compareData) && $this->compareData->return != false ? $this->calculation->CostFormat($this->compareData->totalConsumption / $this->compareData->totalMachines, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
+                        <p style='color:#333; font-size: 15px;'>" . $l->g(102704) . " " . $this->config->GetCompareInfoPeriod() . " " . $l->g(102706) . "</p>
+                    </div>
+                </div>
+            ";
+        }
         echo $table;
 
         $labels = [$l->g(102702) . " " . $this->config->GetCollectInfoPeriod() . " " . $l->g(102706)];
