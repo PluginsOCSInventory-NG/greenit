@@ -36,6 +36,31 @@ class FilteredStatsView extends View
     private array $tabOptionsFilteredSearch;
 
     /**
+     *  List of computers for the filtered search module
+     */
+    private string $computers;
+
+    /**
+     *  List of groups for the filtered search module
+     */
+    private array $groups;
+
+    /**
+     *  List of os for the filtered search module
+     */
+    private array $os;
+
+    /**
+     *  List of tags for the filtered search module
+     */
+    private array $tags;
+
+    /**
+     *  List of assets for the filtered search module
+     */
+    private array $assets;
+
+    /**
      *  List of yesterday data for the current view
      */
     private object $yesterdayData;
@@ -56,6 +81,8 @@ class FilteredStatsView extends View
     function __construct()
     {
         global $l;
+        global $tab_options;
+        global $protectedGet;
         global $protectedPost;
 
         $this->logMessage = new LogMessage();
@@ -63,47 +90,6 @@ class FilteredStatsView extends View
         $this->calculation = new Calculation();
         $this->diagram = new Diagram();
         $this->data = new Data();
-
-        $this->yesterdayData = $this->data->GetGreenITData("
-            SELECT 
-            DATA 
-            FROM greenit_stats 
-            WHERE 
-            TYPE = 'GLOBALSTATS' 
-            AND DATE='" . $this->config->GetYesterdayDate() . "'
-        ", false);
-        $this->collectData = $this->data->GetGreenITData("
-            SELECT 
-            DATE, 
-            DATA 
-            FROM greenit_stats 
-            WHERE 
-            (
-                TYPE = 'GLOBALSTATS' 
-                OR TYPE = 'GLOBAL_COLLECT_TOTAL_STATS' 
-            )
-            AND 
-            (
-                DATE BETWEEN '" . $this->config->GetCollectDate() . "' AND '" . $this->config->GetYesterdayDate() . "' 
-                OR DATE = '0000-00-00'
-            )
-            ", true);
-        $this->compareData = $this->data->GetGreenITData("
-            SELECT 
-            DATE, 
-            DATA 
-            FROM greenit_stats 
-            WHERE 
-            (
-                TYPE = 'GLOBALSTATS' 
-                OR TYPE = 'GLOBAL_COMPARE_TOTAL_STATS' 
-            )
-            AND 
-            (
-                DATE BETWEEN '" . $this->config->GetCompareDate() . "' AND '" . $this->config->GetYesterdayDate() . "' 
-                OR DATE = '0000-00-00'
-            )
-        ", true);
 
         //////////////////////////////
         // If reset button clicked, reset session variables
@@ -196,17 +182,17 @@ class FilteredStatsView extends View
         while ($row = mysqli_fetch_object($computerDataResult)) {
             array_push($computerData, $row->NAME);
         }
-        $computers = "";
+        $this->computers = "";
         foreach ($computerData as $computer) {
-            $computers .= $computer;
+            $this->computers .= $computer;
             if (next($computerData))
-                $computers .= ",";
+                $this->computers .= ",";
         }
         //////////////////////////////
 
         //////////////////////////////
         // Get filter table values
-        $sql_filtered_search['SQL'] = '
+        $this->sqlFilteredSearch['SQL'] = '
             SELECT DISTINCT 
             hardware.NAME as NAME,
             hardware.OSNAME AS OS_NAME,
@@ -225,35 +211,35 @@ class FilteredStatsView extends View
             is_defined($_SESSION['GREENIT']['FILTER']['TAG']) ||
             is_defined($_SESSION['GREENIT']['FILTER']['ASSET'])
         ) {
-            $sql_filtered_search['WHERE'] = [];
-            $sql_filtered_search['SQL'] .= ' WHERE';
+            $this->sqlFilteredSearch['WHERE'] = [];
+            $this->sqlFilteredSearch['SQL'] .= ' WHERE';
 
             if (is_defined($_SESSION['GREENIT']['FILTER']['OS']))
-                array_push($sql_filtered_search['WHERE'], ' hardware.OSNAME="' . $_SESSION['GREENIT']['FILTER']['OS'] . '" AND');
+                array_push($this->sqlFilteredSearch['WHERE'], ' hardware.OSNAME="' . $_SESSION['GREENIT']['FILTER']['OS'] . '" AND');
             if (is_defined($_SESSION['GREENIT']['FILTER']['GROUP']))
-                array_push($sql_filtered_search['WHERE'], ' GROUP_ID="' . $_SESSION['GREENIT']['FILTER']['GROUP'] . '" AND');
+                array_push($this->sqlFilteredSearch['WHERE'], ' GROUP_ID="' . $_SESSION['GREENIT']['FILTER']['GROUP'] . '" AND');
             if (is_defined($_SESSION['GREENIT']['FILTER']['TAG']))
-                array_push($sql_filtered_search['WHERE'], ' accountinfo.TAG="' . $_SESSION['GREENIT']['FILTER']['TAG'] . '" AND');
+                array_push($this->sqlFilteredSearch['WHERE'], ' accountinfo.TAG="' . $_SESSION['GREENIT']['FILTER']['TAG'] . '" AND');
             if (is_defined($_SESSION['GREENIT']['FILTER']['ASSET']))
-                array_push($sql_filtered_search['WHERE'], ' hardware.CATEGORY_ID="' . $_SESSION['GREENIT']['FILTER']['ASSET'] . '" AND');
-            array_push($sql_filtered_search['WHERE'], ' 1');
-            foreach ($sql_filtered_search['WHERE'] as $args) {
-                $sql_filtered_search['SQL'] .= $args;
+                array_push($this->sqlFilteredSearch['WHERE'], ' hardware.CATEGORY_ID="' . $_SESSION['GREENIT']['FILTER']['ASSET'] . '" AND');
+            array_push($this->sqlFilteredSearch['WHERE'], ' 1');
+            foreach ($this->sqlFilteredSearch['WHERE'] as $args) {
+                $this->sqlFilteredSearch['SQL'] .= $args;
             }
         }
 
-        $sql_filtered_search['SQL'] .= ' GROUP BY NAME';
+        $this->sqlFilteredSearch['SQL'] .= ' GROUP BY NAME';
         //////////////////////////////
 
         //////////////////////////////
         // OS filter
         $query = "SELECT OSNAME FROM hardware WHERE OSNAME LIKE '%Windows%' AND DEVICEID<>'_SYSTEMGROUP_' AND DEVICEID<>'_DOWNLOADGROUP_' GROUP BY OSNAME ORDER BY OSNAME";
         $result = mysql2_query_secure($query, $_SESSION['OCS']["readServer"]);
-        $os = [
+        $this->os = [
             0 => "-----",
         ];
         while ($item = mysqli_fetch_array($result)) {
-            $os[$item['OSNAME']] = $item['OSNAME'];
+            $this->os[$item['OSNAME']] = $item['OSNAME'];
         }
         //////////////////////////////
 
@@ -261,11 +247,11 @@ class FilteredStatsView extends View
         // GROUP filter
         $query = "SELECT NAME, ID FROM hardware WHERE DEVICEID = '_SYSTEMGROUP_' GROUP BY NAME ORDER BY NAME";
         $result = mysql2_query_secure($query, $_SESSION['OCS']["readServer"]);
-        $group = [
+        $this->groups = [
             0 => "-----",
         ];
         while ($item = mysqli_fetch_array($result)) {
-            $group[$item['ID']] = $item['NAME'];
+            $this->groups[$item['ID']] = $item['NAME'];
         }
         //////////////////////////////
 
@@ -273,11 +259,11 @@ class FilteredStatsView extends View
         // TAG filter
         $query = "SELECT TAG FROM accountinfo";
         $result = mysql2_query_secure($query, $_SESSION['OCS']["readServer"]);
-        $tag = [
+        $this->tags = [
             0 => "-----",
         ];
         while ($item = mysqli_fetch_array($result)) {
-            $tag[$item['TAG']] = $item['TAG'];
+            $this->tags[$item['TAG']] = $item['TAG'];
         }
         //////////////////////////////
 
@@ -285,14 +271,145 @@ class FilteredStatsView extends View
         // ASSET filter
         $query = "SELECT CATEGORY_NAME, ID FROM assets_categories GROUP BY CATEGORY_NAME ORDER BY CATEGORY_NAME";
         $result = mysql2_query_secure($query, $_SESSION['OCS']["readServer"]);
-        $asset = [
+        $this->assets = [
             0 => "-----",
         ];
         while ($item = mysqli_fetch_array($result)) {
-            $asset[$item['ID']] = $item['CATEGORY_NAME'];
+            $this->assets[$item['ID']] = $item['CATEGORY_NAME'];
         }
         //////////////////////////////
+
+        $yesterdayQuery = "
+            SELECT 
+            COUNT(DISTINCT HARDWARE_ID) AS totalMachines,
+            SUM(CONSUMPTION) AS totalConsumption,
+            SUM(UPTIME) AS totalUptime  
+            FROM greenit 
+            INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
+            WHERE 
+            DATE='" . $this->config->GetYesterdayDate() . "' 
+            AND CONSUMPTION <> 'VM detected' 
+        ";
+        if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))])) {
+            $yesterdayQuery .= "AND hardware.NAME='" . $protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))] . "'";
+        } else if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))])) {
+            $computersData = explode(",", $protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))]);
+            $yesterdayQuery .= "AND (";
+            foreach ($computersData as $computerName) {
+                $yesterdayQuery .= "hardware.NAME='" . $computerName . "'";
+                if (next($computersData))
+                    $yesterdayQuery .= " OR ";
+            }
+            reset($computersData);
+            $yesterdayQuery .= ")";
+        }
+
+        $collectQuery = "
+            SELECT 
+            COUNT(DISTINCT HARDWARE_ID) AS totalMachines,
+            SUM(CONSUMPTION) AS totalConsumption,
+            SUM(UPTIME) AS totalUptime  
+            FROM greenit 
+            INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
+            WHERE 
+            DATE BETWEEN '" . $this->config->GetCollectDate() . "' AND '" . $this->config->GetYesterdayDate() . "'
+            AND CONSUMPTION <> 'VM detected' 
+        ";
+        if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))])) {
+            $collectQuery .= "AND hardware.NAME='" . $protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))] . "'";
+        } else if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))])) {
+            $computersData = explode(",", $protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))]);
+            $collectQuery .= "AND (";
+            foreach ($computersData as $computerName) {
+                $collectQuery .= "hardware.NAME='" . $computerName . "'";
+                if (next($computersData))
+                    $collectQuery .= " OR ";
+            }
+            reset($computersData);
+            $collectQuery .= ")";
+        }
+
+        $compareQuery = "
+            SELECT 
+            COUNT(DISTINCT HARDWARE_ID) AS totalMachines,
+            SUM(CONSUMPTION) AS totalConsumption,
+            SUM(UPTIME) AS totalUptime  
+            FROM greenit 
+            INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
+            WHERE 
+            DATE BETWEEN '" . $this->config->GetCompareDate() . "' AND '" . $this->config->GetYesterdayDate() . "'
+            AND CONSUMPTION <> 'VM detected' 
+        ";
+        if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))])) {
+            $compareQuery .= "AND hardware.NAME='" . $protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))] . "'";
+        } else if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))])) {
+            $computersData = explode(",", $protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))]);
+            $compareQuery .= "AND (";
+            foreach ($computersData as $computerName) {
+                $compareQuery .= "hardware.NAME='" . $computerName . "'";
+                if (next($computersData))
+                    $compareQuery .= " OR ";
+            }
+            reset($computersData);
+            $compareQuery .= ")";
+        }
+
+        $this->yesterdayData = $this->data->GetFilteredGreenITData($yesterdayQuery, false);
+        $this->collectData = $this->data->GetFilteredGreenITData($collectQuery, true);
+        $this->compareData = $this->data->GetFilteredGreenITData($compareQuery, true);
+
     }
+
+    /**
+     * Get a list of fields of FilteredSearch
+     * 
+     * @return array Return a list of fields for the filtered search module
+     */
+    public function GetListFieldsFilteredSearch(): array
+    {
+        return $this->listFieldsFilteredSearch;
+    }
+
+    /**
+     * Get a list of default fields of FilteredSearch
+     * 
+     * @return array Return a list of default fields for the filtered search module
+     */
+    public function GetDefaultFieldsFilteredSearch(): array
+    {
+        return $this->defaultFieldsFilteredSearch;
+    }
+
+    /**
+     * Get a list of colomn can't delete fields of FilteredSearch
+     * 
+     * @return array Return a list of column can't delete fields for the filtered search module
+     */
+    public function GetListColCantDelFilteredSearch(): array
+    {
+        return $this->listColCantDelFilteredSearch;
+    }
+
+    /**
+     * Get an array of sql query of FilteredSearch
+     * 
+     * @return array Return an array of sql query for the filtered search module
+     */
+    public function GetSqlFilteredSearch(): array
+    {
+        return $this->sqlFilteredSearch;
+    }
+
+    /**
+     * Get an array of table options of FilteredSearch
+     * 
+     * @return array Return an array of table options for the filtered search module
+     */
+    public function GetTabOptionsFilteredSearch(): array
+    {
+        return $this->tabOptionsFilteredSearch;
+    }
+
 
     /**
      * Generate the FilteredSearch HTML code of the view
@@ -301,33 +418,35 @@ class FilteredStatsView extends View
      */
     public function ShowFilteredSearch(): void
     {
-        echo "<h4>" . $l->g(102600) . "</h4>";
+        global $l;
+        global $protectedGet;
+        global $protectedPost;
+
+        echo "<h4>" . $l->g(102900) . "</h4>";
 
         $form_name = "filteredSearch";
 
         //////////////////////////////
         // Table settings
         $table_name = $form_name;
-        $tab_options_filtered_search = $protectedPost;
-        $tab_options_filtered_search['form_name'] = $form_name;
-        $tab_options_filtered_search['table_name'] = $table_name;
+        $this->tabOptionsFilteredSearch = $protectedPost;
+        $this->tabOptionsFilteredSearch['form_name'] = $form_name;
+        $this->tabOptionsFilteredSearch['table_name'] = $table_name;
 
-        $list_fields_filtered_search = array(
+        $this->listFieldsFilteredSearch = array(
             $l->g(23) => 'NAME',
             $l->g(190) . ' ' . strtoupper($l->g(1425)) => 'TAG',
             $l->g(25) => 'OS_NAME',
         );
 
-        $list_col_cant_del_filtered_search = $list_fields_filtered_search;
-        $default_fields_filtered_search = $list_fields_filtered_search;
+        $this->listColCantDelFilteredSearch = $this->listFieldsFilteredSearch;
+        $this->defaultFieldsFilteredSearch = $this->listFieldsFilteredSearch;
 
-        $tab_options_filtered_search['LIEN_LBL'][$l->g(23)] = 'index.php?function=ms_greenit_dashboard&cat=filteredstats&' . strtolower(str_replace(" ", "_", $l->g(23))) . '=';
-        $tab_options_filtered_search['LIEN_CHAMP'][$l->g(23)] = 'NAME';
+        $this->tabOptionsFilteredSearch['LIEN_LBL'][$l->g(23)] = 'index.php?function=ms_greenit_dashboard&cat=filteredstats&' . strtolower(str_replace(" ", "_", $l->g(23))) . '=';
+        $this->tabOptionsFilteredSearch['LIEN_CHAMP'][$l->g(23)] = 'NAME';
         //////////////////////////////
 
         echo open_form($form_name, '', '', 'form-horizontal');
-
-        echo "<h4>" . $l->g(102800) . "</h4>";
 
         echo '
         <div class="form-group">
@@ -345,15 +464,15 @@ class FilteredStatsView extends View
             msg_warning($l->g(767));
             echo '
                 <a 
-                    href="index.php?function=ms_greenit_dashboard&cat=filteredstats&' . strtolower(str_replace(" ", "_", $l->g(729))) . '=' . $computers . '" 
+                    href="index.php?function=ms_greenit_dashboard&cat=filteredstats&' . strtolower(str_replace(" ", "_", $l->g(729))) . '=' . $this->computers . '" 
                     class="btn btn-success"
                 >
-                    ' . $l->g(102801) . '
+                    ' . $l->g(102901) . '
                 </a>
             ';
         }
 
-        ajaxtab_entete_fixe($list_fields_filtered_search, $default_fields_filtered_search, $tab_options_filtered_search, $list_col_cant_del_filtered_search);
+        ajaxtab_entete_fixe($this->listFieldsFilteredSearch, $this->defaultFieldsFilteredSearch, $this->tabOptionsFilteredSearch, $this->listColCantDelFilteredSearch);
 
         echo '
                 <button type="button" data-toggle="collapse" data-target="#filter" class="btn">' . $l->g(735) . '</button>
@@ -368,7 +487,7 @@ class FilteredStatsView extends View
                         <div class="col-sm-3">
                             <select name="OS" id="OS" class="form-control">
             ';
-        foreach ($os as $key => $name) {
+        foreach ($this->os as $key => $name) {
             if (isset($_SESSION['GREENIT']['FILTER']['OS']) && $_SESSION['GREENIT']['FILTER']['OS'] == $key) {
                 echo "<option value='" . $key . "' selected>" . $name . "</option>";
             } else {
@@ -388,7 +507,7 @@ class FilteredStatsView extends View
                         <div class="col-sm-3">
                             <select name="GROUP" id="GROUP" class="form-control">
             ';
-        foreach ($group as $key => $name) {
+        foreach ($this->groups as $key => $name) {
             if (isset($_SESSION['GREENIT']['FILTER']['GROUP']) && $_SESSION['GREENIT']['FILTER']['GROUP'] == $key) {
                 echo "<option value='" . $key . "' selected>" . $name . "</option>";
             } else {
@@ -410,7 +529,7 @@ class FilteredStatsView extends View
                         <div class="col-sm-3">
                             <select name="TAG" id="TAG" class="form-control">
             ';
-        foreach ($tag as $key => $name) {
+        foreach ($this->tags as $key => $name) {
             if (isset($_SESSION['GREENIT']['FILTER']['TAG']) && $_SESSION['GREENIT']['FILTER']['TAG'] == $key) {
                 echo "<option value='" . $key . "' selected>" . $name . "</option>";
             } else {
@@ -430,7 +549,7 @@ class FilteredStatsView extends View
                         <div class="col-sm-3">
                             <select name="ASSET" id="ASSET" class="form-control">
             ';
-        foreach ($asset as $key => $name) {
+        foreach ($this->assets as $key => $name) {
             if (isset($_SESSION['GREENIT']['FILTER']['ASSET']) && $_SESSION['GREENIT']['FILTER']['ASSET'] == $key) {
                 echo "<option value='" . $key . "' selected>" . $name . "</option>";
             } else {
@@ -519,22 +638,22 @@ class FilteredStatsView extends View
         $table = "
             <div class='row'>
                 <div class='col-md-6' style='border-right: 1px solid #ddd;'>
-                    <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->collectData) && $this->collectData->return != false ? $this->calculation->CostFormat($this->collectData->{"0000-00-00"}->totalConsumption, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
+                    <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->collectData) && $this->collectData->return != false ? $this->calculation->CostFormat($this->collectData->totalConsumption, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
                     <p style='color:#333; font-size: 15px;'>" . $l->g(102702) . " " . $this->config->GetCollectInfoPeriod() . " " . $l->g(102706) . "</p>
                 </div>
                 <div class='col-md-6'>
-                    <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->compareData) && $this->compareData->return != false ? $this->calculation->CostFormat($this->compareData->{"0000-00-00"}->totalConsumption, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
+                    <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->compareData) && $this->compareData->return != false ? $this->calculation->CostFormat($this->compareData->totalConsumption, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
                     <p style='color:#333; font-size: 15px;'>" . $l->g(102702) . " " . $this->config->GetCompareInfoPeriod() . " " . $l->g(102706) . "</p>
                 </div>                
             </div>
             <br>
             <div class='row'>
                 <div class='col-md-6' style='border-right: 1px solid #ddd;'>
-                    <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->collectData) && $this->collectData->return != false ? $this->calculation->CostFormat($this->collectData->{"0000-00-00"}->totalConsumption / $this->collectData->{"0000-00-00"}->totalMachines, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
+                    <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->collectData) && $this->collectData->return != false ? $this->calculation->CostFormat($this->collectData->totalConsumption / $this->collectData->totalMachines, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
                     <p style='color:#333; font-size: 15px;'>" . $l->g(102704) . " " . $this->config->GetCollectInfoPeriod() . " " . $l->g(102706) . "</p>
                 </div>
                 <div class='col-md-6'>
-                    <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->compareData) && $this->compareData->return != false ? $this->calculation->CostFormat($this->compareData->{"0000-00-00"}->totalConsumption / $this->compareData->{"0000-00-00"}->totalMachines, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
+                    <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->compareData) && $this->compareData->return != false ? $this->calculation->CostFormat($this->compareData->totalConsumption / $this->compareData->totalMachines, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
                     <p style='color:#333; font-size: 15px;'>" . $l->g(102704) . " " . $this->config->GetCompareInfoPeriod() . " " . $l->g(102706) . "</p>
                 </div>
             </div>
@@ -544,8 +663,8 @@ class FilteredStatsView extends View
         $labels = [$l->g(102702) . " " . $this->config->GetCollectInfoPeriod() . " " . $l->g(102706)];
         $backgroundColor = $this->diagram->GenerateColorList(2, true);
         $data = array(
-            "CONSUMPTION" => str_replace(" " . "kW/h", "", (isset($this->collectData) && $this->collectData->return != false ? $this->calculation->ConsumptionFormat($this->collectData->{"0000-00-00"}->totalConsumption, $this->config->GetConsumptionRound()) : "0")),
-            "COST" => str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->collectData) && $this->collectData->return != false ? $this->calculation->CostFormat($this->collectData->{"0000-00-00"}->totalConsumption, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0"))
+            "CONSUMPTION" => str_replace(" " . "kW/h", "", (isset($this->collectData) && $this->collectData->return != false ? $this->calculation->ConsumptionFormat($this->collectData->totalConsumption, $this->config->GetConsumptionRound()) : "0")),
+            "COST" => str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->collectData) && $this->collectData->return != false ? $this->calculation->CostFormat($this->collectData->totalConsumption, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0"))
         );
         $datasets = array(
             "consumption" => array(
@@ -565,8 +684,8 @@ class FilteredStatsView extends View
         $labels = [$l->g(102702) . " " . $this->config->GetCompareInfoPeriod() . " " . $l->g(102706)];
         $backgroundColor = $this->diagram->GenerateColorList(2, true);
         $data = array(
-            "CONSUMPTION" => str_replace(" " . "kW/h", "", (isset($this->compareData) && $this->compareData->return != false ? $this->calculation->ConsumptionFormat($this->compareData->{"0000-00-00"}->totalConsumption, $this->config->GetConsumptionRound()) : "0")),
-            "COST" => str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->compareData) && $this->compareData->return != false ? $this->calculation->CostFormat($this->compareData->{"0000-00-00"}->totalConsumption, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0"))
+            "CONSUMPTION" => str_replace(" " . "kW/h", "", (isset($this->compareData) && $this->compareData->return != false ? $this->calculation->ConsumptionFormat($this->compareData->totalConsumption, $this->config->GetConsumptionRound()) : "0")),
+            "COST" => str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->compareData) && $this->compareData->return != false ? $this->calculation->CostFormat($this->compareData->totalConsumption, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0"))
         );
         $datasets = array(
             "consumption" => array(

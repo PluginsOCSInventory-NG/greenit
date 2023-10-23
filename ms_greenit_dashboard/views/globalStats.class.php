@@ -50,15 +50,8 @@ class GlobalStatsView extends View
             DATA 
             FROM greenit_stats 
             WHERE 
-            (
-                TYPE = 'GLOBALSTATS' 
-                OR TYPE = 'GLOBAL_COLLECT_TOTAL_STATS' 
-            )
-            AND 
-            (
-                DATE BETWEEN '" . $this->config->GetCollectDate() . "' AND '" . $this->config->GetYesterdayDate() . "' 
-                OR DATE = '0000-00-00'
-            )
+            TYPE = 'GLOBAL_COLLECT_TOTAL_STATS' 
+            AND DATE = '0000-00-00'
             ", true);
         $this->compareData = $this->data->GetGreenITData("
             SELECT 
@@ -66,15 +59,8 @@ class GlobalStatsView extends View
             DATA 
             FROM greenit_stats 
             WHERE 
-            (
-                TYPE = 'GLOBALSTATS' 
-                OR TYPE = 'GLOBAL_COMPARE_TOTAL_STATS' 
-            )
-            AND 
-            (
-                DATE BETWEEN '" . $this->config->GetCompareDate() . "' AND '" . $this->config->GetYesterdayDate() . "' 
-                OR DATE = '0000-00-00'
-            )
+            TYPE = 'GLOBAL_COMPARE_TOTAL_STATS' 
+            AND DATE = '0000-00-00'
         ", true);
     }
 

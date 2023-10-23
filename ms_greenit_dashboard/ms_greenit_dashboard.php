@@ -59,11 +59,11 @@ if (isset($view)) {
             <div class='col-md-10'>
     ";
     if ($protectedGet["cat"] == "filteredstats") {
-        $view->ShowFilteredSearch();
-        if (isset($protectedGet["computers"]) || isset($protectedGet["computers"])) {
+        if (isset($protectedGet["computer"]) || isset($protectedGet["computers"])) {
             $view->ShowYesterdayStats();
             $view->ShowComparatorStats();
         }
+        $view->ShowFilteredSearch();
     } else {
         $view->ShowYesterdayStats();
         $view->ShowComparatorStats();
@@ -78,11 +78,11 @@ if (AJAX) {
     ob_end_clean();
     if ($protectedGet["cat"] == "filteredstats") {
         tab_req(
-            $list_fields_filtered_search,
-            $default_fields_filtered_search,
-            $list_col_cant_del_filtered_search,
-            $sql_filtered_search['SQL'],
-            $tab_options_filtered_search
+            $view->GetListFieldsFilteredSearch(),
+            $view->GetDefaultFieldsFilteredSearch(),
+            $view->GetListColCantDelFilteredSearch(),
+            $view->GetSqlFilteredSearch()['SQL'],
+            $view->GetTabOptionsFilteredSearch()
         );
     }
 }

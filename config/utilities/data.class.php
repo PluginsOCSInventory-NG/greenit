@@ -56,6 +56,32 @@ class Data
     }
 
     /**
+     * Get the filtered GreenIT data from a formated request from the database
+     * 
+     * @param string $query Define the query to execute in the database
+     * @param bool $multiple Set if the retrieved data is on one day or more
+     * 
+     * @return object Return an object with the formated data from database or false if the database canno't be reached
+     */
+    public function GetFilteredGreenITData(string $query): object
+    {
+        $data = new stdClass();
+        $dataResult = mysql2_query_secure($query, $_SESSION['OCS']["readServer"]);
+        if ($dataResult != false && isset($dataResult->num_rows) && $dataResult->num_rows != 0) {
+            while ($row = mysqli_fetch_object($dataResult)) {
+                $data->return = true;
+                $data->totalMachines = $row->totalMachines;
+                $data->totalConsumption = $row->totalConsumption;
+                $data->totalUptime = $row->totalUptime;
+                $data->consumptionAverage = round($row->totalConsumption / $row->totalMachines, 6);
+                $data->uptimeAverage = round($row->totalUptime / $row->totalMachines, 6);
+            }
+        } else
+            $data->return = false;
+        return $data;
+    }
+
+    /**
      * Get the computer types from OCS-Inventory database
      * @param string $query Define the query to execute in the database
      * @param bool $multiple Set if the retrieved data is on one day or more

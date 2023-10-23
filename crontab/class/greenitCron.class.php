@@ -1,20 +1,27 @@
 <?php
+
+require_once(__DIR__ . "/../../../../var.php");
+require_once(CONF_MYSQL);
+require_once(ETC_DIR . "/require/fichierConf.class.php");
+require_once(ETC_DIR . "/require/config/include.php");
+require_once(ETC_DIR . "/require/function_commun.php");
+require_once(ETC_DIR . "/extensions/greenit/config/utilities/config.class.php");
+require_once(ETC_DIR . "/extensions/greenit/config/utilities/logMessage.class.php");
+
 class CronStats
 {
+    private Config $config;
+    private LogMessage $logMessage;
     private array $options;
-    private datetime $messageTime;
     private array $logType;
 
     function __construct()
     {
-        require_once(__DIR__ . '/../../../../var.php');
-        require_once(CONF_MYSQL);
-        require_once(ETC_DIR . '/require/function_commun.php');
-        require_once(ETC_DIR . '/require/config/include.php');
-        require_once(ETC_DIR . '/require/fichierConf.class.php');
+        $_SESSION["OCS"]["writeServer"] = dbconnect(SERVER_WRITE, COMPTE_BASE, PSWD_BASE, DB_NAME, SSL_KEY, SSL_CERT, CA_CERT, SERVER_PORT);
+        $_SESSION["OCS"]["readServer"] = dbconnect(SERVER_READ, COMPTE_BASE, PSWD_BASE, DB_NAME, SSL_KEY, SSL_CERT, CA_CERT, SERVER_PORT);
 
-        $_SESSION['OCS']["writeServer"] = dbconnect(SERVER_WRITE, COMPTE_BASE, PSWD_BASE, DB_NAME, SSL_KEY, SSL_CERT, CA_CERT, SERVER_PORT);
-        $_SESSION['OCS']["readServer"] = dbconnect(SERVER_READ, COMPTE_BASE, PSWD_BASE, DB_NAME, SSL_KEY, SSL_CERT, CA_CERT, SERVER_PORT);
+        $this->config = new Config();
+        $this->logMessage = new LogMessage();
 
         $shortopts = "h::";
         $shortopts .= "m:";
@@ -23,20 +30,22 @@ class CronStats
             "mode:",
         );
         $this->options = getopt($shortopts, $longopts);
-
         if (isset($this->options["h"]))
             $this->options["help"] = $this->options["h"];
         if (isset($this->options["m"]))
             $this->options["mode"] = $this->options["m"];
 
-        $logType = ["INFO", "WARNING", "ERROR"];
-        $this->logType = $logType;
+        $this->logType = array(
+            "INFO",
+            "WARNING",
+            "ERROR"
+        );
     }
 
     public function Options()
     {
         if (sizeof($this->options) == 0) {
-            echo $this->LogMessage("ERROR", "Mode required to start the script. --help for more information.");
+            echo $this->logMessage->NewMessage("ERROR", "Mode required to start the script. --help for more information.");
             return;
         }
         if (isset($this->options["help"])) {
@@ -57,7 +66,6 @@ class CronStats
 
     private function Mode()
     {
-
         switch ($this->options["mode"]) {
             case "delta":
                 $this->DeltaMode();
@@ -65,122 +73,112 @@ class CronStats
             case "full":
                 $this->FullMode();
                 break;
+            default:
+                echo $this->logMessage->NewMessage("ERROR", "Mode unknown. --help for more information.");
+                break;
         }
     }
 
     private function DeltaMode()
     {
-        echo $this->LogMessage("INFO", "Executing delta mode. Processing...");
-        echo $this->LogMessage("INFO", "Communication with database system...");
-        $date = new DateTime("NOW");
-        $date->modify("-1 day");
-        $dateString = $date->format("Y-m-d");
-        $selectQuery = "SELECT CONSUMPTION,UPTIME FROM greenit WHERE DATE = '%s' ORDER BY UPTIME;";
-
-        echo $this->LogMessage("INFO", "Getting values to insert...");
-
-        if ($query = mysql2_query_secure($selectQuery, $_SESSION['OCS']["readServer"], $dateString)) {
-            foreach ($query as $values) {
-                if (!isset($consumptionCount[$date->format("Y-m-d")]))
-                    $consumptionCount[$date->format("Y-m-d")] = 0;
-                if (!isset($uptimeCount[$date->format("Y-m-d")]))
-                    $uptimeCount[$date->format("Y-m-d")] = 0;
-
-                if (isset($data[$date->format("Y-m-d")]["totalConsumption"]))
-                    $data[$date->format("Y-m-d")]["totalConsumption"] += floatval($values["CONSUMPTION"]);
-                else
-                    $data[$date->format("Y-m-d")]["totalConsumption"] = floatval($values["CONSUMPTION"]);
-                $consumptionCount[$date->format("Y-m-d")]++;
-
-                if ($values["CONSUMPTION"] != "VM detected") {
-                    if (isset($data[$date->format("Y-m-d")]["totalUptime"]))
-                        $data[$date->format("Y-m-d")]["totalUptime"] += intval($values["UPTIME"]);
-                    else
-                        $data[$date->format("Y-m-d")]["totalUptime"] = intval($values["UPTIME"]);
-                    $uptimeCount[$date->format("Y-m-d")]++;
-                }
-            }
-        }
-
-        if (isset($data)) {
-            foreach ($data as $key => $value) {
-                $data[$key]["consumptionAverage"] = round($data[$key]["totalConsumption"] / $consumptionCount[$key], 6);
-                $data[$key]["uptimeAverage"] = round($data[$key]["totalUptime"] / $uptimeCount[$key], 6);
-            }
-
-            echo $this->LogMessage("INFO", "Inserting values into database...");
-
-            $deleteQuery = "DELETE FROM greenit_stats WHERE DATE = '%s';";
-            $alterQuery = "ALTER TABLE greenit_stats AUTO_INCREMENT 0;";
-            $insertQuery = "INSERT INTO greenit_stats (DATE,DATA) VALUES ('%s','%s');";
-
-            foreach ($data as $key => $value)
-                mysql2_query_secure(sprintf($deleteQuery, $key), $_SESSION['OCS']["writeServer"]);
-            mysql2_query_secure($alterQuery, $_SESSION['OCS']["writeServer"]); foreach ($data as $key => $value)
-                mysql2_query_secure(sprintf($insertQuery, $key, json_encode($value)), $_SESSION['OCS']["writeServer"]);
-            echo $this->LogMessage("INFO", "Job done");
-        } else
-            echo $this->LogMessage("ERROR", "No data");
     }
 
     private function FullMode()
     {
-        echo $this->LogMessage("INFO", "Executing full mode. Processing...");
-        echo $this->LogMessage("INFO", "Communication with database system...");
-        $selectQuery = "SELECT DATE,CONSUMPTION,UPTIME FROM greenit ORDER BY DATE;";
-        echo $this->LogMessage("INFO", "Getting values to insert...");
-        if ($query = mysql2_query_secure($selectQuery, $_SESSION['OCS']["readServer"])) {
+        echo $this->logMessage->NewMessage("INFO", "GlobalStats");
+        echo $this->logMessage->NewMessage("INFO", "Executing full mode. Processing...");
+        echo $this->logMessage->NewMessage("INFO", "Communication with database system...");
+
+        $selectQuery = "
+            SELECT 
+            DATE,
+            COUNT(DISTINCT HARDWARE_ID) AS totalMachines,
+            SUM(CONSUMPTION) AS totalConsumption,
+            SUM(UPTIME) AS totalUptime 
+            FROM greenit 
+            WHERE 
+            CONSUMPTION <> 'VM detected' 
+            GROUP BY DATE
+        ";
+        if ($query = mysql2_query_secure($selectQuery, $_SESSION["OCS"]["readServer"])) {
+            echo $this->logMessage->NewMessage("INFO", "Getting values to insert...");
             foreach ($query as $values) {
-                if (!isset($consumptionCount[$values["DATE"]]))
-                    $consumptionCount[$values["DATE"]] = 0;
-                if (!isset($uptimeCount[$values["DATE"]]))
-                    $uptimeCount[$values["DATE"]] = 0;
-
-                if (isset($data[$values["DATE"]]["totalConsumption"]))
-                    $data[$values["DATE"]]["totalConsumption"] += floatval($values["CONSUMPTION"]);
-                else
-                    $data[$values["DATE"]]["totalConsumption"] = floatval($values["CONSUMPTION"]);
-                $consumptionCount[$values["DATE"]]++;
-
-                if ($values["CONSUMPTION"] != "VM detected") {
-                    if (isset($data[$values["DATE"]]["totalUptime"]))
-                        $data[$values["DATE"]]["totalUptime"] += intval($values["UPTIME"]);
-                    else
-                        $data[$values["DATE"]]["totalUptime"] = intval($values["UPTIME"]);
-                    $uptimeCount[$values["DATE"]]++;
-                }
+                $data["GLOBALSTATS"][$values["DATE"]]["totalMachines"] = intval($values["totalMachines"]);
+                $data["GLOBALSTATS"][$values["DATE"]]["totalConsumption"] = floatval($values["totalConsumption"]);
+                $data["GLOBALSTATS"][$values["DATE"]]["totalUptime"] = intval($values["totalUptime"]);
             }
+        } else {
+            echo $this->logMessage->NewMessage("ERROR", "Can't communicate with the database.");
+            die();
+        }
+
+        $globalCollectTotalQuery = "
+            SELECT 
+            COUNT(DISTINCT HARDWARE_ID) AS totalMachines,
+            SUM(CONSUMPTION) AS totalConsumption,
+            SUM(UPTIME) AS totalUptime 
+            FROM greenit 
+            WHERE 
+            DATE BETWEEN '" . $this->config->GetCollectDate() . "' AND '" . $this->config->GetYesterdayDate() . "'
+            AND CONSUMPTION <> 'VM detected' 
+        ";
+        if ($query = mysql2_query_secure($globalCollectTotalQuery, $_SESSION['OCS']["readServer"])) {
+            echo $this->logMessage->NewMessage("INFO", "Getting values to insert...");
+            foreach ($query as $values) {
+                $data["GLOBAL_COLLECT_TOTAL_STATS"]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
+                $data["GLOBAL_COLLECT_TOTAL_STATS"]["0000-00-00"]["totalConsumption"] = floatval($values["totalConsumption"]);
+                $data["GLOBAL_COLLECT_TOTAL_STATS"]["0000-00-00"]["totalUptime"] = intval($values["totalUptime"]);
+            }
+        } else {
+            echo $this->logMessage->NewMessage("ERROR", "Can't communicate with the database.");
+            die();
+        }
+
+        $globalCompareTotalQuery = "
+            SELECT 
+            COUNT(DISTINCT HARDWARE_ID) AS totalMachines,
+            SUM(CONSUMPTION) AS totalConsumption,
+            SUM(UPTIME) AS totalUptime 
+            FROM greenit 
+            WHERE 
+            DATE BETWEEN '" . $this->config->GetCompareDate() . "' AND '" . $this->config->GetYesterdayDate() . "'
+            AND CONSUMPTION <> 'VM detected' 
+        ";
+        if ($query = mysql2_query_secure($globalCompareTotalQuery, $_SESSION['OCS']["readServer"])) {
+            echo $this->logMessage->NewMessage("INFO", "Getting values to insert...");
+            foreach ($query as $values) {
+                $data["GLOBAL_COMPARE_TOTAL_STATS"]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
+                $data["GLOBAL_COMPARE_TOTAL_STATS"]["0000-00-00"]["totalConsumption"] = floatval($values["totalConsumption"]);
+                $data["GLOBAL_COMPARE_TOTAL_STATS"]["0000-00-00"]["totalUptime"] = intval($values["totalUptime"]);
+            }
+        } else {
+            echo $this->logMessage->NewMessage("ERROR", "Can't communicate with the database.");
+            die();
         }
 
         if (isset($data)) {
-            foreach ($data as $key => $value) {
-                $data[$key]["consumptionAverage"] = round($data[$key]["totalConsumption"] / $consumptionCount[$key], 6);
-                $data[$key]["uptimeAverage"] = round($data[$key]["totalUptime"] / $uptimeCount[$key], 6);
+            foreach ($data as $type => $date) {
+                foreach ($date as $date => $value) {
+                    $data[$type][$date]["consumptionAverage"] = round($data[$type][$date]["totalConsumption"] / $data[$type][$date]["totalMachines"], 6);
+                    $data[$type][$date]["uptimeAverage"] = round($data[$type][$date]["totalUptime"] / $data[$type][$date]["totalMachines"], 6);
+                }
             }
 
-            echo $this->LogMessage("INFO", "Inserting values into database...");
-            $deleteQuery = "DELETE FROM greenit_stats WHERE DATE = '%s';";
-            $alterQuery = "ALTER TABLE greenit_stats AUTO_INCREMENT 0;";
-            $insertQuery = "INSERT INTO greenit_stats (DATE,DATA) VALUES ('%s','%s');";
-
-            foreach ($data as $key => $value)
-                mysql2_query_secure(sprintf($deleteQuery, $key), $_SESSION['OCS']["writeServer"]);
-            mysql2_query_secure($alterQuery, $_SESSION['OCS']["writeServer"]); foreach ($data as $key => $value)
-                mysql2_query_secure(sprintf($insertQuery, $key, json_encode($value)), $_SESSION['OCS']["writeServer"]);
-            echo $this->LogMessage("INFO", "Job done");
+            echo $this->logMessage->NewMessage("INFO", "Inserting values into database...");
+            $deleteQuery = "DELETE FROM greenit_stats";
+            $alterQuery = "ALTER TABLE greenit_stats AUTO_INCREMENT 0";
+            $insertQuery = "INSERT INTO greenit_stats (TYPE,DATE,DATA) VALUES ('%s','%s','%s')";
+            mysql2_query_secure($deleteQuery, $_SESSION['OCS']["writeServer"]);
+            mysql2_query_secure($alterQuery, $_SESSION['OCS']["writeServer"]);
+            foreach ($data as $type => $date) {
+                foreach ($date as $date => $value) {
+                    mysql2_query_secure(sprintf($insertQuery, $type, $date, json_encode($value)), $_SESSION['OCS']["writeServer"]);
+                }
+            }
+            foreach ($data as $date => $value)
+                echo $this->logMessage->NewMessage("INFO", "Job done\n");
         } else
-            echo $this->LogMessage("ERROR", "No data");
-    }
-
-    private function LogMessage(string $type, string $message): ?string
-    {
-        foreach ($this->logType as $value) {
-            if ($type == $value) {
-                $date = date("H:i:s");
-                return "[" . $value . "] | " . $date . " | " . $message . "\n";
-            }
-        }
-        return false;
+            echo $this->logMessage->NewMessage("ERROR", "No data");
     }
 }
 ?>
