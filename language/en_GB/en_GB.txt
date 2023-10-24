@@ -1,8 +1,9 @@
 100000 GreenIT
 
 101000 Configuration has been updated
-101001 API successfully called
-101002 API unsuccessfully called
+101001 A problem occurred with the configuration query
+101002 API successfully called
+101003 API unsuccessfully called
 
 102000 Power consumption
 102001 Interface's settings

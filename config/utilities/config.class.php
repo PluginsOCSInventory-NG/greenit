@@ -44,6 +44,16 @@ class Config
     private string $COST_UNIT;
 
     /**
+     * Data of the API key
+     */
+    private string $API_KEY;
+
+    /**
+     * Data of the consumption type
+     */
+    private string $CONSUMPTION_TYPE;
+
+    /**
      * Date of D-1 for dynamic queries
      */
     private DateTime $yesterdayDate;
@@ -71,7 +81,9 @@ class Config
             UPTIME_FORMAT, 
             KILOWATT_COST, 
             COST_ROUND, 
-            COST_UNIT 
+            COST_UNIT,
+            API_KEY,
+            CONSUMPTION_TYPE 
             FROM greenit_config 
             WHERE 
             ID='1'
@@ -86,6 +98,8 @@ class Config
             $this->KILOWATT_COST = $row->KILOWATT_COST;
             $this->COST_ROUND = $row->COST_ROUND;
             $this->COST_UNIT = $row->COST_UNIT;
+            $this->API_KEY = $row->API_KEY;
+            $this->CONSUMPTION_TYPE = $row->CONSUMPTION_TYPE;
         }
 
         $this->yesterdayDate = new DateTime("NOW");
@@ -194,6 +208,26 @@ class Config
     public function GetCompareDate(): string
     {
         return $this->compareDate->format("Y-m-d");
+    }
+
+    /**
+     * Get the API key
+     * 
+     * @return string Return the API key
+     */
+    public function GetAPIKey(): string
+    {
+        return $this->API_KEY;
+    }
+
+    /**
+     * Get the consumption type
+     * 
+     * @return string Return the consumption type
+     */
+    public function GetConsumptionType(): string
+    {
+        return $this->CONSUMPTION_TYPE;
     }
 }
 

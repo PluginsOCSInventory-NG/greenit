@@ -10,53 +10,44 @@
 //====================================================================================
 
 if (AJAX) {
-    parse_str($protectedPost['ocs']['0'], $params);
+    parse_str($protectedPost["ocs"]["0"], $params);
     $protectedPost += $params;
     ob_start();
 }
 
-if (!isset($protectedPost['onglet'])) {
-    $protectedPost['onglet'] = 1;
+require_once("views/config.class.php");
+
+if (!isset($protectedGet["cat"]))
+    $protectedGet["cat"] = "config";
+
+if ($protectedGet["cat"]) {
+    switch ($protectedGet["cat"]) {
+        case "config":
+            $view = new ConfigView();
+            break;
+        default:
+            msg_error("Error 404");
+            break;
+    }
 }
 
-if (
-    isset($protectedPost['SUBMIT_FORM']) &&
-    isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102002)))]) &&
-    isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102003)))]) &&
-    isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102004)))]) &&
-    isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102005)))]) &&
-    isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102006)))]) &&
-    isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102007)))]) &&
-    isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102009)))]) &&
-    isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102012)))])
-) {
-    // Data insert
-    require_once("data/updateDB.php");
-    require_once("data/config.php");
-    require_once("data/API.php");
-} else if (isset($protectedPost['TEST_API'])) {
-    require_once("data/config.php");
-    require_once("data/testAPI.php");
-} else {
-    // Config recovery
-    require_once("data/config.php");
+if (isset($view)) {
+    echo "
+        <div class='col-md-1'></div>
+        <div class='col-md-10'>
+    ";
+    $view->ShowTitle();
+    $view->ShowInterfaceSettings();
+    $view->ShowAPIConfiguration();
+    $view->ShowSubmit();
+    echo "
+        </div>
+        <div class='col-md-1'></div>
+    ";
 }
 
-
-
-// Start display page
-echo '
-<div class="col-md-1"></div>
-<div class="col-md-10">
-';
-
-require_once("components/title.php");
-
-require("components/formular.php");
-
-echo '
-</div>
-<div class="col-md-1"></div>
-';
+if (AJAX) {
+    ob_end_clean();
+}
 
 ?>
