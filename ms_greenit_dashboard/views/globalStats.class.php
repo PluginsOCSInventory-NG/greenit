@@ -3,7 +3,7 @@
 require_once(__DIR__ . "/../../config/view.class.php");
 
 /**
- * GlobalStats view
+ * Global stats view
  * 
  * @version Release: 1.0
  * @since Class available since Release 2.0

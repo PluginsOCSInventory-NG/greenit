@@ -2,6 +2,12 @@
 
 require_once(__DIR__ . "/../../config/view.class.php");
 
+/**
+ * ComputerType stats view
+ * 
+ * @version Release: 1.0
+ * @since Class available since Release 2.0
+ */
 class ComputerTypeStatsView extends View
 {
     /**
@@ -35,34 +41,46 @@ class ComputerTypeStatsView extends View
         $this->diagram = new Diagram();
         $this->data = new Data();
 
-        $this->computerTypes = new stdClass();
-        $this->computerTypes->{"Desktop"} = 10;
-        $this->computerTypes->{"Laptop"} = 10;
-        $this->computerTypes->{"Other"} = 10;
+        $this->computerTypes = $this->data->GetComputerTypes();
 
-        $this->yesterdayData = $this->data->GetGreenITData("
-            SELECT 
-            DATA 
-            FROM greenit_stats 
-            WHERE 
-            DATE='" . $this->config->GetYesterdayDate() . "'
-        ", false);
-        $this->collectData = $this->data->GetGreenITData("
-            SELECT 
-            DATE, 
-            DATA 
-            FROM greenit_stats 
-            WHERE 
-            DATE BETWEEN '" . $this->config->GetCollectDate() . "' AND '" . $this->config->GetYesterdayDate() . "'
-        ", true);
-        $this->compareData = $this->data->GetGreenITData("
-            SELECT 
-            DATE, 
-            DATA 
-            FROM greenit_stats 
-            WHERE 
-            DATE BETWEEN '" . $this->config->GetCompareDate() . "' AND '" . $this->config->GetYesterdayDate() . "'
-        ", true);
+        $this->yesterdayData = new stdClass();
+
+        foreach ($this->computerTypes->ComputerTypes as $count => $computerType) {
+            $this->yesterdayData->{$computerType} = $this->data->GetGreenITData("
+                SELECT 
+                DATA 
+                FROM greenit_stats 
+                WHERE 
+                TYPE = 'COMPUTERTYPESSTATS_" . strtoupper(str_replace(" ", "_", $computerType)) . "' 
+                AND DATE='" . $this->config->GetYesterdayDate() . "'
+            ", false);
+        }
+
+        $this->collectData = new stdClass();
+
+        foreach ($this->computerTypes->ComputerTypes as $count => $computerType) {
+            $this->collectData->{$computerType} = $this->data->GetGreenITData("
+                SELECT 
+                DATA 
+                FROM greenit_stats 
+                WHERE 
+                TYPE = 'COMPUTERTYPES_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $computerType)) . "' 
+                AND DATE = '0000-00-00'
+            ", false);
+        }
+
+        $this->compareData = new stdClass();
+
+        foreach ($this->computerTypes->ComputerTypes as $count => $computerType) {
+            $this->compareData->{$computerType} = $this->data->GetGreenITData("
+                SELECT 
+                DATA 
+                FROM greenit_stats 
+                WHERE 
+                TYPE = 'COMPUTERTYPES_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $computerType)) . "' 
+                AND DATE = '0000-00-00'
+                ", false);
+        }
     }
 
     /**
@@ -88,8 +106,8 @@ class ComputerTypeStatsView extends View
         $table = '
             <div class="row">
         ';
-        foreach ($this->computerTypes as $computerType => $count) {
-            if (next($this->computerTypes)) {
+        foreach ($this->computerTypes->ComputerTypes as $count => $computerType) {
+            if (next($this->computerTypes->ComputerTypes)) {
                 $table .= "
                    <div class='col-md-4' style='border-right: 1px solid #ddd;'>
                 ";
@@ -99,7 +117,7 @@ class ComputerTypeStatsView extends View
                 ";
             }
             $table .= "
-                    <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->yesterdayData) && $this->yesterdayData->RETURN != false ? $this->calculation->CostFormat($this->yesterdayData->totalConsumption, "W/h", $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
+                    <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->collectData->{$computerType}) && $this->collectData->{$computerType}->return != false ? $this->calculation->CostFormat($this->collectData->{$computerType}->totalConsumption, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
                     <p style='color:#333; font-size: 15px;'>" . $l->g(102703) . " " . $computerType . " " . $l->g(102705) . " " . $this->config->GetCollectInfoPeriod() . " " . $l->g(102706) . "</p>
                 </div>
             ";
@@ -110,8 +128,8 @@ class ComputerTypeStatsView extends View
             <br>
             <div class="row">
         ';
-        foreach ($this->computerTypes as $computerType => $count) {
-            if (next($this->computerTypes)) {
+        foreach ($this->computerTypes->ComputerTypes as $count => $computerType) {
+            if (next($this->computerTypes->ComputerTypes)) {
                 $table .= "
                    <div class='col-md-4' style='border-right: 1px solid #ddd;'>
                 ";
@@ -121,7 +139,7 @@ class ComputerTypeStatsView extends View
                 ";
             }
             $table .= "
-                    <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->yesterdayData) && $this->yesterdayData->RETURN != false ? $this->calculation->CostFormat($this->yesterdayData->totalConsumption, "W/h", $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
+                    <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->compareData->{$computerType}) && $this->compareData->{$computerType}->return != false ? $this->calculation->CostFormat($this->compareData->{$computerType}->totalConsumption, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
                     <p style='color:#333; font-size: 15px;'>" . $l->g(102703) . " " . $computerType . " " . $l->g(102705) . " " . $this->config->GetCompareInfoPeriod() . " " . $l->g(102706) . "</p>
                 </div>
             ";
@@ -133,11 +151,21 @@ class ComputerTypeStatsView extends View
 
         echo "<hr>";
 
-        $labels = [$l->g(102701)];
+        $labels = array();
+        $data = array(
+            "CONSUMPTION" => "",
+            "COST" => ""
+        );
+        foreach ($this->computerTypes->ComputerTypes as $count => $computerType) {
+            array_push($labels, $computerType);
+            $data["CONSUMPTION"] .= str_replace(" " . "kW/h", "", (isset($this->yesterdayData->{$computerType}) && $this->yesterdayData->{$computerType}->return != false ? $this->calculation->ConsumptionFormat($this->yesterdayData->{$computerType}->totalConsumption, $this->config->GetConsumptionRound()) : "0"));
+            $data["COST"] .= str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->yesterdayData->{$computerType}) && $this->yesterdayData->{$computerType}->return != false ? $this->calculation->CostFormat($this->yesterdayData->{$computerType}->totalConsumption, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0"));
+            if (next($this->computerTypes->ComputerTypes)) {
+                $data["CONSUMPTION"] .= ", ";
+                $data["COST"] .= ", ";
+            }
+        }
         $backgroundColor = $this->diagram->GenerateColorList(2, true);
-        $data = array();
-        $data["CONSUMPTION"] = str_replace(" " . "kW/h", "", (isset($this->collectData) && $this->collectData->RETURN != false ? $this->calculation->ConsumptionFormat($this->collectData->{"2023-10-18"}->totalConsumption, "kW/h", $this->config->GetConsumptionRound()) : "0"));
-        $data["COST"] = str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->collectData) && $this->collectData->RETURN != false ? $this->calculation->CostFormat($this->collectData->{"2023-10-18"}->totalConsumption, "W/h", $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0"));
         $datasets = array(
             "consumption" => array(
                 "backgroundColor" => $backgroundColor[0],
@@ -150,14 +178,24 @@ class ComputerTypeStatsView extends View
                 "label" => "'" . $l->g(102801) . " (" . $this->config->GetCostUnit() . ")'",
             )
         );
-        $this->diagram->createCanvas("histogram_yesterday_period", "4", "500");
+        $this->diagram->createCanvas("histogram_yesterday_period", "4", "550");
         $this->diagram->createVerticalBarChart("histogram_yesterday_period", "", $labels, $datasets);
 
-        $labels = [$l->g(102702) . " " . $this->config->GetCollectInfoPeriod() . " " . $l->g(102706)];
+        $labels = array();
+        $data = array(
+            "CONSUMPTION" => "",
+            "COST" => ""
+        );
+        foreach ($this->computerTypes->ComputerTypes as $count => $computerType) {
+            array_push($labels, $computerType);
+            $data["CONSUMPTION"] .= str_replace(" " . "kW/h", "", (isset($this->collectData->{$computerType}) && $this->collectData->{$computerType}->return != false ? $this->calculation->ConsumptionFormat($this->collectData->{$computerType}->totalConsumption, $this->config->GetConsumptionRound()) : "0"));
+            $data["COST"] .= str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->collectData->{$computerType}) && $this->collectData->{$computerType}->return != false ? $this->calculation->CostFormat($this->collectData->{$computerType}->totalConsumption, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0"));
+            if (next($this->computerTypes->ComputerTypes)) {
+                $data["CONSUMPTION"] .= ", ";
+                $data["COST"] .= ", ";
+            }
+        }
         $backgroundColor = $this->diagram->GenerateColorList(2, true);
-        $data = array();
-        $data["CONSUMPTION"] = str_replace(" " . "kW/h", "", (isset($this->collectData) && $this->collectData->RETURN != false ? $this->calculation->ConsumptionFormat($this->collectData->{"2023-10-18"}->totalConsumption, "kW/h", $this->config->GetConsumptionRound()) : "0"));
-        $data["COST"] = str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->collectData) && $this->collectData->RETURN != false ? $this->calculation->CostFormat($this->collectData->{"2023-10-18"}->totalConsumption, "W/h", $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0"));
         $datasets = array(
             "consumption" => array(
                 "backgroundColor" => $backgroundColor[0],
@@ -170,14 +208,24 @@ class ComputerTypeStatsView extends View
                 "label" => "'" . $l->g(102801) . " (" . $this->config->GetCostUnit() . ")'",
             )
         );
-        $this->diagram->createCanvas("histogram_collect_period", "4", "500");
+        $this->diagram->createCanvas("histogram_collect_period", "4", "550");
         $this->diagram->createVerticalBarChart("histogram_collect_period", "", $labels, $datasets);
 
-        $labels = [$l->g(102702) . " " . $this->config->GetCompareInfoPeriod() . " " . $l->g(102706)];
+        $labels = array();
+        $data = array(
+            "CONSUMPTION" => "",
+            "COST" => ""
+        );
+        foreach ($this->computerTypes->ComputerTypes as $count => $computerType) {
+            array_push($labels, $computerType);
+            $data["CONSUMPTION"] .= str_replace(" " . "kW/h", "", (isset($this->compareData->{$computerType}) && $this->compareData->{$computerType}->return != false ? $this->calculation->ConsumptionFormat($this->compareData->{$computerType}->totalConsumption, $this->config->GetConsumptionRound()) : "0"));
+            $data["COST"] .= str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->compareData->{$computerType}) && $this->compareData->{$computerType}->return != false ? $this->calculation->CostFormat($this->compareData->{$computerType}->totalConsumption, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0"));
+            if (next($this->computerTypes->ComputerTypes)) {
+                $data["CONSUMPTION"] .= ", ";
+                $data["COST"] .= ", ";
+            }
+        }
         $backgroundColor = $this->diagram->GenerateColorList(2, true);
-        $data = array();
-        $data["CONSUMPTION"] = str_replace(" " . "kW/h", "", (isset($this->collectData) && $this->collectData->RETURN != false ? $this->calculation->ConsumptionFormat($this->collectData->{"2023-10-18"}->totalConsumption, "kW/h", $this->config->GetConsumptionRound()) : "0"));
-        $data["COST"] = str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->collectData) && $this->collectData->RETURN != false ? $this->calculation->CostFormat($this->collectData->{"2023-10-18"}->totalConsumption, "W/h", $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0"));
         $datasets = array(
             "consumption" => array(
                 "backgroundColor" => $backgroundColor[0],
@@ -190,7 +238,7 @@ class ComputerTypeStatsView extends View
                 "label" => "'" . $l->g(102801) . " (" . $this->config->GetCostUnit() . ")'",
             )
         );
-        $this->diagram->createCanvas("histogram_compare_period", "4", "500");
+        $this->diagram->createCanvas("histogram_compare_period", "4", "550");
         $this->diagram->createVerticalBarChart("histogram_compare_period", "", $labels, $datasets);
     }
 }

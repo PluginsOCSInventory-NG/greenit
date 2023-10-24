@@ -6,6 +6,7 @@ require_once(ETC_DIR . "/require/fichierConf.class.php");
 require_once(ETC_DIR . "/require/config/include.php");
 require_once(ETC_DIR . "/require/function_commun.php");
 require_once(ETC_DIR . "/extensions/greenit/config/utilities/config.class.php");
+require_once(ETC_DIR . "/extensions/greenit/config/utilities/data.class.php");
 require_once(ETC_DIR . "/extensions/greenit/config/utilities/logMessage.class.php");
 
 class CronStats
@@ -21,6 +22,7 @@ class CronStats
         $_SESSION["OCS"]["readServer"] = dbconnect(SERVER_READ, COMPTE_BASE, PSWD_BASE, DB_NAME, SSL_KEY, SSL_CERT, CA_CERT, SERVER_PORT);
 
         $this->config = new Config();
+        $this->data = new Data();
         $this->logMessage = new LogMessage();
 
         $shortopts = "h::";
@@ -295,6 +297,246 @@ class CronStats
                 $data["OS_COMPARE_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
                 $data["OS_COMPARE_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalConsumption"] = floatval($values["totalConsumption"]);
                 $data["OS_COMPARE_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalUptime"] = intval($values["totalUptime"]);
+            }
+        } else {
+            echo $this->logMessage->NewMessage("ERROR", "Can't communicate with the database.");
+            die();
+        }
+
+        echo $this->logMessage->NewMessage("INFO", "ComputerTypesStats");
+        echo $this->logMessage->NewMessage("INFO", "Getting values to insert...");
+
+        $computerTypesQuery = "
+            SELECT 
+            DATE,
+            (
+                CASE
+                WHEN (
+                    bios.type LIKE '%Desktop%' OR 
+                    bios.type LIKE '%Elitedesk%' OR 
+                    bios.type LIKE '%Mini Tower%' OR
+                    bios.type LIKE '%ProLient%' OR
+                    bios.type LIKE '%Precision%' OR
+                    bios.type LIKE '%All in One%'
+                )
+                THEN 'Desktop'
+        
+                WHEN (
+                    bios.type LIKE '%LapTop%' OR 
+                    bios.type LIKE '%Portable%' OR
+                    bios.type LIKE '%Notebook%'
+                )
+                THEN 'LapTop'
+                
+                WHEN (
+                    bios.type <> 'Desktop' OR
+                    bios.type <> 'LapTop'
+                )
+                THEN 'Other'
+                
+                ELSE bios.type
+                
+                END
+            ) AS COMPUTER_TYPE, 
+            COUNT(DISTINCT hardware.ID) AS totalMachines,
+            SUM(greenit.CONSUMPTION) AS totalConsumption, 
+            SUM(greenit.UPTIME) AS totalUptime 
+            FROM greenit 
+            INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
+            INNER JOIN bios ON greenit.HARDWARE_ID=bios.HARDWARE_ID
+            WHERE
+            CONSUMPTION <> 'VM detected'
+            GROUP BY COMPUTER_TYPE, DATE
+        ";
+        if ($query = mysql2_query_secure($computerTypesQuery, $_SESSION["OCS"]["readServer"])) {
+            foreach ($query as $values) {
+                $data["COMPUTERTYPESSTATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))][$values["DATE"]]["totalMachines"] = intval($values["totalMachines"]);
+                $data["COMPUTERTYPESSTATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))][$values["DATE"]]["totalConsumption"] = floatval($values["totalConsumption"]);
+                $data["COMPUTERTYPESSTATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))][$values["DATE"]]["totalUptime"] = intval($values["totalUptime"]);
+            }
+        } else {
+            echo $this->logMessage->NewMessage("ERROR", "Can't communicate with the database.");
+            die();
+        }
+
+        $computerTypesCollectTotalQuery = "
+            SELECT 
+            (
+                CASE
+                WHEN (
+                    bios.type LIKE '%Desktop%' OR 
+                    bios.type LIKE '%Elitedesk%' OR 
+                    bios.type LIKE '%Mini Tower%' OR
+                    bios.type LIKE '%ProLient%' OR
+                    bios.type LIKE '%Precision%' OR
+                    bios.type LIKE '%All in One%'
+                )
+                THEN 'Desktop'
+        
+                WHEN (
+                    bios.type LIKE '%LapTop%' OR 
+                    bios.type LIKE '%Portable%' OR
+                    bios.type LIKE '%Notebook%'
+                )
+                THEN 'LapTop'
+                
+                WHEN (
+                    bios.type <> 'Desktop' OR
+                    bios.type <> 'LapTop'
+                )
+                THEN 'Other'
+                
+                ELSE bios.type
+                
+                END
+            ) AS COMPUTER_TYPE, 
+            COUNT(DISTINCT hardware.ID) AS totalMachines,
+            SUM(greenit.CONSUMPTION) AS totalConsumption, 
+            SUM(greenit.UPTIME) AS totalUptime 
+            FROM greenit 
+            INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
+            INNER JOIN bios ON greenit.HARDWARE_ID=bios.HARDWARE_ID
+            WHERE
+            CONSUMPTION <> 'VM detected' 
+            AND greenit.DATE BETWEEN '" . $this->config->GetCollectDate() . "' AND '" . $this->config->GetYesterdayDate() . "'
+            GROUP BY COMPUTER_TYPE
+        ";
+        if ($query = mysql2_query_secure($computerTypesCollectTotalQuery, $_SESSION['OCS']["readServer"])) {
+            foreach ($query as $values) {
+                $data["COMPUTERTYPES_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
+                $data["COMPUTERTYPES_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalConsumption"] = floatval($values["totalConsumption"]);
+                $data["COMPUTERTYPES_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalUptime"] = intval($values["totalUptime"]);
+            }
+        } else {
+            echo $this->logMessage->NewMessage("ERROR", "Can't communicate with the database.");
+            die();
+        }
+
+        $computerTypesCompareTotalQuery = "
+            SELECT 
+            (
+                CASE
+                WHEN (
+                    bios.type LIKE '%Desktop%' OR 
+                    bios.type LIKE '%Elitedesk%' OR 
+                    bios.type LIKE '%Mini Tower%' OR
+                    bios.type LIKE '%ProLient%' OR
+                    bios.type LIKE '%Precision%' OR
+                    bios.type LIKE '%All in One%'
+                )
+                THEN 'Desktop'
+        
+                WHEN (
+                    bios.type LIKE '%LapTop%' OR 
+                    bios.type LIKE '%Portable%' OR
+                    bios.type LIKE '%Notebook%'
+                )
+                THEN 'LapTop'
+                
+                WHEN (
+                    bios.type <> 'Desktop' OR
+                    bios.type <> 'LapTop'
+                )
+                THEN 'Other'
+                
+                ELSE bios.type
+                
+                END
+            ) AS COMPUTER_TYPE, 
+            COUNT(DISTINCT hardware.ID) AS totalMachines,
+            SUM(greenit.CONSUMPTION) AS totalConsumption, 
+            SUM(greenit.UPTIME) AS totalUptime 
+            FROM greenit 
+            INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
+            INNER JOIN bios ON greenit.HARDWARE_ID=bios.HARDWARE_ID
+            WHERE
+            CONSUMPTION <> 'VM detected' 
+            AND greenit.DATE BETWEEN '" . $this->config->GetCompareDate() . "' AND '" . $this->config->GetYesterdayDate() . "'
+            GROUP BY COMPUTER_TYPE
+        ";
+        if ($query = mysql2_query_secure($computerTypesCompareTotalQuery, $_SESSION['OCS']["readServer"])) {
+            foreach ($query as $values) {
+                $data["COMPUTERTYPES_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
+                $data["COMPUTERTYPES_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalConsumption"] = floatval($values["totalConsumption"]);
+                $data["COMPUTERTYPES_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalUptime"] = intval($values["totalUptime"]);
+            }
+        } else {
+            echo $this->logMessage->NewMessage("ERROR", "Can't communicate with the database.");
+            die();
+        }
+
+        echo $this->logMessage->NewMessage("INFO", "ManufacturersStats");
+        echo $this->logMessage->NewMessage("INFO", "Getting values to insert...");
+
+        $ManufacturersQuery = "
+            SELECT 
+            DATE,
+            bios.SMANUFACTURER AS MANUFACTURER, 
+            COUNT(DISTINCT hardware.ID) AS totalMachines,
+            SUM(greenit.CONSUMPTION) AS totalConsumption, 
+            SUM(greenit.UPTIME) AS totalUptime 
+            FROM greenit 
+            INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
+            INNER JOIN bios ON greenit.HARDWARE_ID=bios.HARDWARE_ID 
+            WHERE
+            CONSUMPTION <> 'VM detected' 
+            GROUP BY MANUFACTURER, DATE
+        ";
+        if ($query = mysql2_query_secure($ManufacturersQuery, $_SESSION["OCS"]["readServer"])) {
+            foreach ($query as $values) {
+                $data["MANUFACTURERSSTATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))][$values["DATE"]]["totalMachines"] = intval($values["totalMachines"]);
+                $data["MANUFACTURERSSTATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))][$values["DATE"]]["totalConsumption"] = floatval($values["totalConsumption"]);
+                $data["MANUFACTURERSSTATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))][$values["DATE"]]["totalUptime"] = intval($values["totalUptime"]);
+            }
+        } else {
+            echo $this->logMessage->NewMessage("ERROR", "Can't communicate with the database.");
+            die();
+        }
+
+        $manufacturerCollectTotalQuery = "
+            SELECT 
+            bios.SMANUFACTURER AS MANUFACTURER, 
+            COUNT(DISTINCT hardware.ID) AS totalMachines,
+            SUM(greenit.CONSUMPTION) AS totalConsumption, 
+            SUM(greenit.UPTIME) AS totalUptime 
+            FROM greenit 
+            INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
+            INNER JOIN bios ON greenit.HARDWARE_ID=bios.HARDWARE_ID 
+            WHERE
+            CONSUMPTION <> 'VM detected' 
+            AND greenit.DATE BETWEEN '" . $this->config->GetCollectDate() . "' AND '" . $this->config->GetYesterdayDate() . "'
+            GROUP BY MANUFACTURER
+        ";
+        if ($query = mysql2_query_secure($manufacturerCollectTotalQuery, $_SESSION["OCS"]["readServer"])) {
+            foreach ($query as $values) {
+                $data["MANUFACTURERSSTATS_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
+                $data["MANUFACTURERSSTATS_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalConsumption"] = floatval($values["totalConsumption"]);
+                $data["MANUFACTURERSSTATS_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalUptime"] = intval($values["totalUptime"]);
+            }
+        } else {
+            echo $this->logMessage->NewMessage("ERROR", "Can't communicate with the database.");
+            die();
+        }
+
+        $manufacturerCompareTotalQuery = "
+            SELECT 
+            bios.SMANUFACTURER AS MANUFACTURER, 
+            COUNT(DISTINCT hardware.ID) AS totalMachines,
+            SUM(greenit.CONSUMPTION) AS totalConsumption, 
+            SUM(greenit.UPTIME) AS totalUptime 
+            FROM greenit 
+            INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
+            INNER JOIN bios ON greenit.HARDWARE_ID=bios.HARDWARE_ID 
+            WHERE
+            CONSUMPTION <> 'VM detected' 
+            AND greenit.DATE BETWEEN '" . $this->config->GetCompareDate() . "' AND '" . $this->config->GetYesterdayDate() . "'
+            GROUP BY MANUFACTURER
+        ";
+        if ($query = mysql2_query_secure($manufacturerCompareTotalQuery, $_SESSION["OCS"]["readServer"])) {
+            foreach ($query as $values) {
+                $data["MANUFACTURERSSTATS_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
+                $data["MANUFACTURERSSTATS_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalConsumption"] = floatval($values["totalConsumption"]);
+                $data["MANUFACTURERSSTATS_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalUptime"] = intval($values["totalUptime"]);
             }
         } else {
             echo $this->logMessage->NewMessage("ERROR", "Can't communicate with the database.");
