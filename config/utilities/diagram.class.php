@@ -35,6 +35,13 @@ class Diagram
     );
 
     /**
+     * Constructor of the class which define everything the view need to work
+     */
+    function __construct()
+    {
+    }
+
+    /**
      * Generate a list of color and return it
      * 
      * @param int $nb Define the number of the color will be generated

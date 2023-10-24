@@ -9,6 +9,13 @@
 class Calculation
 {
     /**
+     * Constructor of the class which define everything the view need to work
+     */
+    function __construct()
+    {
+    }
+
+    /**
      * Format a consumption in Watt per hour and round if it's needed
      * 
      * @param float $consumptionInWattPerHour Define the consumption in Watt per hour

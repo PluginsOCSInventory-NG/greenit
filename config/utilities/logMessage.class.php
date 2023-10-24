@@ -18,6 +18,13 @@ class LogMessage
     );
 
     /**
+     * Constructor of the class which define everything the view need to work
+     */
+    function __construct()
+    {
+    }
+
+    /**
      * List of color can be generate by the class
      * 
      * @param string $type Define the type of the message

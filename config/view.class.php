@@ -51,6 +51,8 @@ abstract class View
      */
     public function ShowTitle(): void
     {
+        global $l;
+
         $this->data = new Data();
         $this->titleData = new stdClass();
         $this->titleData->greenitMachines = $this->data->GetTitleData("
@@ -72,8 +74,6 @@ abstract class View
             WHERE 
             DEVICEID <> '_SYSTEMGROUP_'
         ");
-
-        global $l;
 
         printEnTete($l->g(102100));
 
