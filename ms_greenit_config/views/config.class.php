@@ -84,10 +84,12 @@ class ConfigView
                 CONSUMPTION_TYPE='" . $protectedPost[strtoupper(str_replace(" ", "_", $l->g(102012)))] . "'
                 WHERE ID='1';
             ";
-            if (mysql2_query_secure($insertQuery, $_SESSION['OCS']["writeServer"]))
+            if (mysql2_query_secure($insertQuery, $_SESSION['OCS']["writeServer"])) {
+                $this->config = new Config();
                 msg_success($l->g(101000));
-            else
+            } else
                 msg_error($l->g(101001));
+
 
             $url = 'http://172.18.25.171:8080/data/periods/';
             $query = curl_init($url);
@@ -129,6 +131,7 @@ class ConfigView
             ";
             mysql2_query_secure($insertQuery, $_SESSION['OCS']["writeServer"]);
         } else if (isset($protectedPost["TEST_API"])) {
+
             $url = 'http://172.18.25.171:8080/';
             $query = curl_init($url);
             curl_setopt(
