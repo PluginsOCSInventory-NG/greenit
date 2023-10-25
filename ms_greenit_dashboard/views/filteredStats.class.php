@@ -76,6 +76,11 @@ class FilteredStatsView extends View
     private object $compareData;
 
     /**
+     * List of eletricity prices
+     */
+    private object $eletricityPrices;
+
+    /**
      * Constructor of the view which define everything the view need to work
      */
     function __construct()
@@ -279,85 +284,93 @@ class FilteredStatsView extends View
         }
         //////////////////////////////
 
-        $yesterdayQuery = "
-            SELECT 
-            COUNT(DISTINCT HARDWARE_ID) AS totalMachines,
-            SUM(CONSUMPTION) AS totalConsumption,
-            SUM(UPTIME) AS totalUptime  
-            FROM greenit 
-            INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
-            WHERE 
-            DATE='" . $this->config->GetYesterdayDate() . "' 
-            AND CONSUMPTION <> 'VM detected' 
-        ";
-        if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))])) {
-            $yesterdayQuery .= "AND hardware.NAME='" . $protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))] . "'";
-        } else if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))])) {
-            $computersData = explode(",", $protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))]);
-            $yesterdayQuery .= "AND (";
-            foreach ($computersData as $computerName) {
-                $yesterdayQuery .= "hardware.NAME='" . $computerName . "'";
-                if (next($computersData))
-                    $yesterdayQuery .= " OR ";
+        if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))]) || isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))])) {
+            $yesterdayQuery = "
+                SELECT 
+                DATE,
+                COUNT(DISTINCT HARDWARE_ID) AS totalMachines,
+                SUM(CONSUMPTION) AS totalConsumption,
+                SUM(UPTIME) AS totalUptime  
+                FROM greenit 
+                INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
+                WHERE 
+                DATE='" . $this->config->GetYesterdayDate() . "' 
+                AND CONSUMPTION <> 'VM detected' 
+            ";
+            if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))])) {
+                $yesterdayQuery .= "AND hardware.NAME='" . $protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))] . "'";
+            } else if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))])) {
+                $computersData = explode(",", $protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))]);
+                $yesterdayQuery .= "AND (";
+                foreach ($computersData as $computerName) {
+                    $yesterdayQuery .= "hardware.NAME='" . $computerName . "'";
+                    if (next($computersData))
+                        $yesterdayQuery .= " OR ";
+                }
+                reset($computersData);
+                $yesterdayQuery .= ")";
             }
-            reset($computersData);
-            $yesterdayQuery .= ")";
-        }
 
-        $collectQuery = "
-            SELECT 
-            COUNT(DISTINCT HARDWARE_ID) AS totalMachines,
-            SUM(CONSUMPTION) AS totalConsumption,
-            SUM(UPTIME) AS totalUptime  
-            FROM greenit 
-            INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
-            WHERE 
-            DATE BETWEEN '" . $this->config->GetCollectDate() . "' AND '" . $this->config->GetYesterdayDate() . "'
-            AND CONSUMPTION <> 'VM detected' 
-        ";
-        if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))])) {
-            $collectQuery .= "AND hardware.NAME='" . $protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))] . "'";
-        } else if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))])) {
-            $computersData = explode(",", $protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))]);
-            $collectQuery .= "AND (";
-            foreach ($computersData as $computerName) {
-                $collectQuery .= "hardware.NAME='" . $computerName . "'";
-                if (next($computersData))
-                    $collectQuery .= " OR ";
+            $collectQuery = "
+                SELECT 
+                DATE,
+                COUNT(DISTINCT HARDWARE_ID) AS totalMachines,
+                SUM(CONSUMPTION) AS totalConsumption,
+                SUM(UPTIME) AS totalUptime  
+                FROM greenit 
+                INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
+                WHERE 
+                DATE BETWEEN '" . $this->config->GetCollectDate() . "' AND '" . $this->config->GetYesterdayDate() . "'
+                AND CONSUMPTION <> 'VM detected' 
+            ";
+            if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))])) {
+                $collectQuery .= "AND hardware.NAME='" . $protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))] . "'";
+            } else if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))])) {
+                $computersData = explode(",", $protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))]);
+                $collectQuery .= "AND (";
+                foreach ($computersData as $computerName) {
+                    $collectQuery .= "hardware.NAME='" . $computerName . "'";
+                    if (next($computersData))
+                        $collectQuery .= " OR ";
+                }
+                reset($computersData);
+                $collectQuery .= ")";
             }
-            reset($computersData);
-            $collectQuery .= ")";
-        }
+            $collectQuery .= " GROUP BY DATE";
 
-        $compareQuery = "
-            SELECT 
-            COUNT(DISTINCT HARDWARE_ID) AS totalMachines,
-            SUM(CONSUMPTION) AS totalConsumption,
-            SUM(UPTIME) AS totalUptime  
-            FROM greenit 
-            INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
-            WHERE 
-            DATE BETWEEN '" . $this->config->GetCompareDate() . "' AND '" . $this->config->GetYesterdayDate() . "'
-            AND CONSUMPTION <> 'VM detected' 
-        ";
-        if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))])) {
-            $compareQuery .= "AND hardware.NAME='" . $protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))] . "'";
-        } else if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))])) {
-            $computersData = explode(",", $protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))]);
-            $compareQuery .= "AND (";
-            foreach ($computersData as $computerName) {
-                $compareQuery .= "hardware.NAME='" . $computerName . "'";
-                if (next($computersData))
-                    $compareQuery .= " OR ";
+            $compareQuery = "
+                SELECT 
+                DATE,
+                COUNT(DISTINCT HARDWARE_ID) AS totalMachines,
+                SUM(CONSUMPTION) AS totalConsumption,
+                SUM(UPTIME) AS totalUptime  
+                FROM greenit 
+                INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
+                WHERE 
+                DATE BETWEEN '" . $this->config->GetCompareDate() . "' AND '" . $this->config->GetYesterdayDate() . "'
+                AND CONSUMPTION <> 'VM detected' 
+            ";
+            if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))])) {
+                $compareQuery .= "AND hardware.NAME='" . $protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))] . "'";
+            } else if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))])) {
+                $computersData = explode(",", $protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))]);
+                $compareQuery .= "AND (";
+                foreach ($computersData as $computerName) {
+                    $compareQuery .= "hardware.NAME='" . $computerName . "'";
+                    if (next($computersData))
+                        $compareQuery .= " OR ";
+                }
+                reset($computersData);
+                $compareQuery .= ")";
             }
-            reset($computersData);
-            $compareQuery .= ")";
+            $compareQuery .= " GROUP BY DATE";
+
+            $this->electricityPrices = $this->data->GetElectricityPrices();
+
+            $this->yesterdayData = $this->data->GetFilteredGreenITData($yesterdayQuery, $this->electricityPrices, false);
+            $this->collectData = $this->data->GetFilteredGreenITData($collectQuery, $this->electricityPrices, true);
+            $this->compareData = $this->data->GetFilteredGreenITData($compareQuery, $this->electricityPrices, true);
         }
-
-        $this->yesterdayData = $this->data->GetFilteredGreenITData($yesterdayQuery);
-        $this->collectData = $this->data->GetFilteredGreenITData($collectQuery);
-        $this->compareData = $this->data->GetFilteredGreenITData($compareQuery);
-
     }
 
     /**
@@ -599,7 +612,7 @@ class FilteredStatsView extends View
                     <p style='color:#333; font-size: 15px;'>" . $l->g(102603) . "</p>
                 </div>
                 <div class='col-md-4'>
-                    <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->yesterdayData) && $this->yesterdayData->return != false ? $this->calculation->CostFormat($this->yesterdayData->totalConsumption, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
+                    <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->yesterdayData) && $this->yesterdayData->return != false ? $this->calculation->CostFormat($this->yesterdayData->totalCost, $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
                     <p style='color:#333; font-size: 15px;'>" . $l->g(102605) . "</p>
                 </div>
                 
@@ -618,7 +631,7 @@ class FilteredStatsView extends View
                         <p style='color:#333; font-size: 15px;'>" . $l->g(102604) . "</p>
                     </div>
                     <div class='col-md-4'>
-                        <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->yesterdayData) && $this->yesterdayData->return != false ? $this->calculation->CostFormat($this->yesterdayData->totalConsumption / $this->yesterdayData->totalMachines, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
+                        <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->yesterdayData) && $this->yesterdayData->return != false ? $this->calculation->CostFormat($this->yesterdayData->totalCost / $this->yesterdayData->totalMachines, $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
                         <p style='color:#333; font-size: 15px;'>" . $l->g(102606) . "</p>
                     </div>
                 </div>
@@ -644,11 +657,11 @@ class FilteredStatsView extends View
         $table = "
             <div class='row'>
                 <div class='col-md-6' style='border-right: 1px solid #ddd;'>
-                    <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->collectData) && $this->collectData->return != false ? $this->calculation->CostFormat($this->collectData->totalConsumption, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
+                    <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->collectData) && $this->collectData->return != false ? $this->calculation->CostFormat($this->collectData->totalCost, $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
                     <p style='color:#333; font-size: 15px;'>" . $l->g(102702) . " " . $this->config->GetCollectInfoPeriod() . " " . $l->g(102706) . "</p>
                 </div>
                 <div class='col-md-6'>
-                    <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->compareData) && $this->compareData->return != false ? $this->calculation->CostFormat($this->compareData->totalConsumption, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
+                    <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->compareData) && $this->compareData->return != false ? $this->calculation->CostFormat($this->compareData->totalCost, $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
                     <p style='color:#333; font-size: 15px;'>" . $l->g(102702) . " " . $this->config->GetCompareInfoPeriod() . " " . $l->g(102706) . "</p>
                 </div>                
             </div>
@@ -658,11 +671,11 @@ class FilteredStatsView extends View
             $table .= "
                 <div class='row'>
                     <div class='col-md-6' style='border-right: 1px solid #ddd;'>
-                        <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->collectData) && $this->collectData->return != false ? $this->calculation->CostFormat($this->collectData->totalConsumption / $this->collectData->totalMachines, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
+                        <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->collectData) && $this->collectData->return != false ? $this->calculation->CostFormat($this->collectData->totalCost / $this->collectData->totalMachines, $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
                         <p style='color:#333; font-size: 15px;'>" . $l->g(102704) . " " . $this->config->GetCollectInfoPeriod() . " " . $l->g(102706) . "</p>
                     </div>
                     <div class='col-md-6'>
-                        <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->compareData) && $this->compareData->return != false ? $this->calculation->CostFormat($this->compareData->totalConsumption / $this->compareData->totalMachines, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
+                        <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->compareData) && $this->compareData->return != false ? $this->calculation->CostFormat($this->compareData->totalCost / $this->compareData->totalMachines, $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
                         <p style='color:#333; font-size: 15px;'>" . $l->g(102704) . " " . $this->config->GetCompareInfoPeriod() . " " . $l->g(102706) . "</p>
                     </div>
                 </div>
@@ -674,7 +687,7 @@ class FilteredStatsView extends View
         $backgroundColor = $this->diagram->GenerateColorList(2, true);
         $data = array(
             "CONSUMPTION" => str_replace(" " . "kW/h", "", (isset($this->collectData) && $this->collectData->return != false ? $this->calculation->ConsumptionFormat($this->collectData->totalConsumption, $this->config->GetConsumptionRound()) : "0")),
-            "COST" => str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->collectData) && $this->collectData->return != false ? $this->calculation->CostFormat($this->collectData->totalConsumption, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0"))
+            "COST" => str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->collectData) && $this->collectData->return != false ? $this->calculation->CostFormat($this->collectData->totalCost, $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0"))
         );
         $datasets = array(
             "consumption" => array(
@@ -695,7 +708,7 @@ class FilteredStatsView extends View
         $backgroundColor = $this->diagram->GenerateColorList(2, true);
         $data = array(
             "CONSUMPTION" => str_replace(" " . "kW/h", "", (isset($this->compareData) && $this->compareData->return != false ? $this->calculation->ConsumptionFormat($this->compareData->totalConsumption, $this->config->GetConsumptionRound()) : "0")),
-            "COST" => str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->compareData) && $this->compareData->return != false ? $this->calculation->CostFormat($this->compareData->totalConsumption, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0"))
+            "COST" => str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->compareData) && $this->compareData->return != false ? $this->calculation->CostFormat($this->compareData->totalCost, $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0"))
         );
         $datasets = array(
             "consumption" => array(

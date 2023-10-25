@@ -95,7 +95,7 @@ class ManufacturerStatsView extends View
                 WHERE 
                 TYPE = 'MANUFACTURERSSTATS_" . strtoupper(str_replace(" ", "_", $manufacturer)) . "' 
                 AND DATE='" . $this->config->GetYesterdayDate() . "'
-            ", false);
+            ");
         }
 
         $this->collectData = new stdClass();
@@ -106,9 +106,9 @@ class ManufacturerStatsView extends View
                 DATA 
                 FROM greenit_stats 
                 WHERE 
-                TYPE = 'MANUFACTURERSSTATS_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $manufacturer)) . "' 
+                TYPE = 'MANUFACTURERS_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $manufacturer)) . "' 
                 AND DATE='0000-00-00'
-            ", false);
+            ");
         }
 
         $this->compareData = new stdClass();
@@ -119,9 +119,9 @@ class ManufacturerStatsView extends View
                 DATA 
                 FROM greenit_stats 
                 WHERE 
-                TYPE = 'MANUFACTURERSSTATS_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $manufacturer)) . "' 
+                TYPE = 'MANUFACTURERS_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $manufacturer)) . "' 
                 AND DATE='0000-00-00'
-            ", false);
+            ");
         }
     }
 
@@ -160,7 +160,7 @@ class ManufacturerStatsView extends View
                 ";
             }
             $table .= "
-                    <p style='font-size: 32px; font-weight:bold;'>" . (isset($this->collectData->{$manufacturer}) && $this->collectData->{$manufacturer}->return != false ? $this->calculation->CostFormat($this->collectData->{$manufacturer}->consumptionAverage, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
+                    <p style='font-size: 32px; font-weight:bold;'>" . (isset($this->collectData->{$manufacturer}) && $this->collectData->{$manufacturer}->return != false ? $this->calculation->CostFormat($this->collectData->{$manufacturer}->totalCost / $this->collectData->{$manufacturer}->totalMachines, $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
                     <p style='color:#333; font-size: 15px;'>" . $l->g(102703) . " " . $manufacturer . " " . $l->g(102705) . " " . $this->config->GetCollectInfoPeriod() . " " . $l->g(102706) . "</p>
                 </div>
             ";
@@ -185,7 +185,7 @@ class ManufacturerStatsView extends View
                 ";
             }
             $table .= "
-                    <p style='font-size: 32px; font-weight:bold;'>" . (isset($this->compareData->{$manufacturer}) && $this->compareData->{$manufacturer}->return != false ? $this->calculation->CostFormat($this->compareData->{$manufacturer}->consumptionAverage, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
+                    <p style='font-size: 32px; font-weight:bold;'>" . (isset($this->compareData->{$manufacturer}) && $this->compareData->{$manufacturer}->return != false ? $this->calculation->CostFormat($this->compareData->{$manufacturer}->totalCost / $this->compareData->{$manufacturer}->totalMachines, $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
                     <p style='color:#333; font-size: 15px;'>" . $l->g(102703) . " " . $manufacturer . " " . $l->g(102705) . " " . $this->config->GetCompareInfoPeriod() . " " . $l->g(102706) . "</p>
                 </div>
             ";
@@ -207,7 +207,7 @@ class ManufacturerStatsView extends View
         foreach ($this->manufacturers->Yesterday->Manufacturers as $count => $manufacturer) {
             array_push($labels, $manufacturer);
             $data["CONSUMPTION"] .= str_replace(" " . "kW/h", "", (isset($this->yesterdayData->{$manufacturer}) && $this->yesterdayData->{$manufacturer}->return != false ? $this->calculation->ConsumptionFormat($this->yesterdayData->{$manufacturer}->totalConsumption, $this->config->GetConsumptionRound()) : "0"));
-            $data["COST"] .= str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->yesterdayData->{$manufacturer}) && $this->yesterdayData->{$manufacturer}->return != false ? $this->calculation->CostFormat($this->yesterdayData->{$manufacturer}->totalConsumption, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0"));
+            $data["COST"] .= str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->yesterdayData->{$manufacturer}) && $this->yesterdayData->{$manufacturer}->return != false ? $this->calculation->CostFormat($this->yesterdayData->{$manufacturer}->totalCost, $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0"));
             if (next($this->manufacturers->Yesterday->Manufacturers)) {
                 $data["CONSUMPTION"] .= ", ";
                 $data["COST"] .= ", ";
@@ -242,7 +242,7 @@ class ManufacturerStatsView extends View
         foreach ($this->manufacturers->Collect->Manufacturers as $count => $manufacturer) {
             array_push($labels, $manufacturer);
             $data["CONSUMPTION"] .= str_replace(" " . "kW/h", "", (isset($this->collectData->{$manufacturer}) && $this->collectData->{$manufacturer}->return != false ? $this->calculation->ConsumptionFormat($this->collectData->{$manufacturer}->totalConsumption, $this->config->GetConsumptionRound()) : "0"));
-            $data["COST"] .= str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->collectData->{$manufacturer}) && $this->collectData->{$manufacturer}->return != false ? $this->calculation->CostFormat($this->collectData->{$manufacturer}->totalConsumption, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0"));
+            $data["COST"] .= str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->collectData->{$manufacturer}) && $this->collectData->{$manufacturer}->return != false ? $this->calculation->CostFormat($this->collectData->{$manufacturer}->totalCost, $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0"));
             if (next($this->manufacturers->Collect->Manufacturers)) {
                 $data["CONSUMPTION"] .= ", ";
                 $data["COST"] .= ", ";
@@ -277,7 +277,7 @@ class ManufacturerStatsView extends View
         foreach ($this->manufacturers->Compare->Manufacturers as $count => $manufacturer) {
             array_push($labels, $manufacturer);
             $data["CONSUMPTION"] .= str_replace(" " . "kW/h", "", (isset($this->compareData->{$manufacturer}) && $this->compareData->{$manufacturer}->return != false ? $this->calculation->ConsumptionFormat($this->compareData->{$manufacturer}->totalConsumption, $this->config->GetConsumptionRound()) : "0"));
-            $data["COST"] .= str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->compareData->{$manufacturer}) && $this->compareData->{$manufacturer}->return != false ? $this->calculation->CostFormat($this->compareData->{$manufacturer}->totalConsumption, $this->config->GetKiloWattCost(), $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0"));
+            $data["COST"] .= str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->compareData->{$manufacturer}) && $this->compareData->{$manufacturer}->return != false ? $this->calculation->CostFormat($this->compareData->{$manufacturer}->totalCost, $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0"));
             if (next($this->manufacturers->Compare->Manufacturers)) {
                 $data["CONSUMPTION"] .= ", ";
                 $data["COST"] .= ", ";

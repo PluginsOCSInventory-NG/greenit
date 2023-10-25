@@ -5,13 +5,16 @@ require_once(CONF_MYSQL);
 require_once(ETC_DIR . "/require/fichierConf.class.php");
 require_once(ETC_DIR . "/require/config/include.php");
 require_once(ETC_DIR . "/require/function_commun.php");
+require_once(ETC_DIR . "/extensions/greenit/config/utilities/calculation.class.php");
 require_once(ETC_DIR . "/extensions/greenit/config/utilities/config.class.php");
 require_once(ETC_DIR . "/extensions/greenit/config/utilities/data.class.php");
 require_once(ETC_DIR . "/extensions/greenit/config/utilities/logMessage.class.php");
 
 class CronStats
 {
+    private Calculation $calculation;
     private Config $config;
+    private Data $data;
     private LogMessage $logMessage;
     private array $options;
     private array $logType;
@@ -21,6 +24,7 @@ class CronStats
         $_SESSION["OCS"]["writeServer"] = dbconnect(SERVER_WRITE, COMPTE_BASE, PSWD_BASE, DB_NAME, SSL_KEY, SSL_CERT, CA_CERT, SERVER_PORT);
         $_SESSION["OCS"]["readServer"] = dbconnect(SERVER_READ, COMPTE_BASE, PSWD_BASE, DB_NAME, SSL_KEY, SSL_CERT, CA_CERT, SERVER_PORT);
 
+        $this->calculation = new Calculation();
         $this->config = new Config();
         $this->data = new Data();
         $this->logMessage = new LogMessage();
@@ -88,6 +92,10 @@ class CronStats
     private function FullMode()
     {
         echo $this->logMessage->NewMessage("INFO", "Executing full mode. Processing...");
+        echo $this->logMessage->NewMessage("INFO", "Communication with API system...");
+        echo $this->logMessage->NewMessage("INFO", "Getting electricity prices...");
+        $kilowattCosts = $this->data->GetElectricityPrices();
+
         echo $this->logMessage->NewMessage("INFO", "Communication with database system...");
 
         echo $this->logMessage->NewMessage("INFO", "GlobalStats");
@@ -109,6 +117,22 @@ class CronStats
                 $data["GLOBALSTATS"][$values["DATE"]]["totalMachines"] = intval($values["totalMachines"]);
                 $data["GLOBALSTATS"][$values["DATE"]]["totalConsumption"] = floatval($values["totalConsumption"]);
                 $data["GLOBALSTATS"][$values["DATE"]]["totalUptime"] = intval($values["totalUptime"]);
+                $formatedConsumptions = array();
+                $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
+                $totalCost = 0;
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $Date = new Datetime($FCDate);
+                    foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                        if ($Date->format("Y-m-01") > $KWCDate) {
+                            while ($Date->format("Y-m-01") != $KWCDate) {
+                                $Date->modify("- 1 month");
+                            }
+                            break;
+                        }
+                    }
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                }
+                $data["GLOBALSTATS"][$values["DATE"]]["totalCost"] = floatval($totalCost);
             }
         } else {
             echo $this->logMessage->NewMessage("ERROR", "Can't communicate with the database.");
@@ -117,6 +141,7 @@ class CronStats
 
         $globalCollectTotalQuery = "
             SELECT 
+            DATE,
             COUNT(DISTINCT HARDWARE_ID) AS totalMachines,
             SUM(CONSUMPTION) AS totalConsumption,
             SUM(UPTIME) AS totalUptime 
@@ -124,12 +149,31 @@ class CronStats
             WHERE 
             DATE BETWEEN '" . $this->config->GetCollectDate() . "' AND '" . $this->config->GetYesterdayDate() . "'
             AND CONSUMPTION <> 'VM detected' 
+            GROUP BY DATE
         ";
         if ($query = mysql2_query_secure($globalCollectTotalQuery, $_SESSION['OCS']["readServer"])) {
+            $data["GLOBAL_COLLECT_TOTAL_STATS"]["0000-00-00"]["totalConsumption"] = 0;
+            $data["GLOBAL_COLLECT_TOTAL_STATS"]["0000-00-00"]["totalUptime"] = 0;
+            $formatedConsumptions = array();
             foreach ($query as $values) {
                 $data["GLOBAL_COLLECT_TOTAL_STATS"]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
-                $data["GLOBAL_COLLECT_TOTAL_STATS"]["0000-00-00"]["totalConsumption"] = floatval($values["totalConsumption"]);
-                $data["GLOBAL_COLLECT_TOTAL_STATS"]["0000-00-00"]["totalUptime"] = intval($values["totalUptime"]);
+                $data["GLOBAL_COLLECT_TOTAL_STATS"]["0000-00-00"]["totalConsumption"] += floatval($values["totalConsumption"]);
+                $data["GLOBAL_COLLECT_TOTAL_STATS"]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
+                $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
+                $totalCost = 0;
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $Date = new Datetime($FCDate);
+                    foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                        if ($Date->format("Y-m-01") > $KWCDate) {
+                            while ($Date->format("Y-m-01") != $KWCDate) {
+                                $Date->modify("- 1 month");
+                            }
+                            break;
+                        }
+                    }
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                }
+                $data["GLOBAL_COLLECT_TOTAL_STATS"]["0000-00-00"]["totalCost"] = floatval($totalCost);
             }
         } else {
             echo $this->logMessage->NewMessage("ERROR", "Can't communicate with the database.");
@@ -138,6 +182,7 @@ class CronStats
 
         $globalCompareTotalQuery = "
             SELECT 
+            DATE,
             COUNT(DISTINCT HARDWARE_ID) AS totalMachines,
             SUM(CONSUMPTION) AS totalConsumption,
             SUM(UPTIME) AS totalUptime 
@@ -145,12 +190,31 @@ class CronStats
             WHERE 
             DATE BETWEEN '" . $this->config->GetCompareDate() . "' AND '" . $this->config->GetYesterdayDate() . "'
             AND CONSUMPTION <> 'VM detected' 
+            GROUP BY DATE
         ";
         if ($query = mysql2_query_secure($globalCompareTotalQuery, $_SESSION['OCS']["readServer"])) {
+            $data["GLOBAL_COMPARE_TOTAL_STATS"]["0000-00-00"]["totalConsumption"] = 0;
+            $data["GLOBAL_COMPARE_TOTAL_STATS"]["0000-00-00"]["totalUptime"] = 0;
+            $formatedConsumptions = array();
             foreach ($query as $values) {
                 $data["GLOBAL_COMPARE_TOTAL_STATS"]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
-                $data["GLOBAL_COMPARE_TOTAL_STATS"]["0000-00-00"]["totalConsumption"] = floatval($values["totalConsumption"]);
-                $data["GLOBAL_COMPARE_TOTAL_STATS"]["0000-00-00"]["totalUptime"] = intval($values["totalUptime"]);
+                $data["GLOBAL_COMPARE_TOTAL_STATS"]["0000-00-00"]["totalConsumption"] += floatval($values["totalConsumption"]);
+                $data["GLOBAL_COMPARE_TOTAL_STATS"]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
+                $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
+                $totalCost = 0;
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $Date = new Datetime($FCDate);
+                    foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                        if ($Date->format("Y-m-01") > $KWCDate) {
+                            while ($Date->format("Y-m-01") != $KWCDate) {
+                                $Date->modify("- 1 month");
+                            }
+                            break;
+                        }
+                    }
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                }
+                $data["GLOBAL_COMPARE_TOTAL_STATS"]["0000-00-00"]["totalCost"] = floatval($totalCost);
             }
         } else {
             echo $this->logMessage->NewMessage("ERROR", "Can't communicate with the database.");
@@ -179,6 +243,22 @@ class CronStats
                 $data["OSSTATS_CLIENTS"][$values["DATE"]]["totalMachines"] = intval($values["totalMachines"]);
                 $data["OSSTATS_CLIENTS"][$values["DATE"]]["totalConsumption"] = floatval($values["totalConsumption"]);
                 $data["OSSTATS_CLIENTS"][$values["DATE"]]["totalUptime"] = intval($values["totalUptime"]);
+                $formatedConsumptions = array();
+                $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
+                $totalCost = 0;
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $Date = new Datetime($FCDate);
+                    foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                        if ($Date->format("Y-m-01") > $KWCDate) {
+                            while ($Date->format("Y-m-01") != $KWCDate) {
+                                $Date->modify("- 1 month");
+                            }
+                            break;
+                        }
+                    }
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                }
+                $data["OSSTATS_CLIENTS"][$values["DATE"]]["totalCost"] = floatval($totalCost);
             }
         } else {
             echo $this->logMessage->NewMessage("ERROR", "Can't communicate with the database.");
@@ -203,6 +283,22 @@ class CronStats
                 $data["OSSTATS_SERVERS"][$values["DATE"]]["totalMachines"] = intval($values["totalMachines"]);
                 $data["OSSTATS_SERVERS"][$values["DATE"]]["totalConsumption"] = floatval($values["totalConsumption"]);
                 $data["OSSTATS_SERVERS"][$values["DATE"]]["totalUptime"] = intval($values["totalUptime"]);
+                $formatedConsumptions = array();
+                $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
+                $totalCost = 0;
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $Date = new Datetime($FCDate);
+                    foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                        if ($Date->format("Y-m-01") > $KWCDate) {
+                            while ($Date->format("Y-m-01") != $KWCDate) {
+                                $Date->modify("- 1 month");
+                            }
+                            break;
+                        }
+                    }
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                }
+                $data["OSSTATS_SERVERS"][$values["DATE"]]["totalCost"] = floatval($totalCost);
             }
         } else {
             echo $this->logMessage->NewMessage("ERROR", "Can't communicate with the database.");
@@ -211,6 +307,7 @@ class CronStats
 
         $clientsOSCollectTotalQuery = "
             SELECT 
+            DATE,
             COUNT(DISTINCT greenit.HARDWARE_ID) AS totalMachines,
             SUM(greenit.CONSUMPTION) AS totalConsumption,
             SUM(greenit.UPTIME) AS totalUptime 
@@ -221,12 +318,31 @@ class CronStats
             AND hardware.OSNAME NOT IN (SELECT hardware.OSNAME FROM hardware WHERE hardware.OSNAME LIKE '%Windows Server%') 
             AND greenit.DATE BETWEEN '" . $this->config->GetCollectDate() . "' AND '" . $this->config->GetYesterdayDate() . "'
             AND greenit.CONSUMPTION <> 'VM detected' 
+            GROUP BY DATE
         ";
         if ($query = mysql2_query_secure($clientsOSCollectTotalQuery, $_SESSION['OCS']["readServer"])) {
+            $data["OS_COLLECT_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalConsumption"] = 0;
+            $data["OS_COLLECT_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalUptime"] = 0;
+            $formatedConsumptions = array();
             foreach ($query as $values) {
                 $data["OS_COLLECT_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
-                $data["OS_COLLECT_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalConsumption"] = floatval($values["totalConsumption"]);
-                $data["OS_COLLECT_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalUptime"] = intval($values["totalUptime"]);
+                $data["OS_COLLECT_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalConsumption"] += floatval($values["totalConsumption"]);
+                $data["OS_COLLECT_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
+                $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
+                $totalCost = 0;
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $Date = new Datetime($FCDate);
+                    foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                        if ($Date->format("Y-m-01") > $KWCDate) {
+                            while ($Date->format("Y-m-01") != $KWCDate) {
+                                $Date->modify("- 1 month");
+                            }
+                            break;
+                        }
+                    }
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                }
+                $data["OS_COLLECT_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalCost"] = floatval($totalCost);
             }
         } else {
             echo $this->logMessage->NewMessage("ERROR", "Can't communicate with the database.");
@@ -235,6 +351,7 @@ class CronStats
 
         $serversOSCollectTotalQuery = "
             SELECT 
+            DATE,
             COUNT(DISTINCT greenit.HARDWARE_ID) AS totalMachines,
             SUM(greenit.CONSUMPTION) AS totalConsumption,
             SUM(greenit.UPTIME) AS totalUptime 
@@ -244,12 +361,31 @@ class CronStats
             hardware.OSNAME LIKE '%Windows Server%' 
             AND greenit.DATE BETWEEN '" . $this->config->GetCollectDate() . "' AND '" . $this->config->GetYesterdayDate() . "'
             AND greenit.CONSUMPTION <> 'VM detected' 
+            GROUP BY DATE
         ";
         if ($query = mysql2_query_secure($serversOSCollectTotalQuery, $_SESSION['OCS']["readServer"])) {
+            $data["OS_COLLECT_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalConsumption"] = 0;
+            $data["OS_COLLECT_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalUptime"] = 0;
+            $formatedConsumptions = array();
             foreach ($query as $values) {
                 $data["OS_COLLECT_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
-                $data["OS_COLLECT_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalConsumption"] = floatval($values["totalConsumption"]);
-                $data["OS_COLLECT_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalUptime"] = intval($values["totalUptime"]);
+                $data["OS_COLLECT_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalConsumption"] += floatval($values["totalConsumption"]);
+                $data["OS_COLLECT_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
+                $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
+                $totalCost = 0;
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $Date = new Datetime($FCDate);
+                    foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                        if ($Date->format("Y-m-01") > $KWCDate) {
+                            while ($Date->format("Y-m-01") != $KWCDate) {
+                                $Date->modify("- 1 month");
+                            }
+                            break;
+                        }
+                    }
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                }
+                $data["OS_COLLECT_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalCost"] = floatval($totalCost);
             }
         } else {
             echo $this->logMessage->NewMessage("ERROR", "Can't communicate with the database.");
@@ -258,6 +394,7 @@ class CronStats
 
         $clientsOSCompareTotalQuery = "
             SELECT 
+            DATE,
             COUNT(DISTINCT greenit.HARDWARE_ID) AS totalMachines,
             SUM(greenit.CONSUMPTION) AS totalConsumption,
             SUM(greenit.UPTIME) AS totalUptime 
@@ -268,12 +405,31 @@ class CronStats
             AND hardware.OSNAME NOT IN (SELECT hardware.OSNAME FROM hardware WHERE hardware.OSNAME LIKE '%Windows Server%') 
             AND greenit.DATE BETWEEN '" . $this->config->GetCompareDate() . "' AND '" . $this->config->GetYesterdayDate() . "'
             AND greenit.CONSUMPTION <> 'VM detected' 
+            GROUP BY DATE
         ";
         if ($query = mysql2_query_secure($clientsOSCompareTotalQuery, $_SESSION['OCS']["readServer"])) {
+            $data["OS_COMPARE_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalConsumption"] = 0;
+            $data["OS_COMPARE_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalUptime"] = 0;
+            $formatedConsumptions = array();
             foreach ($query as $values) {
                 $data["OS_COMPARE_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
-                $data["OS_COMPARE_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalConsumption"] = floatval($values["totalConsumption"]);
-                $data["OS_COMPARE_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalUptime"] = intval($values["totalUptime"]);
+                $data["OS_COMPARE_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalConsumption"] += floatval($values["totalConsumption"]);
+                $data["OS_COMPARE_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
+                $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
+                $totalCost = 0;
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $Date = new Datetime($FCDate);
+                    foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                        if ($Date->format("Y-m-01") > $KWCDate) {
+                            while ($Date->format("Y-m-01") != $KWCDate) {
+                                $Date->modify("- 1 month");
+                            }
+                            break;
+                        }
+                    }
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                }
+                $data["OS_COMPARE_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalCost"] = floatval($totalCost);
             }
         } else {
             echo $this->logMessage->NewMessage("ERROR", "Can't communicate with the database.");
@@ -282,6 +438,7 @@ class CronStats
 
         $serversOSCompareTotalQuery = "
             SELECT 
+            DATE,
             COUNT(DISTINCT greenit.HARDWARE_ID) AS totalMachines,
             SUM(greenit.CONSUMPTION) AS totalConsumption,
             SUM(greenit.UPTIME) AS totalUptime 
@@ -291,12 +448,31 @@ class CronStats
             hardware.OSNAME LIKE '%Windows Server%' 
             AND greenit.DATE BETWEEN '" . $this->config->GetCompareDate() . "' AND '" . $this->config->GetYesterdayDate() . "'
             AND greenit.CONSUMPTION <> 'VM detected' 
+            GROUP BY DATE
         ";
         if ($query = mysql2_query_secure($serversOSCompareTotalQuery, $_SESSION['OCS']["readServer"])) {
+            $data["OS_COMPARE_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalConsumption"] = 0;
+            $data["OS_COMPARE_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalUptime"] = 0;
+            $formatedConsumptions = array();
             foreach ($query as $values) {
                 $data["OS_COMPARE_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
-                $data["OS_COMPARE_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalConsumption"] = floatval($values["totalConsumption"]);
-                $data["OS_COMPARE_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalUptime"] = intval($values["totalUptime"]);
+                $data["OS_COMPARE_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalConsumption"] += floatval($values["totalConsumption"]);
+                $data["OS_COMPARE_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
+                $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
+                $totalCost = 0;
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $Date = new Datetime($FCDate);
+                    foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                        if ($Date->format("Y-m-01") > $KWCDate) {
+                            while ($Date->format("Y-m-01") != $KWCDate) {
+                                $Date->modify("- 1 month");
+                            }
+                            break;
+                        }
+                    }
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                }
+                $data["OS_COMPARE_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalCost"] = floatval($totalCost);
             }
         } else {
             echo $this->logMessage->NewMessage("ERROR", "Can't communicate with the database.");
@@ -353,6 +529,22 @@ class CronStats
                 $data["COMPUTERTYPESSTATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))][$values["DATE"]]["totalMachines"] = intval($values["totalMachines"]);
                 $data["COMPUTERTYPESSTATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))][$values["DATE"]]["totalConsumption"] = floatval($values["totalConsumption"]);
                 $data["COMPUTERTYPESSTATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))][$values["DATE"]]["totalUptime"] = intval($values["totalUptime"]);
+                $formatedConsumptions = array();
+                $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
+                $totalCost = 0;
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $Date = new Datetime($FCDate);
+                    foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                        if ($Date->format("Y-m-01") > $KWCDate) {
+                            while ($Date->format("Y-m-01") != $KWCDate) {
+                                $Date->modify("- 1 month");
+                            }
+                            break;
+                        }
+                    }
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                }
+                $data["COMPUTERTYPESSTATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))][$values["DATE"]]["totalCost"] = floatval($totalCost);
             }
         } else {
             echo $this->logMessage->NewMessage("ERROR", "Can't communicate with the database.");
@@ -361,6 +553,7 @@ class CronStats
 
         $computerTypesCollectTotalQuery = "
             SELECT 
+            DATE,
             (
                 CASE
                 WHEN (
@@ -399,13 +592,33 @@ class CronStats
             WHERE
             CONSUMPTION <> 'VM detected' 
             AND greenit.DATE BETWEEN '" . $this->config->GetCollectDate() . "' AND '" . $this->config->GetYesterdayDate() . "'
-            GROUP BY COMPUTER_TYPE
+            GROUP BY COMPUTER_TYPE, DATE
         ";
         if ($query = mysql2_query_secure($computerTypesCollectTotalQuery, $_SESSION['OCS']["readServer"])) {
             foreach ($query as $values) {
+                $data["COMPUTERTYPES_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalConsumption"] = 0;
+                $data["COMPUTERTYPES_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalUptime"] = 0;
+            }
+            $formatedConsumptions = array();
+            foreach ($query as $values) {
                 $data["COMPUTERTYPES_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
-                $data["COMPUTERTYPES_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalConsumption"] = floatval($values["totalConsumption"]);
-                $data["COMPUTERTYPES_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalUptime"] = intval($values["totalUptime"]);
+                $data["COMPUTERTYPES_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalConsumption"] += floatval($values["totalConsumption"]);
+                $data["COMPUTERTYPES_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
+                $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
+                $totalCost = 0;
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $Date = new Datetime($FCDate);
+                    foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                        if ($Date->format("Y-m-01") > $KWCDate) {
+                            while ($Date->format("Y-m-01") != $KWCDate) {
+                                $Date->modify("- 1 month");
+                            }
+                            break;
+                        }
+                    }
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                }
+                $data["COMPUTERTYPES_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalCost"] = floatval($totalCost);
             }
         } else {
             echo $this->logMessage->NewMessage("ERROR", "Can't communicate with the database.");
@@ -414,6 +627,7 @@ class CronStats
 
         $computerTypesCompareTotalQuery = "
             SELECT 
+            DATE,
             (
                 CASE
                 WHEN (
@@ -452,13 +666,33 @@ class CronStats
             WHERE
             CONSUMPTION <> 'VM detected' 
             AND greenit.DATE BETWEEN '" . $this->config->GetCompareDate() . "' AND '" . $this->config->GetYesterdayDate() . "'
-            GROUP BY COMPUTER_TYPE
+            GROUP BY COMPUTER_TYPE, DATE
         ";
         if ($query = mysql2_query_secure($computerTypesCompareTotalQuery, $_SESSION['OCS']["readServer"])) {
             foreach ($query as $values) {
+                $data["COMPUTERTYPES_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalConsumption"] = 0;
+                $data["COMPUTERTYPES_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalUptime"] = 0;
+            }
+            $formatedConsumptions = array();
+            foreach ($query as $values) {
                 $data["COMPUTERTYPES_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
-                $data["COMPUTERTYPES_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalConsumption"] = floatval($values["totalConsumption"]);
-                $data["COMPUTERTYPES_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalUptime"] = intval($values["totalUptime"]);
+                $data["COMPUTERTYPES_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalConsumption"] += floatval($values["totalConsumption"]);
+                $data["COMPUTERTYPES_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
+                $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
+                $totalCost = 0;
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $Date = new Datetime($FCDate);
+                    foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                        if ($Date->format("Y-m-01") > $KWCDate) {
+                            while ($Date->format("Y-m-01") != $KWCDate) {
+                                $Date->modify("- 1 month");
+                            }
+                            break;
+                        }
+                    }
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                }
+                $data["COMPUTERTYPES_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalCost"] = floatval($totalCost);
             }
         } else {
             echo $this->logMessage->NewMessage("ERROR", "Can't communicate with the database.");
@@ -476,7 +710,7 @@ class CronStats
             SUM(greenit.CONSUMPTION) AS totalConsumption, 
             SUM(greenit.UPTIME) AS totalUptime 
             FROM greenit 
-            INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
+            INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID 
             INNER JOIN bios ON greenit.HARDWARE_ID=bios.HARDWARE_ID 
             WHERE
             CONSUMPTION <> 'VM detected' 
@@ -487,6 +721,22 @@ class CronStats
                 $data["MANUFACTURERSSTATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))][$values["DATE"]]["totalMachines"] = intval($values["totalMachines"]);
                 $data["MANUFACTURERSSTATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))][$values["DATE"]]["totalConsumption"] = floatval($values["totalConsumption"]);
                 $data["MANUFACTURERSSTATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))][$values["DATE"]]["totalUptime"] = intval($values["totalUptime"]);
+                $formatedConsumptions = array();
+                $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
+                $totalCost = 0;
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $Date = new Datetime($FCDate);
+                    foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                        if ($Date->format("Y-m-01") > $KWCDate) {
+                            while ($Date->format("Y-m-01") != $KWCDate) {
+                                $Date->modify("- 1 month");
+                            }
+                            break;
+                        }
+                    }
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                }
+                $data["MANUFACTURERSSTATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))][$values["DATE"]]["totalCost"] = floatval($totalCost);
             }
         } else {
             echo $this->logMessage->NewMessage("ERROR", "Can't communicate with the database.");
@@ -495,6 +745,7 @@ class CronStats
 
         $manufacturerCollectTotalQuery = "
             SELECT 
+            DATE,
             bios.SMANUFACTURER AS MANUFACTURER, 
             COUNT(DISTINCT hardware.ID) AS totalMachines,
             SUM(greenit.CONSUMPTION) AS totalConsumption, 
@@ -505,13 +756,33 @@ class CronStats
             WHERE
             CONSUMPTION <> 'VM detected' 
             AND greenit.DATE BETWEEN '" . $this->config->GetCollectDate() . "' AND '" . $this->config->GetYesterdayDate() . "'
-            GROUP BY MANUFACTURER
+            GROUP BY MANUFACTURER, DATE
         ";
         if ($query = mysql2_query_secure($manufacturerCollectTotalQuery, $_SESSION["OCS"]["readServer"])) {
             foreach ($query as $values) {
-                $data["MANUFACTURERSSTATS_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
-                $data["MANUFACTURERSSTATS_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalConsumption"] = floatval($values["totalConsumption"]);
-                $data["MANUFACTURERSSTATS_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalUptime"] = intval($values["totalUptime"]);
+                $data["MANUFACTURERS_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalConsumption"] = floatval($values["totalConsumption"]);
+                $data["MANUFACTURERS_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalUptime"] = intval($values["totalUptime"]);
+            }
+            $formatedConsumptions = array();
+            foreach ($query as $values) {
+                $data["MANUFACTURERS_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
+                $data["MANUFACTURERS_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalConsumption"] += floatval($values["totalConsumption"]);
+                $data["MANUFACTURERS_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
+                $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
+                $totalCost = 0;
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $Date = new Datetime($FCDate);
+                    foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                        if ($Date->format("Y-m-01") > $KWCDate) {
+                            while ($Date->format("Y-m-01") != $KWCDate) {
+                                $Date->modify("- 1 month");
+                            }
+                            break;
+                        }
+                    }
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                }
+                $data["MANUFACTURERS_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalCost"] = floatval($totalCost);
             }
         } else {
             echo $this->logMessage->NewMessage("ERROR", "Can't communicate with the database.");
@@ -520,6 +791,7 @@ class CronStats
 
         $manufacturerCompareTotalQuery = "
             SELECT 
+            DATE,
             bios.SMANUFACTURER AS MANUFACTURER, 
             COUNT(DISTINCT hardware.ID) AS totalMachines,
             SUM(greenit.CONSUMPTION) AS totalConsumption, 
@@ -530,13 +802,33 @@ class CronStats
             WHERE
             CONSUMPTION <> 'VM detected' 
             AND greenit.DATE BETWEEN '" . $this->config->GetCompareDate() . "' AND '" . $this->config->GetYesterdayDate() . "'
-            GROUP BY MANUFACTURER
+            GROUP BY MANUFACTURER, DATE
         ";
         if ($query = mysql2_query_secure($manufacturerCompareTotalQuery, $_SESSION["OCS"]["readServer"])) {
             foreach ($query as $values) {
-                $data["MANUFACTURERSSTATS_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
-                $data["MANUFACTURERSSTATS_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalConsumption"] = floatval($values["totalConsumption"]);
-                $data["MANUFACTURERSSTATS_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalUptime"] = intval($values["totalUptime"]);
+                $data["MANUFACTURERS_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalConsumption"] = floatval($values["totalConsumption"]);
+                $data["MANUFACTURERS_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalUptime"] = intval($values["totalUptime"]);
+            }
+            $formatedConsumptions = array();
+            foreach ($query as $values) {
+                $data["MANUFACTURERS_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
+                $data["MANUFACTURERS_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalConsumption"] += floatval($values["totalConsumption"]);
+                $data["MANUFACTURERS_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
+                $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
+                $totalCost = 0;
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $Date = new Datetime($FCDate);
+                    foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                        if ($Date->format("Y-m-01") > $KWCDate) {
+                            while ($Date->format("Y-m-01") != $KWCDate) {
+                                $Date->modify("- 1 month");
+                            }
+                            break;
+                        }
+                    }
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                }
+                $data["MANUFACTURERS_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalCost"] = floatval($totalCost);
             }
         } else {
             echo $this->logMessage->NewMessage("ERROR", "Can't communicate with the database.");

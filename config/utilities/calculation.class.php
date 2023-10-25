@@ -56,17 +56,16 @@ class Calculation
     }
 
     /**
-     * Calcul a cost with a consumption and a kiloWatt price
+     * Calcul a cost with a formated consumptions and a kiloWatt prices
      * 
-     * @param float $formatedConsumption Define the formated consumption
-     * @param float $kilowattCost Define kiloWatt price for 1 kW/h
+     * @param float $totalCost Define the total cost
      * @param int $round Define a number which will round the cost default: 1
      * 
-     * @return string Return a string with calculated cost
+     * @return string Return a string with formated cost
      */
-    function CostFormat(float $formatedConsumption, float $kilowattCost, string $costUnit, int $round = 1): string
+    function CostFormat(float $totalCost, string $costUnit, int $round = 1): string
     {
-        return round(($formatedConsumption / 1000) * $kilowattCost, $round) . " " . $costUnit;
+        return round($totalCost, $round) . " " . $costUnit;
     }
 }
 

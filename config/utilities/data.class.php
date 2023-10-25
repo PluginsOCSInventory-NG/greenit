@@ -41,20 +41,16 @@ class Data
      * Get the GreenIT data from a formated request from the database
      * 
      * @param string $query Define the query to execute in the database
-     * @param bool $multiple Set if the retrieved data is on one day or more
      * 
      * @return object Return an object with the formated data from database or false if the database canno't be reached
      */
-    public function GetGreenITData(string $query, bool $multiple): object
+    public function GetGreenITData(string $query): object
     {
         $data = new stdClass();
         $dataResult = mysql2_query_secure($query, $_SESSION["OCS"]["readServer"]);
         if ($dataResult != false && isset($dataResult->num_rows) && $dataResult->num_rows != 0) {
             while ($row = mysqli_fetch_object($dataResult)) {
-                if ($multiple == true)
-                    $data->{$row->DATE} = json_decode($row->DATA);
-                else
-                    $data = json_decode($row->DATA);
+                $data = json_decode($row->DATA);
             }
             $data->return = true;
         } else
@@ -66,20 +62,66 @@ class Data
      * Get the filtered GreenIT data from a formated request from the database
      * 
      * @param string $query Define the query to execute in the database
+     * @param bool $multiple Set if the retrieved data is on one day or more
      * 
      * @return object Return an object with the formated data from database or false if the database canno't be reached
      */
-    public function GetFilteredGreenITData(string $query): object
+    public function GetFilteredGreenITData(string $query, object $eletricityPrices, bool $multiple): object
     {
         $data = new stdClass();
+        $config = new Config();
         $dataResult = mysql2_query_secure($query, $_SESSION["OCS"]["readServer"]);
         if ($dataResult != false && isset($dataResult->num_rows) && $dataResult->num_rows != 0) {
-            while ($row = mysqli_fetch_object($dataResult)) {
-                $data->totalMachines = $row->totalMachines;
-                $data->totalConsumption = $row->totalConsumption;
-                $data->totalUptime = $row->totalUptime;
-                $data->consumptionAverage = round($row->totalConsumption / $row->totalMachines, 6);
-                $data->uptimeAverage = round($row->totalUptime / $row->totalMachines, 6);
+            $formatedConsumptions = array();
+            if ($multiple == false) {
+                while ($row = mysqli_fetch_object($dataResult)) {
+                    $data->totalMachines = $row->totalMachines;
+                    $data->totalConsumption = $row->totalConsumption;
+                    $data->totalUptime = $row->totalUptime;
+                    $data->consumptionAverage = round($row->totalConsumption / $row->totalMachines, 6);
+                    $data->uptimeAverage = round($row->totalUptime / $row->totalMachines, 6);
+                    $formatedConsumptions[$row->DATE] = floatval($row->totalConsumption);
+                    $totalCost = 0;
+                    foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                        $Date = new Datetime($FCDate);
+                        foreach ($eletricityPrices as $KWCDate => $KWCValue) {
+                            if ($Date->format("Y-m-01") > $KWCDate) {
+                                while ($Date->format("Y-m-01") != $KWCDate) {
+                                    $Date->modify("- 1 month");
+                                }
+                                break;
+                            }
+                        }
+                        $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($eletricityPrices->{$Date->format("Y-m-01")} / 100), $config->GetCostRound());
+                    }
+                    $data->totalCost = floatval($totalCost);
+                }
+            } else {
+                $data->totalMachines = 0;
+                $data->totalConsumption = 0;
+                $data->totalUptime = 0;
+                $data->consumptionAverage = 0;
+                $data->uptimeAverage = 0;
+                while ($row = mysqli_fetch_object($dataResult)) {
+                    $data->totalMachines = $row->totalMachines;
+                    $data->totalConsumption += $row->totalConsumption;
+                    $data->totalUptime += $row->totalUptime;
+                    $formatedConsumptions[$row->DATE] = floatval($row->totalConsumption);
+                    $totalCost = 0;
+                    foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                        $Date = new Datetime($FCDate);
+                        foreach ($eletricityPrices as $KWCDate => $KWCValue) {
+                            if ($Date->format("Y-m-01") > $KWCDate) {
+                                while ($Date->format("Y-m-01") != $KWCDate) {
+                                    $Date->modify("- 1 month");
+                                }
+                                break;
+                            }
+                        }
+                        $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($eletricityPrices->{$Date->format("Y-m-01")} / 100), $config->GetCostRound());
+                    }
+                    $data->totalCost = floatval($totalCost);
+                }
             }
             $data->return = true;
         } else
