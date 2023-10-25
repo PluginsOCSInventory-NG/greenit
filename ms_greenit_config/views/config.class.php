@@ -89,47 +89,6 @@ class ConfigView
                 msg_success($l->g(101000));
             } else
                 msg_error($l->g(101001));
-
-
-            $url = 'http://172.18.25.171:8080/data/periods/';
-            $query = curl_init($url);
-            curl_setopt(
-                $query,
-                CURLOPT_RETURNTRANSFER,
-                true
-            );
-            if (is_defined($this->config->GetAPIKey()))
-                curl_setopt(
-                    $query,
-                    CURLOPT_HTTPHEADER,
-                    array(
-                        'Authorization: Token ' . $this->config->GetAPIKey()
-                    )
-                );
-            $response = curl_exec($query);
-            $response = json_decode($response);
-            curl_close($query);
-
-            if (curl_getinfo($query, CURLINFO_HTTP_CODE) == 200) {
-                $date = new DateTime("NOW");
-                while ($date->format("Y-m-01") != $response[0]->period) {
-                    $date->modify("-1 month");
-                }
-                foreach ($response[0]->groups as $group) {
-                    if ($group->name == $this->config->GetConsumptionType())
-                        $kilowattCost = $group->electricity_price / 100;
-                }
-            } else {
-                $kilowattCost = 0;
-            }
-
-            $insertQuery = "
-                UPDATE greenit_config 
-                SET 
-                KILOWATT_COST='" . $kilowattCost . "'
-                WHERE ID='1';
-            ";
-            mysql2_query_secure($insertQuery, $_SESSION['OCS']["writeServer"]);
         } else if (isset($protectedPost["TEST_API"])) {
 
             $url = 'http://172.18.25.171:8080/';
