@@ -106,10 +106,10 @@ class ComputerTypeStatsView extends View
 
         echo "<h4>" . $l->g(102700) . "</h4>";
 
-        $table = '
-            <div class="row">
-        ';
         if ($this->computerTypes->return != false) {
+            $table = '
+                <div class="row">
+            ';
             foreach ($this->computerTypes->ComputerTypes as $count => $computerType) {
                 if (next($this->computerTypes->ComputerTypes)) {
                     $table .= "
@@ -148,14 +148,14 @@ class ComputerTypeStatsView extends View
                 </div>
             ";
             }
-        }
 
-        $table .= '
+            $table .= '
             </div>
-        ';
-        echo $table;
+            ';
+            echo $table;
 
-        echo "<hr>";
+            echo "<hr>";
+        }
 
         $labels = array();
         $data = array(
