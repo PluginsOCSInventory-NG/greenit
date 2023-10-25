@@ -79,7 +79,6 @@ class Config
             COMPARE_INFO_PERIOD, 
             CONSUMPTION_ROUND, 
             UPTIME_FORMAT, 
-            KILOWATT_COST, 
             COST_ROUND, 
             COST_UNIT,
             API_KEY,
@@ -95,7 +94,6 @@ class Config
             $this->COMPARE_INFO_PERIOD = $row->COMPARE_INFO_PERIOD;
             $this->CONSUMPTION_ROUND = $row->CONSUMPTION_ROUND;
             $this->UPTIME_FORMAT = $row->UPTIME_FORMAT;
-            $this->KILOWATT_COST = $row->KILOWATT_COST;
             $this->COST_ROUND = $row->COST_ROUND;
             $this->COST_UNIT = $row->COST_UNIT;
             $this->API_KEY = $row->API_KEY;
