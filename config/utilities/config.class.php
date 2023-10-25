@@ -29,11 +29,6 @@ class Config
     private string $UPTIME_FORMAT;
 
     /**
-     * Data of the kilowatt price
-     */
-    private float $KILOWATT_COST;
-
-    /**
      * Data of the round of cost
      */
     private int $COST_ROUND;
@@ -146,16 +141,6 @@ class Config
     public function GetUptimeFormat(): string
     {
         return $this->UPTIME_FORMAT;
-    }
-
-    /**
-     * Get the kilowatt price data
-     * 
-     * @return int Return kilowatt price data
-     */
-    public function GetKiloWattCost(): float
-    {
-        return $this->KILOWATT_COST;
     }
 
     /**
