@@ -166,6 +166,47 @@ class Data
             $data->return = false;
         return $data;
     }
+
+    /**
+     * Get the electricity prices from the GreenIT API
+     * 
+     * @return object Return an object with the formated data from database or false if the database canno't be reached
+     */
+    public function GetElectricityPrices(): object|false
+    {
+        $data = new stdClass();
+        $config = new Config();
+        $url = 'http://172.18.25.171:8080/data/periods/';
+        $query = curl_init($url);
+        curl_setopt(
+            $query,
+            CURLOPT_RETURNTRANSFER,
+            true
+        );
+        if (is_defined($config->GetAPIKey()))
+            curl_setopt(
+                $query,
+                CURLOPT_HTTPHEADER,
+                array(
+                    'Authorization: Token ' . $config->GetAPIKey()
+                )
+            );
+        $response = curl_exec($query);
+        $response = json_decode($response);
+        curl_close($query);
+
+        if (curl_getinfo($query, CURLINFO_HTTP_CODE) == 200) {
+            foreach ($response as $element) {
+                foreach ($element->{"groups"} as $group) {
+                    if ($group->{"name"} == $config->GetConsumptionType()) {
+                        $data->{$element->{"period"}} = $group->{"electricity_price"};
+                    }
+                }
+            }
+            return $data;
+        } else
+            return false;
+    }
 }
 
 ?>
