@@ -85,11 +85,13 @@ class Data
                     foreach ($formatedConsumptions as $FCDate => $FCValue) {
                         $Date = new Datetime($FCDate);
                         foreach ($eletricityPrices as $KWCDate => $KWCValue) {
-                            if ($Date->format("Y-m-01") > $KWCDate) {
-                                while ($Date->format("Y-m-01") != $KWCDate) {
-                                    $Date->modify("- 1 month");
+                            if ($KWCDate != "return") {
+                                if ($Date->format("Y-m-01") > $KWCDate) {
+                                    while ($Date->format("Y-m-01") != $KWCDate) {
+                                        $Date->modify("- 1 month");
+                                    }
+                                    break;
                                 }
-                                break;
                             }
                         }
                         $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($eletricityPrices->{$Date->format("Y-m-01")} / 100), $config->GetCostRound());
@@ -111,11 +113,13 @@ class Data
                     foreach ($formatedConsumptions as $FCDate => $FCValue) {
                         $Date = new Datetime($FCDate);
                         foreach ($eletricityPrices as $KWCDate => $KWCValue) {
-                            if ($Date->format("Y-m-01") > $KWCDate) {
-                                while ($Date->format("Y-m-01") != $KWCDate) {
-                                    $Date->modify("- 1 month");
+                            if ($KWCDate != "return") {
+                                if ($Date->format("Y-m-01") > $KWCDate) {
+                                    while ($Date->format("Y-m-01") != $KWCDate) {
+                                        $Date->modify("- 1 month");
+                                    }
+                                    break;
                                 }
-                                break;
                             }
                         }
                         $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($eletricityPrices->{$Date->format("Y-m-01")} / 100), $config->GetCostRound());
@@ -214,7 +218,7 @@ class Data
      * 
      * @return object Return an object with the formated data from database or false if the database canno't be reached
      */
-    public function GetElectricityPrices(): object|false
+    public function GetElectricityPrices(): object
     {
         $data = new stdClass();
         $config = new Config();
@@ -245,9 +249,10 @@ class Data
                     }
                 }
             }
-            return $data;
+            $data->return = true;
         } else
-            return false;
+            $data->return = false;
+        return $data;
     }
 }
 

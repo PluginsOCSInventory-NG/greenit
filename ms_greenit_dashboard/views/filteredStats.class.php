@@ -284,7 +284,7 @@ class FilteredStatsView extends View
         }
         //////////////////////////////
 
-        if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))]) || isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))])) {
+        if (is_defined($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))]) || is_defined($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))])) {
             $yesterdayQuery = "
                 SELECT 
                 DATE,
