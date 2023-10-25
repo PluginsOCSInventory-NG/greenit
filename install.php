@@ -38,7 +38,7 @@ function extension_install_greenit()
     );
 
     $commonObject->sqlQuery(
-        "INSERT INTO `greenit_config` (COLLECT_INFO_PERIOD,COMPARE_INFO_PERIOD,CONSUMPTION_ROUND,COST_ROUND,COST_UNIT,KILOWATT_COST,UPTIME_FORMAT,API_KEY,CONSUMPTION_TYPE) VALUES ('30','365','2','2','€','','h-m-s', '', 'PX_ELE_I_TTES_TRANCHES');"
+        "INSERT INTO `greenit_config` (COLLECT_INFO_PERIOD,COMPARE_INFO_PERIOD,CONSUMPTION_ROUND,COST_ROUND,COST_UNIT,UPTIME_FORMAT,API_KEY,CONSUMPTION_TYPE) VALUES ('30','365','2','2','€','h-m-s', '', 'PX_ELE_I_TTES_TRANCHES');"
     );
 
     $commonObject->sqlQuery(
