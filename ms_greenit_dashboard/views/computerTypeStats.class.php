@@ -120,7 +120,7 @@ class ComputerTypeStatsView extends View
                     ";
                 }
                 $table .= "
-                        <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->collectData->{$computerType}) && $this->collectData->{$computerType}->return != false ? $this->calculation->CostFormat($this->collectData->{$computerType}->totalCost / $this->collectData->{$computerType}->totalMachines, $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
+                        <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->collectData->{$computerType}) && $this->collectData->{$computerType}->return != false ? $this->calculation->CostFormat($this->collectData->{$computerType}->costAverage, $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
                         <p style='color:#333; font-size: 15px;'>" . $l->g(102703) . " " . $computerType . " " . $l->g(102705) . " " . $this->config->GetCollectInfoPeriod() . " " . $l->g(102706) . "</p>
                     </div>
                 ";
@@ -142,7 +142,7 @@ class ComputerTypeStatsView extends View
                 ";
                 }
                 $table .= "
-                        <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->compareData->{$computerType}) && $this->compareData->{$computerType}->return != false ? $this->calculation->CostFormat($this->compareData->{$computerType}->totalCost / $this->collectData->{$computerType}->totalMachines, $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
+                        <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->compareData->{$computerType}) && $this->compareData->{$computerType}->return != false ? $this->calculation->CostFormat($this->compareData->{$computerType}->costAverage, $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
                         <p style='color:#333; font-size: 15px;'>" . $l->g(102703) . " " . $computerType . " " . $l->g(102705) . " " . $this->config->GetCompareInfoPeriod() . " " . $l->g(102706) . "</p>
                     </div>
                 ";

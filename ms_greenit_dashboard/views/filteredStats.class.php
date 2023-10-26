@@ -631,7 +631,7 @@ class FilteredStatsView extends View
                         <p style='color:#333; font-size: 15px;'>" . $l->g(102604) . "</p>
                     </div>
                     <div class='col-md-4'>
-                        <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->yesterdayData) && $this->yesterdayData->return != false ? $this->calculation->CostFormat($this->yesterdayData->totalCost / $this->yesterdayData->totalMachines, $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
+                        <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->yesterdayData) && $this->yesterdayData->return != false ? $this->calculation->CostFormat($this->yesterdayData->costAverage, $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
                         <p style='color:#333; font-size: 15px;'>" . $l->g(102606) . "</p>
                     </div>
                 </div>
@@ -671,11 +671,11 @@ class FilteredStatsView extends View
             $table .= "
                 <div class='row'>
                     <div class='col-md-6' style='border-right: 1px solid #ddd;'>
-                        <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->collectData) && $this->collectData->return != false ? $this->calculation->CostFormat($this->collectData->totalCost / $this->collectData->totalMachines, $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
+                        <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->collectData) && $this->collectData->return != false ? $this->calculation->CostFormat($this->collectData->costAverage, $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
                         <p style='color:#333; font-size: 15px;'>" . $l->g(102704) . " " . $this->config->GetCollectInfoPeriod() . " " . $l->g(102706) . "</p>
                     </div>
                     <div class='col-md-6'>
-                        <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->compareData) && $this->compareData->return != false ? $this->calculation->CostFormat($this->compareData->totalCost / $this->compareData->totalMachines, $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
+                        <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->compareData) && $this->compareData->return != false ? $this->calculation->CostFormat($this->compareData->costAverage, $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
                         <p style='color:#333; font-size: 15px;'>" . $l->g(102704) . " " . $this->config->GetCompareInfoPeriod() . " " . $l->g(102706) . "</p>
                     </div>
                 </div>

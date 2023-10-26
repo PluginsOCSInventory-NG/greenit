@@ -870,6 +870,7 @@ class CronStats
                 foreach ($date as $date => $value) {
                     $data[$type][$date]["consumptionAverage"] = round($data[$type][$date]["totalConsumption"] / $data[$type][$date]["totalMachines"], 6);
                     $data[$type][$date]["uptimeAverage"] = round($data[$type][$date]["totalUptime"] / $data[$type][$date]["totalMachines"], 6);
+                    $data[$type][$date]["costAverage"] = round($data[$type][$date]["totalCost"] / $data[$type][$date]["totalMachines"], 6);
                 }
             }
 
@@ -1642,6 +1643,7 @@ class CronStats
                 foreach ($date as $date => $value) {
                     $data[$type][$date]["consumptionAverage"] = round($data[$type][$date]["totalConsumption"] / $data[$type][$date]["totalMachines"], 6);
                     $data[$type][$date]["uptimeAverage"] = round($data[$type][$date]["totalUptime"] / $data[$type][$date]["totalMachines"], 6);
+                    $data[$type][$date]["costAverage"] = round($data[$type][$date]["totalCost"] / $data[$type][$date]["totalMachines"], 6);
                 }
             }
 
