@@ -24,6 +24,13 @@ function extension_install_greenit()
     );
 
     $commonObject->sqlQuery(
+        "CREATE INDEX DATE_INDEX ON `greenit`(DATE);"
+    );
+    $commonObject->sqlQuery(
+        "CREATE INDEX HARDWARE_ID_INDEX ON `greenit`(HARDWARE_ID);"
+    );
+
+    $commonObject->sqlQuery(
         "CREATE TABLE IF NOT EXISTS `greenit_config` (
         `ID` INTEGER NOT NULL AUTO_INCREMENT,
         `COLLECT_INFO_PERIOD` INTEGER NOT NULL,
@@ -49,6 +56,10 @@ function extension_install_greenit()
         `DATA` JSON NOT NULL,
         CHECK (JSON_VALID(DATA)),
         PRIMARY KEY (ID)) ENGINE=INNODB;"
+    );
+
+    $commonObject->sqlQuery(
+        "CREATE INDEX DATE_INDEX ON `greenit_stats`(DATE);"
     );
 }
 
