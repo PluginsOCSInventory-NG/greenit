@@ -82,19 +82,21 @@ class Data
                     $data->uptimeAverage = round($row->totalUptime / $row->totalMachines, 6);
                     $formatedConsumptions[$row->DATE] = floatval($row->totalConsumption);
                     $totalCost = 0;
-                    foreach ($formatedConsumptions as $FCDate => $FCValue) {
-                        $Date = new Datetime($FCDate);
-                        foreach ($eletricityPrices as $KWCDate => $KWCValue) {
-                            if ($KWCDate != "return") {
-                                if ($Date->format("Y-m-01") > $KWCDate) {
-                                    while ($Date->format("Y-m-01") != $KWCDate) {
-                                        $Date->modify("- 1 month");
+                    if (is_defined($config->GetAPIKey())) {
+                        foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                            $Date = new Datetime($FCDate);
+                            foreach ($eletricityPrices as $KWCDate => $KWCValue) {
+                                if ($KWCDate != "return") {
+                                    if ($Date->format("Y-m-01") > $KWCDate) {
+                                        while ($Date->format("Y-m-01") != $KWCDate) {
+                                            $Date->modify("- 1 month");
+                                        }
+                                        break;
                                     }
-                                    break;
                                 }
                             }
+                            $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($eletricityPrices->{$Date->format("Y-m-01")} / 100), $config->GetCostRound());
                         }
-                        $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($eletricityPrices->{$Date->format("Y-m-01")} / 100), $config->GetCostRound());
                     }
                     $data->totalCost = floatval($totalCost);
                 }
@@ -110,19 +112,21 @@ class Data
                     $data->totalUptime += $row->totalUptime;
                     $formatedConsumptions[$row->DATE] = floatval($row->totalConsumption);
                     $totalCost = 0;
-                    foreach ($formatedConsumptions as $FCDate => $FCValue) {
-                        $Date = new Datetime($FCDate);
-                        foreach ($eletricityPrices as $KWCDate => $KWCValue) {
-                            if ($KWCDate != "return") {
-                                if ($Date->format("Y-m-01") > $KWCDate) {
-                                    while ($Date->format("Y-m-01") != $KWCDate) {
-                                        $Date->modify("- 1 month");
+                    if (is_defined($config->GetAPIKey())) {
+                        foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                            $Date = new Datetime($FCDate);
+                            foreach ($eletricityPrices as $KWCDate => $KWCValue) {
+                                if ($KWCDate != "return") {
+                                    if ($Date->format("Y-m-01") > $KWCDate) {
+                                        while ($Date->format("Y-m-01") != $KWCDate) {
+                                            $Date->modify("- 1 month");
+                                        }
+                                        break;
                                     }
-                                    break;
                                 }
                             }
+                            $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($eletricityPrices->{$Date->format("Y-m-01")} / 100), $config->GetCostRound());
                         }
-                        $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($eletricityPrices->{$Date->format("Y-m-01")} / 100), $config->GetCostRound());
                     }
                     $data->totalCost = floatval($totalCost);
                 }
