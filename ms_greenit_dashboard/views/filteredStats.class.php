@@ -153,7 +153,7 @@ class FilteredStatsView extends View
         // Get filtered computers
         $computerQuery["SQL"] = "
             SELECT DISTINCT 
-            hardware.NAME as NAME 
+            hardware.ID as ID 
             FROM hardware 
             INNER JOIN accountinfo ON hardware.ID = accountinfo.hardware_id 
             INNER JOIN greenit ON hardware.ID = greenit.HARDWARE_ID 
@@ -185,7 +185,7 @@ class FilteredStatsView extends View
         $computerDataResult = mysql2_query_secure($computerQuery["SQL"], $_SESSION["OCS"]["readServer"]);
         $computerData = array();
         while ($row = mysqli_fetch_object($computerDataResult)) {
-            array_push($computerData, $row->NAME);
+            array_push($computerData, $row->ID);
         }
         $this->computers = "";
         foreach ($computerData as $computer) {
@@ -199,7 +199,8 @@ class FilteredStatsView extends View
         // Get filter table values
         $this->sqlFilteredSearch["SQL"] = "
             SELECT DISTINCT 
-            hardware.NAME as NAME,
+            hardware.ID AS ID,
+            hardware.NAME AS NAME,
             hardware.OSNAME AS OS_NAME,
             accountinfo.TAG AS TAG,
             groups_cache.GROUP_ID AS GROUP_ID,
@@ -298,12 +299,12 @@ class FilteredStatsView extends View
                 AND CONSUMPTION <> 'VM detected' 
             ";
             if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))])) {
-                $yesterdayQuery .= "AND hardware.NAME='" . $protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))] . "'";
+                $yesterdayQuery .= "AND hardware.ID='" . $protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))] . "'";
             } else if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))])) {
                 $computersData = explode(",", $protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))]);
                 $yesterdayQuery .= "AND (";
                 foreach ($computersData as $computerName) {
-                    $yesterdayQuery .= "hardware.NAME='" . $computerName . "'";
+                    $yesterdayQuery .= "hardware.ID='" . $computerName . "'";
                     if (next($computersData))
                         $yesterdayQuery .= " OR ";
                 }
@@ -324,12 +325,12 @@ class FilteredStatsView extends View
                 AND CONSUMPTION <> 'VM detected' 
             ";
             if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))])) {
-                $collectQuery .= "AND hardware.NAME='" . $protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))] . "'";
+                $collectQuery .= "AND hardware.ID='" . $protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))] . "'";
             } else if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))])) {
                 $computersData = explode(",", $protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))]);
                 $collectQuery .= "AND (";
                 foreach ($computersData as $computerName) {
-                    $collectQuery .= "hardware.NAME='" . $computerName . "'";
+                    $collectQuery .= "hardware.ID='" . $computerName . "'";
                     if (next($computersData))
                         $collectQuery .= " OR ";
                 }
@@ -351,12 +352,12 @@ class FilteredStatsView extends View
                 AND CONSUMPTION <> 'VM detected' 
             ";
             if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))])) {
-                $compareQuery .= "AND hardware.NAME='" . $protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))] . "'";
+                $compareQuery .= "AND hardware.ID='" . $protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))] . "'";
             } else if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))])) {
                 $computersData = explode(",", $protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))]);
                 $compareQuery .= "AND (";
                 foreach ($computersData as $computerName) {
-                    $compareQuery .= "hardware.NAME='" . $computerName . "'";
+                    $compareQuery .= "hardware.ID='" . $computerName . "'";
                     if (next($computersData))
                         $compareQuery .= " OR ";
                 }
@@ -455,8 +456,8 @@ class FilteredStatsView extends View
         $this->listColCantDelFilteredSearch = $this->listFieldsFilteredSearch;
         $this->defaultFieldsFilteredSearch = $this->listFieldsFilteredSearch;
 
-        $this->tabOptionsFilteredSearch["LIEN_LBL"][$l->g(23)] = "index.php?function=ms_greenit_dashboard&cat=filteredstats&'" . strtolower(str_replace(" ", "_", $l->g(23))) . "'=";
-        $this->tabOptionsFilteredSearch["LIEN_CHAMP"][$l->g(23)] = "NAME";
+        $this->tabOptionsFilteredSearch["LIEN_LBL"][$l->g(23)] = "index.php?function=ms_greenit_dashboard&cat=filteredstats&" . strtolower(str_replace(" ", "_", $l->g(23))) . "=";
+        $this->tabOptionsFilteredSearch["LIEN_CHAMP"][$l->g(23)] = "ID";
         //////////////////////////////
 
         echo open_form($form_name, '', '', 'form-horizontal');
@@ -477,7 +478,7 @@ class FilteredStatsView extends View
             msg_warning($l->g(767));
             echo "
                 <a 
-                    href='index.php?function=ms_greenit_dashboard&cat=filteredstats&'" . strtolower(str_replace(" ", "_", $l->g(729))) . "'='" . $this->computers . "'
+                    href='index.php?function=ms_greenit_dashboard&cat=filteredstats&" . strtolower(str_replace(" ", "_", $l->g(729))) . "=" . $this->computers . "'
                     class='btn btn-success'
                 >
                     " . $l->g(102901) . "
