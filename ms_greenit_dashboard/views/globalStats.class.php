@@ -51,7 +51,7 @@ class GlobalStatsView extends View
             WHERE 
             TYPE = 'GLOBAL_COLLECT_TOTAL_STATS' 
             AND DATE = '0000-00-00'
-            ");
+        ");
         $this->compareData = $this->data->GetGreenITData("
             SELECT 
             DATA 

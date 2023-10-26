@@ -98,91 +98,91 @@ class FilteredStatsView extends View
 
         //////////////////////////////
         // If reset button clicked, reset session variables
-        if (isset($protectedPost['RESET'])) {
+        if (isset($protectedPost["RESET"])) {
             if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))]))
                 unset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))]);
             if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))]))
                 unset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))]);
-            unset($protectedPost['OS']);
-            unset($protectedPost['GROUP']);
-            unset($protectedPost['TAG']);
-            unset($protectedPost['ASSET']);
-            unset($_SESSION['GREENIT']['FILTER']['OS']);
-            unset($_SESSION['GREENIT']['FILTER']['GROUP']);
-            unset($_SESSION['GREENIT']['FILTER']['TAG']);
-            unset($_SESSION['GREENIT']['FILTER']['ASSET']);
+            unset($protectedPost["OS"]);
+            unset($protectedPost["GROUP"]);
+            unset($protectedPost["TAG"]);
+            unset($protectedPost["ASSET"]);
+            unset($_SESSION["GREENIT"]["FILTER"]["OS"]);
+            unset($_SESSION["GREENIT"]["FILTER"]["GROUP"]);
+            unset($_SESSION["GREENIT"]["FILTER"]["TAG"]);
+            unset($_SESSION["GREENIT"]["FILTER"]["ASSET"]);
         }
         //////////////////////////////
 
         //////////////////////////////
         // If formular submited, reset cache
-        if (isset($protectedPost['SUBMIT_FORM'])) {
+        if (isset($protectedPost["SUBMIT_FORM"])) {
             if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))]))
                 unset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))]);
             if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))]))
                 unset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))]);
-            $tab_options['CACHE'] = 'RESET';
+            $tab_options["CACHE"] = "RESET";
         }
         //////////////////////////////
 
         //////////////////////////////
         // Reset filter if default value was post
-        if (isset($protectedPost["OS"]) && $protectedPost['OS'] == "0")
-            unset($_SESSION['GREENIT']['FILTER']['OS']);
-        if (isset($protectedPost["GROUP"]) && $protectedPost['GROUP'] == "0")
-            unset($_SESSION['GREENIT']['FILTER']['GROUP']);
-        if (isset($protectedPost["TAG"]) && $protectedPost['TAG'] == "0")
-            unset($_SESSION['GREENIT']['FILTER']['TAG']);
-        if (isset($protectedPost["ASSET"]) && $protectedPost['ASSET'] == "0")
-            unset($_SESSION['GREENIT']['FILTER']['ASSET']);
+        if (isset($protectedPost["OS"]) && $protectedPost["OS"] == "0")
+            unset($_SESSION["GREENIT"]["FILTER"]["OS"]);
+        if (isset($protectedPost["GROUP"]) && $protectedPost["GROUP"] == "0")
+            unset($_SESSION["GREENIT"]["FILTER"]["GROUP"]);
+        if (isset($protectedPost["TAG"]) && $protectedPost["TAG"] == "0")
+            unset($_SESSION["GREENIT"]["FILTER"]["TAG"]);
+        if (isset($protectedPost["ASSET"]) && $protectedPost["ASSET"] == "0")
+            unset($_SESSION["GREENIT"]["FILTER"]["ASSET"]);
         //////////////////////////////
 
         //////////////////////////////
         // Define filter session variables
-        if (is_defined($protectedPost['OS']) && $protectedPost['OS'] != "0")
-            $_SESSION['GREENIT']['FILTER']['OS'] = $protectedPost['OS'];
-        if (is_defined($protectedPost['GROUP']) && $protectedPost['GROUP'] != "0")
-            $_SESSION['GREENIT']['FILTER']['GROUP'] = $protectedPost['GROUP'];
-        if (is_defined($protectedPost['TAG']) && $protectedPost['TAG'] != "0")
-            $_SESSION['GREENIT']['FILTER']['TAG'] = $protectedPost['TAG'];
-        if (is_defined($protectedPost['ASSET']) && $protectedPost['ASSET'] != "0")
-            $_SESSION['GREENIT']['FILTER']['ASSET'] = $protectedPost['ASSET'];
+        if (is_defined($protectedPost["OS"]) && $protectedPost["OS"] != "0")
+            $_SESSION["GREENIT"]["FILTER"]["OS"] = $protectedPost["OS"];
+        if (is_defined($protectedPost["GROUP"]) && $protectedPost["GROUP"] != "0")
+            $_SESSION["GREENIT"]["FILTER"]["GROUP"] = $protectedPost["GROUP"];
+        if (is_defined($protectedPost["TAG"]) && $protectedPost["TAG"] != "0")
+            $_SESSION["GREENIT"]["FILTER"]["TAG"] = $protectedPost["TAG"];
+        if (is_defined($protectedPost["ASSET"]) && $protectedPost["ASSET"] != "0")
+            $_SESSION["GREENIT"]["FILTER"]["ASSET"] = $protectedPost["ASSET"];
         //////////////////////////////
 
         //////////////////////////////
         // Get filtered computers
-        $computerQuery['SQL'] = '
+        $computerQuery["SQL"] = "
             SELECT DISTINCT 
             hardware.NAME as NAME 
             FROM hardware 
             INNER JOIN accountinfo ON hardware.ID = accountinfo.hardware_id 
             INNER JOIN greenit ON hardware.ID = greenit.HARDWARE_ID 
             LEFT JOIN groups_cache ON hardware.ID = groups_cache.HARDWARE_ID 
-        ';
+        ";
 
         if (
-            is_defined($_SESSION['GREENIT']['FILTER']['OS']) ||
-            is_defined($_SESSION['GREENIT']['FILTER']['GROUP']) ||
-            is_defined($_SESSION['GREENIT']['FILTER']['TAG']) ||
-            is_defined($_SESSION['GREENIT']['FILTER']['ASSET'])
+            is_defined($_SESSION["GREENIT"]["FILTER"]["OS"]) ||
+            is_defined($_SESSION["GREENIT"]["FILTER"]["GROUP"]) ||
+            is_defined($_SESSION["GREENIT"]["FILTER"]["TAG"]) ||
+            is_defined($_SESSION["GREENIT"]["FILTER"]["ASSET"])
         ) {
-            $computerQuery['WHERE'] = [];
-            $computerQuery['SQL'] .= ' WHERE';
+            $computerQuery["WHERE"] = [];
+            $computerQuery["SQL"] .= " WHERE";
 
-            if (is_defined($_SESSION['GREENIT']['FILTER']['OS']))
-                array_push($computerQuery['WHERE'], ' hardware.OSNAME="' . $_SESSION['GREENIT']['FILTER']['OS'] . '" AND');
-            if (is_defined($_SESSION['GREENIT']['FILTER']['GROUP']))
-                array_push($computerQuery['WHERE'], ' GROUP_ID="' . $_SESSION['GREENIT']['FILTER']['GROUP'] . '" AND');
-            if (is_defined($_SESSION['GREENIT']['FILTER']['TAG']))
-                array_push($computerQuery['WHERE'], ' accountinfo.TAG="' . $_SESSION['GREENIT']['FILTER']['TAG'] . '" AND');
-            if (is_defined($_SESSION['GREENIT']['FILTER']['ASSET']))
-                array_push($computerQuery['WHERE'], ' hardware.CATEGORY_ID="' . $_SESSION['GREENIT']['FILTER']['ASSET'] . '" AND');
-            array_push($computerQuery['WHERE'], ' 1');
-            foreach ($computerQuery['WHERE'] as $args) {
-                $computerQuery['SQL'] .= $args;
+            if (is_defined($_SESSION["GREENIT"]["FILTER"]["OS"]))
+                array_push($computerQuery["WHERE"], " hardware.OSNAME='" . $_SESSION["GREENIT"]["FILTER"]["OS"] . "' AND");
+            if (is_defined($_SESSION["GREENIT"]["FILTER"]["GROUP"]))
+                array_push($computerQuery["WHERE"], " GROUP_ID='" . $_SESSION["GREENIT"]["FILTER"]["GROUP"] . "' AND");
+            if (is_defined($_SESSION["GREENIT"]["FILTER"]["TAG"]))
+                array_push($computerQuery["WHERE"], " accountinfo.TAG='" . $_SESSION["GREENIT"]["FILTER"]["TAG"] . "' AND");
+            if (is_defined($_SESSION["GREENIT"]["FILTER"]["ASSET"]))
+                array_push($computerQuery["WHERE"], " hardware.CATEGORY_ID='" . $_SESSION["GREENIT"]["FILTER"]["ASSET"] . "' AND");
+            array_push($computerQuery["WHERE"], " 1");
+            foreach ($computerQuery["WHERE"] as $args) {
+                $computerQuery["SQL"] .= $args;
             }
         }
-        $computerDataResult = mysql2_query_secure($computerQuery['SQL'], $_SESSION['OCS']["readServer"]);
+        $computerDataResult = mysql2_query_secure($computerQuery["SQL"], $_SESSION["OCS"]["readServer"]);
         $computerData = array();
         while ($row = mysqli_fetch_object($computerDataResult)) {
             array_push($computerData, $row->NAME);
@@ -197,7 +197,7 @@ class FilteredStatsView extends View
 
         //////////////////////////////
         // Get filter table values
-        $this->sqlFilteredSearch['SQL'] = '
+        $this->sqlFilteredSearch["SQL"] = "
             SELECT DISTINCT 
             hardware.NAME as NAME,
             hardware.OSNAME AS OS_NAME,
@@ -208,79 +208,79 @@ class FilteredStatsView extends View
             INNER JOIN accountinfo ON hardware.ID = accountinfo.hardware_id
             INNER JOIN greenit ON hardware.ID = greenit.HARDWARE_ID
             LEFT JOIN groups_cache ON hardware.ID = groups_cache.HARDWARE_ID
-        ';
+        ";
 
         if (
-            is_defined($_SESSION['GREENIT']['FILTER']['OS']) ||
-            is_defined($_SESSION['GREENIT']['FILTER']['GROUP']) ||
-            is_defined($_SESSION['GREENIT']['FILTER']['TAG']) ||
-            is_defined($_SESSION['GREENIT']['FILTER']['ASSET'])
+            is_defined($_SESSION["GREENIT"]["FILTER"]["OS"]) ||
+            is_defined($_SESSION["GREENIT"]["FILTER"]["GROUP"]) ||
+            is_defined($_SESSION["GREENIT"]["FILTER"]["TAG"]) ||
+            is_defined($_SESSION["GREENIT"]["FILTER"]["ASSET"])
         ) {
-            $this->sqlFilteredSearch['WHERE'] = [];
-            $this->sqlFilteredSearch['SQL'] .= ' WHERE';
+            $this->sqlFilteredSearch["WHERE"] = [];
+            $this->sqlFilteredSearch["SQL"] .= " WHERE";
 
-            if (is_defined($_SESSION['GREENIT']['FILTER']['OS']))
-                array_push($this->sqlFilteredSearch['WHERE'], ' hardware.OSNAME="' . $_SESSION['GREENIT']['FILTER']['OS'] . '" AND');
-            if (is_defined($_SESSION['GREENIT']['FILTER']['GROUP']))
-                array_push($this->sqlFilteredSearch['WHERE'], ' GROUP_ID="' . $_SESSION['GREENIT']['FILTER']['GROUP'] . '" AND');
-            if (is_defined($_SESSION['GREENIT']['FILTER']['TAG']))
-                array_push($this->sqlFilteredSearch['WHERE'], ' accountinfo.TAG="' . $_SESSION['GREENIT']['FILTER']['TAG'] . '" AND');
-            if (is_defined($_SESSION['GREENIT']['FILTER']['ASSET']))
-                array_push($this->sqlFilteredSearch['WHERE'], ' hardware.CATEGORY_ID="' . $_SESSION['GREENIT']['FILTER']['ASSET'] . '" AND');
-            array_push($this->sqlFilteredSearch['WHERE'], ' 1');
-            foreach ($this->sqlFilteredSearch['WHERE'] as $args) {
-                $this->sqlFilteredSearch['SQL'] .= $args;
+            if (is_defined($_SESSION["GREENIT"]["FILTER"]["OS"]))
+                array_push($this->sqlFilteredSearch["WHERE"], ' hardware.OSNAME="' . $_SESSION["GREENIT"]["FILTER"]["OS"] . '" AND');
+            if (is_defined($_SESSION["GREENIT"]["FILTER"]["GROUP"]))
+                array_push($this->sqlFilteredSearch["WHERE"], ' GROUP_ID="' . $_SESSION["GREENIT"]["FILTER"]["GROUP"] . '" AND');
+            if (is_defined($_SESSION["GREENIT"]["FILTER"]["TAG"]))
+                array_push($this->sqlFilteredSearch["WHERE"], ' accountinfo.TAG="' . $_SESSION["GREENIT"]["FILTER"]["TAG"] . '" AND');
+            if (is_defined($_SESSION["GREENIT"]["FILTER"]["ASSET"]))
+                array_push($this->sqlFilteredSearch["WHERE"], ' hardware.CATEGORY_ID="' . $_SESSION["GREENIT"]["FILTER"]["ASSET"] . '" AND');
+            array_push($this->sqlFilteredSearch["WHERE"], ' 1');
+            foreach ($this->sqlFilteredSearch["WHERE"] as $args) {
+                $this->sqlFilteredSearch["SQL"] .= $args;
             }
         }
 
-        $this->sqlFilteredSearch['SQL'] .= ' GROUP BY NAME';
+        $this->sqlFilteredSearch["SQL"] .= " GROUP BY NAME";
         //////////////////////////////
 
         //////////////////////////////
         // OS filter
         $query = "SELECT OSNAME FROM hardware WHERE OSNAME LIKE '%Windows%' AND DEVICEID<>'_SYSTEMGROUP_' AND DEVICEID<>'_DOWNLOADGROUP_' GROUP BY OSNAME ORDER BY OSNAME";
-        $result = mysql2_query_secure($query, $_SESSION['OCS']["readServer"]);
+        $result = mysql2_query_secure($query, $_SESSION["OCS"]["readServer"]);
         $this->os = [
             0 => "-----",
         ];
         while ($item = mysqli_fetch_array($result)) {
-            $this->os[$item['OSNAME']] = $item['OSNAME'];
+            $this->os[$item["OSNAME"]] = $item["OSNAME"];
         }
         //////////////////////////////
 
         //////////////////////////////
         // GROUP filter
         $query = "SELECT NAME, ID FROM hardware WHERE DEVICEID = '_SYSTEMGROUP_' GROUP BY NAME ORDER BY NAME";
-        $result = mysql2_query_secure($query, $_SESSION['OCS']["readServer"]);
+        $result = mysql2_query_secure($query, $_SESSION["OCS"]["readServer"]);
         $this->groups = [
             0 => "-----",
         ];
         while ($item = mysqli_fetch_array($result)) {
-            $this->groups[$item['ID']] = $item['NAME'];
+            $this->groups[$item["ID"]] = $item["NAME"];
         }
         //////////////////////////////
 
         //////////////////////////////
         // TAG filter
         $query = "SELECT TAG FROM accountinfo";
-        $result = mysql2_query_secure($query, $_SESSION['OCS']["readServer"]);
+        $result = mysql2_query_secure($query, $_SESSION["OCS"]["readServer"]);
         $this->tags = [
             0 => "-----",
         ];
         while ($item = mysqli_fetch_array($result)) {
-            $this->tags[$item['TAG']] = $item['TAG'];
+            $this->tags[$item["TAG"]] = $item["TAG"];
         }
         //////////////////////////////
 
         //////////////////////////////
         // ASSET filter
         $query = "SELECT CATEGORY_NAME, ID FROM assets_categories GROUP BY CATEGORY_NAME ORDER BY CATEGORY_NAME";
-        $result = mysql2_query_secure($query, $_SESSION['OCS']["readServer"]);
+        $result = mysql2_query_secure($query, $_SESSION["OCS"]["readServer"]);
         $this->assets = [
             0 => "-----",
         ];
         while ($item = mysqli_fetch_array($result)) {
-            $this->assets[$item['ID']] = $item['CATEGORY_NAME'];
+            $this->assets[$item["ID"]] = $item["CATEGORY_NAME"];
         }
         //////////////////////////////
 
@@ -443,8 +443,8 @@ class FilteredStatsView extends View
         // Table settings
         $table_name = $form_name;
         $this->tabOptionsFilteredSearch = $protectedPost;
-        $this->tabOptionsFilteredSearch['form_name'] = $form_name;
-        $this->tabOptionsFilteredSearch['table_name'] = $table_name;
+        $this->tabOptionsFilteredSearch["form_name"] = $form_name;
+        $this->tabOptionsFilteredSearch["table_name"] = $table_name;
 
         $this->listFieldsFilteredSearch = array(
             $l->g(23) => 'NAME',
@@ -455,134 +455,134 @@ class FilteredStatsView extends View
         $this->listColCantDelFilteredSearch = $this->listFieldsFilteredSearch;
         $this->defaultFieldsFilteredSearch = $this->listFieldsFilteredSearch;
 
-        $this->tabOptionsFilteredSearch['LIEN_LBL'][$l->g(23)] = 'index.php?function=ms_greenit_dashboard&cat=filteredstats&' . strtolower(str_replace(" ", "_", $l->g(23))) . '=';
-        $this->tabOptionsFilteredSearch['LIEN_CHAMP'][$l->g(23)] = 'NAME';
+        $this->tabOptionsFilteredSearch["LIEN_LBL"][$l->g(23)] = "index.php?function=ms_greenit_dashboard&cat=filteredstats&'" . strtolower(str_replace(" ", "_", $l->g(23))) . "'=";
+        $this->tabOptionsFilteredSearch["LIEN_CHAMP"][$l->g(23)] = "NAME";
         //////////////////////////////
 
         echo open_form($form_name, '', '', 'form-horizontal');
 
-        echo '
-        <div class="form-group">
-            <div class="col-sm-12">
-        ';
+        echo "
+        <div class='form-group'>
+            <div class='col-sm-12'>
+        ";
 
         //////////////////////////////
         // Show generate filtered stats + warning message about filter on
         if (
-            is_defined($_SESSION['GREENIT']['FILTER']['OS']) ||
-            is_defined($_SESSION['GREENIT']['FILTER']['GROUP']) ||
-            is_defined($_SESSION['GREENIT']['FILTER']['TAG']) ||
-            is_defined($_SESSION['GREENIT']['FILTER']['ASSET'])
+            is_defined($_SESSION["GREENIT"]["FILTER"]["OS"]) ||
+            is_defined($_SESSION["GREENIT"]["FILTER"]["GROUP"]) ||
+            is_defined($_SESSION["GREENIT"]["FILTER"]["TAG"]) ||
+            is_defined($_SESSION["GREENIT"]["FILTER"]["ASSET"])
         ) {
             msg_warning($l->g(767));
-            echo '
+            echo "
                 <a 
-                    href="index.php?function=ms_greenit_dashboard&cat=filteredstats&' . strtolower(str_replace(" ", "_", $l->g(729))) . '=' . $this->computers . '" 
-                    class="btn btn-success"
+                    href='index.php?function=ms_greenit_dashboard&cat=filteredstats&'" . strtolower(str_replace(" ", "_", $l->g(729))) . "'='" . $this->computers . "'
+                    class='btn btn-success'
                 >
-                    ' . $l->g(102901) . '
+                    " . $l->g(102901) . "
                 </a>
-            ';
+            ";
         }
 
         ajaxtab_entete_fixe($this->listFieldsFilteredSearch, $this->defaultFieldsFilteredSearch, $this->tabOptionsFilteredSearch, $this->listColCantDelFilteredSearch);
 
-        echo '
-                <button type="button" data-toggle="collapse" data-target="#filter" class="btn">' . $l->g(735) . '</button>
-                <div id="filter" class="collapse">
-        ';
+        echo "
+                <button type='button' data-toggle='collapse' data-target='#filter' class='btn'>" . $l->g(735) . "</button>
+                <div id='filter' class='collapse'>
+        ";
 
         //////////////////////////////
         // OS
-        echo '
-                    <div class="form-group">
-                        <label class="control-label col-sm-2" for="OS">' . $l->g(25) . '</label>
-                        <div class="col-sm-3">
-                            <select name="OS" id="OS" class="form-control">
-            ';
+        echo "
+                    <div class='form-group'>
+                        <label class='control-label col-sm-2' for='OS'>" . $l->g(25) . "</label>
+                        <div class='col-sm-3'>
+                            <select name='OS' id='OS' class='form-control'>
+            ";
         foreach ($this->os as $key => $name) {
-            if (isset($_SESSION['GREENIT']['FILTER']['OS']) && $_SESSION['GREENIT']['FILTER']['OS'] == $key) {
+            if (isset($_SESSION["GREENIT"]["FILTER"]["OS"]) && $_SESSION["GREENIT"]["FILTER"]["OS"] == $key) {
                 echo "<option value='" . $key . "' selected>" . $name . "</option>";
             } else {
                 echo "<option value='" . $key . "'>" . $name . "</option>";
             }
         }
-        echo '
+        echo "
                             </select>
                         </div>
-            ';
+            ";
         //////////////////////////////
 
         //////////////////////////////
         // GROUP
-        echo '
-                        <label class="control-label col-sm-2" for="GROUP">' . $l->g(583) . '</label>
-                        <div class="col-sm-3">
-                            <select name="GROUP" id="GROUP" class="form-control">
-            ';
+        echo "
+                        <label class='control-label col-sm-2' for='GROUP'>" . $l->g(583) . "</label>
+                        <div class='col-sm-3'>
+                            <select name='GROUP' id='GROUP' class='form-control'>
+            ";
         foreach ($this->groups as $key => $name) {
-            if (isset($_SESSION['GREENIT']['FILTER']['GROUP']) && $_SESSION['GREENIT']['FILTER']['GROUP'] == $key) {
+            if (isset($_SESSION["GREENIT"]["FILTER"]["GROUP"]) && $_SESSION["GREENIT"]["FILTER"]["GROUP"] == $key) {
                 echo "<option value='" . $key . "' selected>" . $name . "</option>";
             } else {
                 echo "<option value='" . $key . "'>" . $name . "</option>";
             }
         }
-        echo '
+        echo "
                             </select>
                         </div>
                     </div>
-            ';
+            ";
         //////////////////////////////
 
         //////////////////////////////
         // TAG
-        echo '
-                    <div class="form-group">
-                        <label class="control-label col-sm-2" for="TAG">' . $l->g(1425) . '</label>
-                        <div class="col-sm-3">
-                            <select name="TAG" id="TAG" class="form-control">
-            ';
+        echo "
+                    <div class='form-group'>
+                        <label class='control-label col-sm-2' for='TAG'>" . $l->g(1425) . "</label>
+                        <div class='col-sm-3'>
+                            <select name='TAG' id='TAG' class='form-control'>
+            ";
         foreach ($this->tags as $key => $name) {
-            if (isset($_SESSION['GREENIT']['FILTER']['TAG']) && $_SESSION['GREENIT']['FILTER']['TAG'] == $key) {
+            if (isset($_SESSION["GREENIT"]["FILTER"]["TAG"]) && $_SESSION["GREENIT"]["FILTER"]["TAG"] == $key) {
                 echo "<option value='" . $key . "' selected>" . $name . "</option>";
             } else {
                 echo "<option value='" . $key . "'>" . $name . "</option>";
             }
         }
-        echo '
+        echo "
                             </select>
                         </div>
-            ';
+            ";
         //////////////////////////////
 
         //////////////////////////////
         // ASSET CATEGORY
-        echo '
-                        <label class="control-label col-sm-2" for="ASSET">' . $l->g(2132) . '</label>
-                        <div class="col-sm-3">
-                            <select name="ASSET" id="ASSET" class="form-control">
-            ';
+        echo "
+                        <label class='control-label col-sm-2' for='ASSET'>" . $l->g(2132) . "</label>
+                        <div class='col-sm-3'>
+                            <select name='ASSET' id='ASSET' class='form-control'>
+            ";
         foreach ($this->assets as $key => $name) {
-            if (isset($_SESSION['GREENIT']['FILTER']['ASSET']) && $_SESSION['GREENIT']['FILTER']['ASSET'] == $key) {
+            if (isset($_SESSION["GREENIT"]["FILTER"]["ASSET"]) && $_SESSION["GREENIT"]["FILTER"]["ASSET"] == $key) {
                 echo "<option value='" . $key . "' selected>" . $name . "</option>";
             } else {
                 echo "<option value='" . $key . "'>" . $name . "</option>";
             }
         }
-        echo '
+        echo "
                             </select>
                         </div>
                     </div>
-            ';
+            ";
         //////////////////////////////
 
 
-        echo '
-                <button class="btn btn-success" name="SUBMIT_FORM">' . $l->g(393) . '</button>
-                <button class="btn btn-danger" name="RESET">' . $l->g(41) . '</button>
+        echo "
+                <button class='btn btn-success' name='SUBMIT_FORM'>" . $l->g(393) . "</button>
+                <button class='btn btn-danger' name='RESET'>" . $l->g(41) . "</button>
             </div>
         </div>
-        ';
+        ";
 
         echo close_form();
 

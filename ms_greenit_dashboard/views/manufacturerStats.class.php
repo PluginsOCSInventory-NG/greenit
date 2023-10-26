@@ -90,28 +90,29 @@ class ManufacturerStatsView extends View
         if ($this->manufacturers->Yesterday->return != false) {
             foreach ($this->manufacturers->Yesterday->Manufacturers as $count => $manufacturer) {
                 $this->yesterdayData->{$manufacturer} = $this->data->GetGreenITData("
-                SELECT 
-                DATA 
-                FROM greenit_stats 
-                WHERE 
-                TYPE = 'MANUFACTURERSSTATS_" . strtoupper(str_replace(" ", "_", $manufacturer)) . "' 
-                AND DATE='" . $this->config->GetYesterdayDate() . "'
+                    SELECT 
+                    DATA 
+                    FROM greenit_stats 
+                    WHERE 
+                    TYPE = 'MANUFACTURERSSTATS_" . strtoupper(str_replace(" ", "_", $manufacturer)) . "' 
+                    AND DATE='" . $this->config->GetYesterdayDate() . "'
                 ");
             }
         }
+
 
         $this->collectData = new stdClass();
 
         if ($this->manufacturers->Collect->return != false) {
             foreach ($this->manufacturers->Collect->Manufacturers as $count => $manufacturer) {
                 $this->collectData->{$manufacturer} = $this->data->GetGreenITData("
-                SELECT 
-                DATA 
-                FROM greenit_stats 
-                WHERE 
-                TYPE = 'MANUFACTURERS_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $manufacturer)) . "' 
-                AND DATE='0000-00-00'
-            ");
+                    SELECT 
+                    DATA 
+                    FROM greenit_stats 
+                    WHERE 
+                    TYPE = 'MANUFACTURERS_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $manufacturer)) . "' 
+                    AND DATE='0000-00-00'
+                ");
             }
         }
         $this->compareData = new stdClass();
@@ -119,13 +120,13 @@ class ManufacturerStatsView extends View
         if ($this->manufacturers->Compare->return != false) {
             foreach ($this->manufacturers->Compare->Manufacturers as $count => $manufacturer) {
                 $this->compareData->{$manufacturer} = $this->data->GetGreenITData("
-                SELECT 
-                DATA 
-                FROM greenit_stats 
-                WHERE 
-                TYPE = 'MANUFACTURERS_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $manufacturer)) . "' 
-                AND DATE='0000-00-00'
-            ");
+                    SELECT 
+                    DATA 
+                    FROM greenit_stats 
+                    WHERE 
+                    TYPE = 'MANUFACTURERS_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $manufacturer)) . "' 
+                    AND DATE='0000-00-00'
+                ");
             }
         }
     }
@@ -151,25 +152,25 @@ class ManufacturerStatsView extends View
         echo "<h4>" . $l->g(102700) . "</h4>";
 
         if ($this->manufacturers->Collect->return != false) {
-            $table = '
-                <div class="row">
-                    <div class="col-md-1"></div>
-            ';
+            $table = "
+                <div class='row'>
+                    <div class='col-md-1'></div>
+            ";
             foreach ($this->manufacturers->Collect->Manufacturers as $count => $manufacturer) {
                 if (next($this->manufacturers->Collect->Manufacturers)) {
                     $table .= "
-                    <div class='col-md-2' style='border-right: 1px solid #ddd;'>
-                ";
+                        <div class='col-md-2' style='border-right: 1px solid #ddd;'>
+                    ";
                 } else {
                     $table .= "
-                    <div class='col-md-2'>
-                ";
+                        <div class='col-md-2'>
+                    ";
                 }
                 $table .= "
-                    <p style='font-size: 32px; font-weight:bold;'>" . (isset($this->collectData->{$manufacturer}) && $this->collectData->{$manufacturer}->return != false ? $this->calculation->CostFormat($this->collectData->{$manufacturer}->totalCost / $this->collectData->{$manufacturer}->totalMachines, $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
-                    <p style='color:#333; font-size: 15px;'>" . $l->g(102703) . " " . $manufacturer . " " . $l->g(102705) . " " . $this->config->GetCollectInfoPeriod() . " " . $l->g(102706) . "</p>
-                </div>
-            ";
+                        <p style='font-size: 32px; font-weight:bold;'>" . (isset($this->collectData->{$manufacturer}) && $this->collectData->{$manufacturer}->return != false ? $this->calculation->CostFormat($this->collectData->{$manufacturer}->totalCost / $this->collectData->{$manufacturer}->totalMachines, $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
+                        <p style='color:#333; font-size: 15px;'>" . $l->g(102703) . " " . $manufacturer . " " . $l->g(102705) . " " . $this->config->GetCollectInfoPeriod() . " " . $l->g(102706) . "</p>
+                    </div>
+                ";
             }
             $table .= "
                     <div class='col-md-1'></div>
@@ -178,25 +179,25 @@ class ManufacturerStatsView extends View
             ";
         }
         if ($this->manufacturers->Compare->return != false) {
-            $table .= '
-                <div class="row">
-                    <div class="col-md-1"></div>
-            ';
+            $table .= "
+                <div class='row'>
+                    <div class='col-md-1'></div>
+            ";
             foreach ($this->manufacturers->Compare->Manufacturers as $count => $manufacturer) {
                 if (next($this->manufacturers->Compare->Manufacturers)) {
                     $table .= "
-                    <div class='col-md-2' style='border-right: 1px solid #ddd;'>
-                ";
+                        <div class='col-md-2' style='border-right: 1px solid #ddd;'>
+                    ";
                 } else {
                     $table .= "
-                    <div class='col-md-2'>
-                ";
+                        <div class='col-md-2'>
+                    ";
                 }
                 $table .= "
-                    <p style='font-size: 32px; font-weight:bold;'>" . (isset($this->compareData->{$manufacturer}) && $this->compareData->{$manufacturer}->return != false ? $this->calculation->CostFormat($this->compareData->{$manufacturer}->totalCost / $this->compareData->{$manufacturer}->totalMachines, $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
-                    <p style='color:#333; font-size: 15px;'>" . $l->g(102703) . " " . $manufacturer . " " . $l->g(102705) . " " . $this->config->GetCompareInfoPeriod() . " " . $l->g(102706) . "</p>
-                </div>
-            ";
+                        <p style='font-size: 32px; font-weight:bold;'>" . (isset($this->compareData->{$manufacturer}) && $this->compareData->{$manufacturer}->return != false ? $this->calculation->CostFormat($this->compareData->{$manufacturer}->totalCost / $this->compareData->{$manufacturer}->totalMachines, $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
+                        <p style='color:#333; font-size: 15px;'>" . $l->g(102703) . " " . $manufacturer . " " . $l->g(102705) . " " . $this->config->GetCompareInfoPeriod() . " " . $l->g(102706) . "</p>
+                    </div>
+                ";
             }
             $table .= "
                     <div class='col-md-1'></div>
