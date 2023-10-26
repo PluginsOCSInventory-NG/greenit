@@ -101,8 +101,8 @@ class FilteredStatsView extends View
         if (isset($protectedPost["RESET"])) {
             if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))]))
                 unset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))]);
-            if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))]))
-                unset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))]);
+            if (isset($protectedPost[strtolower(str_replace(" ", "_", $l->g(729)))]))
+                unset($protectedPost[strtolower(str_replace(" ", "_", $l->g(729)))]);
             unset($protectedPost["OS"]);
             unset($protectedPost["GROUP"]);
             unset($protectedPost["TAG"]);
@@ -119,8 +119,8 @@ class FilteredStatsView extends View
         if (isset($protectedPost["SUBMIT_FORM"])) {
             if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))]))
                 unset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))]);
-            if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))]))
-                unset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))]);
+            if (isset($protectedPost[strtolower(str_replace(" ", "_", $l->g(729)))]))
+                unset($protectedPost[strtolower(str_replace(" ", "_", $l->g(729)))]);
             $tab_options["CACHE"] = "RESET";
         }
         //////////////////////////////
@@ -285,7 +285,7 @@ class FilteredStatsView extends View
         }
         //////////////////////////////
 
-        if (is_defined($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))]) || is_defined($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))])) {
+        if (is_defined($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))]) || is_defined($protectedPost[strtolower(str_replace(" ", "_", $l->g(729)))])) {
             $yesterdayQuery = "
                 SELECT 
                 DATE,
@@ -300,8 +300,8 @@ class FilteredStatsView extends View
             ";
             if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))])) {
                 $yesterdayQuery .= "AND hardware.ID='" . $protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))] . "'";
-            } else if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))])) {
-                $computersData = explode(",", $protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))]);
+            } else if (isset($protectedPost[strtolower(str_replace(" ", "_", $l->g(729)))])) {
+                $computersData = explode(",", $protectedPost[strtolower(str_replace(" ", "_", $l->g(729)))]);
                 $yesterdayQuery .= "AND (";
                 foreach ($computersData as $computerName) {
                     $yesterdayQuery .= "hardware.ID='" . $computerName . "'";
@@ -326,8 +326,8 @@ class FilteredStatsView extends View
             ";
             if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))])) {
                 $collectQuery .= "AND hardware.ID='" . $protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))] . "'";
-            } else if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))])) {
-                $computersData = explode(",", $protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))]);
+            } else if (isset($protectedPost[strtolower(str_replace(" ", "_", $l->g(729)))])) {
+                $computersData = explode(",", $protectedPost[strtolower(str_replace(" ", "_", $l->g(729)))]);
                 $collectQuery .= "AND (";
                 foreach ($computersData as $computerName) {
                     $collectQuery .= "hardware.ID='" . $computerName . "'";
@@ -353,8 +353,8 @@ class FilteredStatsView extends View
             ";
             if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))])) {
                 $compareQuery .= "AND hardware.ID='" . $protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))] . "'";
-            } else if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))])) {
-                $computersData = explode(",", $protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))]);
+            } else if (isset($protectedPost[strtolower(str_replace(" ", "_", $l->g(729)))])) {
+                $computersData = explode(",", $protectedPost[strtolower(str_replace(" ", "_", $l->g(729)))]);
                 $compareQuery .= "AND (";
                 foreach ($computersData as $computerName) {
                     $compareQuery .= "hardware.ID='" . $computerName . "'";
@@ -460,8 +460,6 @@ class FilteredStatsView extends View
         $this->tabOptionsFilteredSearch["LIEN_CHAMP"][$l->g(23)] = "ID";
         //////////////////////////////
 
-        echo open_form($form_name, '', '', 'form-horizontal');
-
         echo "
         <div class='form-group'>
             <div class='col-sm-12'>
@@ -476,15 +474,16 @@ class FilteredStatsView extends View
             is_defined($_SESSION["GREENIT"]["FILTER"]["ASSET"])
         ) {
             msg_warning($l->g(767));
+            echo open_form('generateFilteredStats', 'index.php?function=ms_greenit_dashboard&cat=filteredstats', '', 'form-horizontal');
+
             echo "
-                <a 
-                    href='index.php?function=ms_greenit_dashboard&cat=filteredstats&" . strtolower(str_replace(" ", "_", $l->g(729))) . "=" . $this->computers . "'
-                    class='btn btn-success'
-                >
-                    " . $l->g(102901) . "
-                </a>
+                <input type='hidden' name='" . strtolower(str_replace(" ", "_", $l->g(729))) . "' value='" . $this->computers . "' />
+                <input type='submit' class='btn btn-success' value='" . $l->g(102901) . "' />
             ";
+            echo close_form();
         }
+
+        echo open_form($form_name, '', '', 'form-horizontal');
 
         ajaxtab_entete_fixe($this->listFieldsFilteredSearch, $this->defaultFieldsFilteredSearch, $this->tabOptionsFilteredSearch, $this->listColCantDelFilteredSearch);
 
@@ -500,7 +499,7 @@ class FilteredStatsView extends View
                         <label class='control-label col-sm-2' for='OS'>" . $l->g(25) . "</label>
                         <div class='col-sm-3'>
                             <select name='OS' id='OS' class='form-control'>
-            ";
+        ";
         foreach ($this->os as $key => $name) {
             if (isset($_SESSION["GREENIT"]["FILTER"]["OS"]) && $_SESSION["GREENIT"]["FILTER"]["OS"] == $key) {
                 echo "<option value='" . $key . "' selected>" . $name . "</option>";
@@ -511,7 +510,7 @@ class FilteredStatsView extends View
         echo "
                             </select>
                         </div>
-            ";
+        ";
         //////////////////////////////
 
         //////////////////////////////
@@ -520,7 +519,7 @@ class FilteredStatsView extends View
                         <label class='control-label col-sm-2' for='GROUP'>" . $l->g(583) . "</label>
                         <div class='col-sm-3'>
                             <select name='GROUP' id='GROUP' class='form-control'>
-            ";
+        ";
         foreach ($this->groups as $key => $name) {
             if (isset($_SESSION["GREENIT"]["FILTER"]["GROUP"]) && $_SESSION["GREENIT"]["FILTER"]["GROUP"] == $key) {
                 echo "<option value='" . $key . "' selected>" . $name . "</option>";
@@ -532,7 +531,7 @@ class FilteredStatsView extends View
                             </select>
                         </div>
                     </div>
-            ";
+        ";
         //////////////////////////////
 
         //////////////////////////////
@@ -542,7 +541,7 @@ class FilteredStatsView extends View
                         <label class='control-label col-sm-2' for='TAG'>" . $l->g(1425) . "</label>
                         <div class='col-sm-3'>
                             <select name='TAG' id='TAG' class='form-control'>
-            ";
+        ";
         foreach ($this->tags as $key => $name) {
             if (isset($_SESSION["GREENIT"]["FILTER"]["TAG"]) && $_SESSION["GREENIT"]["FILTER"]["TAG"] == $key) {
                 echo "<option value='" . $key . "' selected>" . $name . "</option>";
@@ -553,7 +552,7 @@ class FilteredStatsView extends View
         echo "
                             </select>
                         </div>
-            ";
+        ";
         //////////////////////////////
 
         //////////////////////////////
@@ -562,7 +561,7 @@ class FilteredStatsView extends View
                         <label class='control-label col-sm-2' for='ASSET'>" . $l->g(2132) . "</label>
                         <div class='col-sm-3'>
                             <select name='ASSET' id='ASSET' class='form-control'>
-            ";
+        ";
         foreach ($this->assets as $key => $name) {
             if (isset($_SESSION["GREENIT"]["FILTER"]["ASSET"]) && $_SESSION["GREENIT"]["FILTER"]["ASSET"] == $key) {
                 echo "<option value='" . $key . "' selected>" . $name . "</option>";
@@ -574,7 +573,7 @@ class FilteredStatsView extends View
                             </select>
                         </div>
                     </div>
-            ";
+        ";
         //////////////////////////////
 
 
@@ -598,7 +597,7 @@ class FilteredStatsView extends View
     public function ShowYesterdayStats(): void
     {
         global $l;
-        global $protectedGet;
+        global $protectedPost;
 
         echo "<h4>" . $l->g(102600) . "</h4>";
 
@@ -620,7 +619,7 @@ class FilteredStatsView extends View
             </div>
             <br>
         ";
-        if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))])) {
+        if (isset($protectedPost[strtolower(str_replace(" ", "_", $l->g(729)))])) {
             $table .= "
                 <div class='row'>
                     <div class='col-md-4' style='border-right: 1px solid #ddd;'>
@@ -651,7 +650,7 @@ class FilteredStatsView extends View
     public function ShowComparatorStats(): void
     {
         global $l;
-        global $protectedGet;
+        global $protectedPost;
 
         echo "<h4>" . $l->g(102700) . "</h4>";
 
@@ -668,7 +667,7 @@ class FilteredStatsView extends View
             </div>
             <br>
         ";
-        if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(729)))])) {
+        if (isset($protectedPost[strtolower(str_replace(" ", "_", $l->g(729)))])) {
             $table .= "
                 <div class='row'>
                     <div class='col-md-6' style='border-right: 1px solid #ddd;'>

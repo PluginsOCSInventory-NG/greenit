@@ -59,7 +59,10 @@ if (isset($view)) {
             <div class='col-md-10'>
     ";
     if ($protectedGet["cat"] == "filteredstats") {
-        if (isset($protectedGet["computer"]) || isset($protectedGet["computers"])) {
+        if (
+            isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))]) ||
+            isset($protectedPost[strtolower(str_replace(" ", "_", $l->g(729)))])
+        ) {
             $view->ShowYesterdayStats();
             $view->ShowComparatorStats();
         }
