@@ -80,7 +80,8 @@ class Data
                     $data->totalUptime = $row->totalUptime;
                     $formatedConsumptions[$row->DATE] = floatval($row->totalConsumption);
                     $totalCost = 0;
-                    if (is_defined($config->GetAPIKey())) {
+                    $apiKey = $config->GetAPIKey();
+                    if (is_defined($apiKey)) {
                         foreach ($formatedConsumptions as $FCDate => $FCValue) {
                             $Date = new Datetime($FCDate);
                             foreach ($eletricityPrices as $KWCDate => $KWCValue) {
@@ -113,7 +114,8 @@ class Data
                     $data->totalUptime += $row->totalUptime;
                     $formatedConsumptions[$row->DATE] = floatval($row->totalConsumption);
                     $totalCost = 0;
-                    if (is_defined($config->GetAPIKey())) {
+                    $apiKey = $config->GetAPIKey();
+                    if (is_defined($apiKey)) {
                         foreach ($formatedConsumptions as $FCDate => $FCValue) {
                             $Date = new Datetime($FCDate);
                             foreach ($eletricityPrices as $KWCDate => $KWCValue) {
@@ -238,7 +240,8 @@ class Data
             CURLOPT_RETURNTRANSFER,
             true
         );
-        if (is_defined($config->GetAPIKey()))
+        $apiKey = $config->GetAPIKey();
+        if (is_defined($apiKey))
             curl_setopt(
                 $query,
                 CURLOPT_HTTPHEADER,

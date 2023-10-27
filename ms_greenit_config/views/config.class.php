@@ -98,7 +98,8 @@ class ConfigView
                 CURLOPT_RETURNTRANSFER,
                 true
             );
-            if (is_defined($this->config->GetAPIKey()))
+            $apiKey = $this->config->GetAPIKey();
+            if (is_defined($apiKey))
                 curl_setopt(
                     $query,
                     CURLOPT_HTTPHEADER,
@@ -210,7 +211,8 @@ class ConfigView
             <div class='form-group'>
                 <label class='col-sm-7 text-left' for='" . strtoupper(str_replace(" ", "_", $l->g(102009))) . "'>" . $l->g(102009) . "</label>
         ";
-        if (is_defined($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102009)))]) || is_defined($this->config->GetAPIKey())) {
+        $apiKey = $this->config->GetAPIKey();
+        if (is_defined($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102009)))]) || is_defined($apiKey)) {
             echo "
                 <div class='col-sm-3'>
                     <input name='" . strtoupper(str_replace(" ", "_", $l->g(102009))) . "' id='" . strtoupper(str_replace(" ", "_", $l->g(102009))) . "' class='form-control' type='text' placeholder='" . $l->g(102011) . "' value='" . ($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102009)))] ?? $this->config->GetAPIKey()) . "' />

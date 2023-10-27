@@ -10,6 +10,12 @@ require_once(ETC_DIR . "/extensions/greenit/config/utilities/config.class.php");
 require_once(ETC_DIR . "/extensions/greenit/config/utilities/data.class.php");
 require_once(ETC_DIR . "/extensions/greenit/config/utilities/logMessage.class.php");
 
+/**
+ * Cron stats crontab
+ * 
+ * @version Release: 1.0
+ * @since Class available since Release 2.0
+ */
 class CronStats
 {
     private Calculation $calculation;
@@ -117,7 +123,8 @@ class CronStats
                 $formatedConsumptions = array();
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($this->config->GetAPIKey())) {
+                $apiKey = $this->config->GetAPIKey();
+                if (is_defined($apiKey)) {
                     foreach ($formatedConsumptions as $FCDate => $FCValue) {
                         $Date = new Datetime($FCDate);
                         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
@@ -160,7 +167,8 @@ class CronStats
                 $data["GLOBAL_COLLECT_TOTAL_STATS"]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($this->config->GetAPIKey())) {
+                $apiKey = $this->config->GetAPIKey();
+                if (is_defined($apiKey)) {
                     foreach ($formatedConsumptions as $FCDate => $FCValue) {
                         $Date = new Datetime($FCDate);
                         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
@@ -203,7 +211,8 @@ class CronStats
                 $data["GLOBAL_COMPARE_TOTAL_STATS"]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($this->config->GetAPIKey())) {
+                $apiKey = $this->config->GetAPIKey();
+                if (is_defined($apiKey)) {
                     foreach ($formatedConsumptions as $FCDate => $FCValue) {
                         $Date = new Datetime($FCDate);
                         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
@@ -250,7 +259,8 @@ class CronStats
                 $formatedConsumptions = array();
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($this->config->GetAPIKey())) {
+                $apiKey = $this->config->GetAPIKey();
+                if (is_defined($apiKey)) {
                     foreach ($formatedConsumptions as $FCDate => $FCValue) {
                         $Date = new Datetime($FCDate);
                         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
@@ -293,7 +303,8 @@ class CronStats
                 $formatedConsumptions = array();
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($this->config->GetAPIKey())) {
+                $apiKey = $this->config->GetAPIKey();
+                if (is_defined($apiKey)) {
                     foreach ($formatedConsumptions as $FCDate => $FCValue) {
                         $Date = new Datetime($FCDate);
                         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
@@ -339,7 +350,8 @@ class CronStats
                 $data["OS_COLLECT_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($this->config->GetAPIKey())) {
+                $apiKey = $this->config->GetAPIKey();
+                if (is_defined($apiKey)) {
                     foreach ($formatedConsumptions as $FCDate => $FCValue) {
                         $Date = new Datetime($FCDate);
                         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
@@ -384,7 +396,8 @@ class CronStats
                 $data["OS_COLLECT_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($this->config->GetAPIKey())) {
+                $apiKey = $this->config->GetAPIKey();
+                if (is_defined($apiKey)) {
                     foreach ($formatedConsumptions as $FCDate => $FCValue) {
                         $Date = new Datetime($FCDate);
                         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
@@ -430,7 +443,8 @@ class CronStats
                 $data["OS_COMPARE_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($this->config->GetAPIKey())) {
+                $apiKey = $this->config->GetAPIKey();
+                if (is_defined($apiKey)) {
                     foreach ($formatedConsumptions as $FCDate => $FCValue) {
                         $Date = new Datetime($FCDate);
                         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
@@ -475,7 +489,8 @@ class CronStats
                 $data["OS_COMPARE_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($this->config->GetAPIKey())) {
+                $apiKey = $this->config->GetAPIKey();
+                if (is_defined($apiKey)) {
                     foreach ($formatedConsumptions as $FCDate => $FCValue) {
                         $Date = new Datetime($FCDate);
                         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
@@ -550,7 +565,8 @@ class CronStats
                 $formatedConsumptions = array();
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($this->config->GetAPIKey())) {
+                $apiKey = $this->config->GetAPIKey();
+                if (is_defined($apiKey)) {
                     foreach ($formatedConsumptions as $FCDate => $FCValue) {
                         $Date = new Datetime($FCDate);
                         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
@@ -626,7 +642,8 @@ class CronStats
                 $data["COMPUTERTYPES_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($this->config->GetAPIKey())) {
+                $apiKey = $this->config->GetAPIKey();
+                if (is_defined($apiKey)) {
                     foreach ($formatedConsumptions as $FCDate => $FCValue) {
                         $Date = new Datetime($FCDate);
                         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
@@ -702,7 +719,8 @@ class CronStats
                 $data["COMPUTERTYPES_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($this->config->GetAPIKey())) {
+                $apiKey = $this->config->GetAPIKey();
+                if (is_defined($apiKey)) {
                     foreach ($formatedConsumptions as $FCDate => $FCValue) {
                         $Date = new Datetime($FCDate);
                         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
@@ -748,7 +766,8 @@ class CronStats
                 $formatedConsumptions = array();
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($this->config->GetAPIKey())) {
+                $apiKey = $this->config->GetAPIKey();
+                if (is_defined($apiKey)) {
                     foreach ($formatedConsumptions as $FCDate => $FCValue) {
                         $Date = new Datetime($FCDate);
                         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
@@ -796,7 +815,8 @@ class CronStats
                 $data["MANUFACTURERS_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($this->config->GetAPIKey())) {
+                $apiKey = $this->config->GetAPIKey();
+                if (is_defined($apiKey)) {
                     foreach ($formatedConsumptions as $FCDate => $FCValue) {
                         $Date = new Datetime($FCDate);
                         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
@@ -844,7 +864,8 @@ class CronStats
                 $data["MANUFACTURERS_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($this->config->GetAPIKey())) {
+                $apiKey = $this->config->GetAPIKey();
+                if (is_defined($apiKey)) {
                     foreach ($formatedConsumptions as $FCDate => $FCValue) {
                         $Date = new Datetime($FCDate);
                         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
@@ -923,7 +944,8 @@ class CronStats
                 $formatedConsumptions = array();
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($this->config->GetAPIKey())) {
+                $apiKey = $this->config->GetAPIKey();
+                if (is_defined($apiKey)) {
                     foreach ($formatedConsumptions as $FCDate => $FCValue) {
                         $Date = new Datetime($FCDate);
                         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
@@ -966,7 +988,8 @@ class CronStats
                 $data["GLOBAL_COLLECT_TOTAL_STATS"]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($this->config->GetAPIKey())) {
+                $apiKey = $this->config->GetAPIKey();
+                if (is_defined($apiKey)) {
                     foreach ($formatedConsumptions as $FCDate => $FCValue) {
                         $Date = new Datetime($FCDate);
                         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
@@ -1009,7 +1032,8 @@ class CronStats
                 $data["GLOBAL_COMPARE_TOTAL_STATS"]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($this->config->GetAPIKey())) {
+                $apiKey = $this->config->GetAPIKey();
+                if (is_defined($apiKey)) {
                     foreach ($formatedConsumptions as $FCDate => $FCValue) {
                         $Date = new Datetime($FCDate);
                         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
@@ -1055,7 +1079,8 @@ class CronStats
                 $formatedConsumptions = array();
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($this->config->GetAPIKey())) {
+                $apiKey = $this->config->GetAPIKey();
+                if (is_defined($apiKey)) {
                     foreach ($formatedConsumptions as $FCDate => $FCValue) {
                         $Date = new Datetime($FCDate);
                         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
@@ -1097,7 +1122,8 @@ class CronStats
                 $formatedConsumptions = array();
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($this->config->GetAPIKey())) {
+                $apiKey = $this->config->GetAPIKey();
+                if (is_defined($apiKey)) {
                     foreach ($formatedConsumptions as $FCDate => $FCValue) {
                         $Date = new Datetime($FCDate);
                         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
@@ -1143,7 +1169,8 @@ class CronStats
                 $data["OS_COLLECT_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($this->config->GetAPIKey())) {
+                $apiKey = $this->config->GetAPIKey();
+                if (is_defined($apiKey)) {
                     foreach ($formatedConsumptions as $FCDate => $FCValue) {
                         $Date = new Datetime($FCDate);
                         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
@@ -1188,7 +1215,8 @@ class CronStats
                 $data["OS_COLLECT_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($this->config->GetAPIKey())) {
+                $apiKey = $this->config->GetAPIKey();
+                if (is_defined($apiKey)) {
                     foreach ($formatedConsumptions as $FCDate => $FCValue) {
                         $Date = new Datetime($FCDate);
                         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
@@ -1234,7 +1262,8 @@ class CronStats
                 $data["OS_COMPARE_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($this->config->GetAPIKey())) {
+                $apiKey = $this->config->GetAPIKey();
+                if (is_defined($apiKey)) {
                     foreach ($formatedConsumptions as $FCDate => $FCValue) {
                         $Date = new Datetime($FCDate);
                         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
@@ -1279,7 +1308,8 @@ class CronStats
                 $data["OS_COMPARE_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($this->config->GetAPIKey())) {
+                $apiKey = $this->config->GetAPIKey();
+                if (is_defined($apiKey)) {
                     foreach ($formatedConsumptions as $FCDate => $FCValue) {
                         $Date = new Datetime($FCDate);
                         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
@@ -1353,7 +1383,8 @@ class CronStats
                 $formatedConsumptions = array();
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($this->config->GetAPIKey())) {
+                $apiKey = $this->config->GetAPIKey();
+                if (is_defined($apiKey)) {
                     foreach ($formatedConsumptions as $FCDate => $FCValue) {
                         $Date = new Datetime($FCDate);
                         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
@@ -1429,7 +1460,8 @@ class CronStats
                 $data["COMPUTERTYPES_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($this->config->GetAPIKey())) {
+                $apiKey = $this->config->GetAPIKey();
+                if (is_defined($apiKey)) {
                     foreach ($formatedConsumptions as $FCDate => $FCValue) {
                         $Date = new Datetime($FCDate);
                         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
@@ -1505,7 +1537,8 @@ class CronStats
                 $data["COMPUTERTYPES_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($this->config->GetAPIKey())) {
+                $apiKey = $this->config->GetAPIKey();
+                if (is_defined($apiKey)) {
                     foreach ($formatedConsumptions as $FCDate => $FCValue) {
                         $Date = new Datetime($FCDate);
                         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
@@ -1551,7 +1584,8 @@ class CronStats
                 $formatedConsumptions = array();
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($this->config->GetAPIKey())) {
+                $apiKey = $this->config->GetAPIKey();
+                if (is_defined($apiKey)) {
                     foreach ($formatedConsumptions as $FCDate => $FCValue) {
                         $Date = new Datetime($FCDate);
                         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
@@ -1599,7 +1633,8 @@ class CronStats
                 $data["MANUFACTURERS_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($this->config->GetAPIKey())) {
+                $apiKey = $this->config->GetAPIKey();
+                if (is_defined($apiKey)) {
                     foreach ($formatedConsumptions as $FCDate => $FCValue) {
                         $Date = new Datetime($FCDate);
                         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
@@ -1647,7 +1682,8 @@ class CronStats
                 $data["MANUFACTURERS_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($this->config->GetAPIKey())) {
+                $apiKey = $this->config->GetAPIKey();
+                if (is_defined($apiKey)) {
                     foreach ($formatedConsumptions as $FCDate => $FCValue) {
                         $Date = new Datetime($FCDate);
                         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
