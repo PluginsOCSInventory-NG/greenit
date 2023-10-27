@@ -61,6 +61,10 @@ function extension_install_greenit()
     $commonObject->sqlQuery(
         "CREATE INDEX DATE_INDEX ON `greenit_stats`(DATE);"
     );
+
+    $commonObject->sqlQuery(
+        "CREATE INDEX TYPE_INDEX ON `greenit_stats`(TYPE);"
+    );
 }
 
 /**
