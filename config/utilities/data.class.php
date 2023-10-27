@@ -78,8 +78,6 @@ class Data
                     $data->totalMachines = $row->totalMachines;
                     $data->totalConsumption = $row->totalConsumption;
                     $data->totalUptime = $row->totalUptime;
-                    $data->consumptionAverage = round($row->totalConsumption / $row->totalMachines, 6);
-                    $data->uptimeAverage = round($row->totalUptime / $row->totalMachines, 6);
                     $formatedConsumptions[$row->DATE] = floatval($row->totalConsumption);
                     $totalCost = 0;
                     if (is_defined($config->GetAPIKey())) {
@@ -99,6 +97,9 @@ class Data
                         }
                     }
                     $data->totalCost = floatval($totalCost);
+                    $data->consumptionAverage = round($data->totalConsumption / $data->totalMachines, 6);
+                    $data->uptimeAverage = round($data->totalUptime / $data->totalMachines, 6);
+                    $data->costAverage = round($data->totalCost / $data->totalMachines, 6);
                 }
             } else {
                 $data->totalMachines = 0;
@@ -129,6 +130,10 @@ class Data
                         }
                     }
                     $data->totalCost = floatval($totalCost);
+                    $data->consumptionAverage = round($data->totalConsumption / $data->totalMachines, 6);
+                    $data->uptimeAverage = round($data->totalUptime / $data->totalMachines, 6);
+                    $data->costAverage = round($data->totalCost / $data->totalMachines, 6);
+
                 }
             }
             $data->return = true;
