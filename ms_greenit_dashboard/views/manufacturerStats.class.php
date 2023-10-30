@@ -206,7 +206,10 @@ class ManufacturerStatsView extends View
 
         $labels = array();
         $backgroundColor = $this->diagram->GenerateColorList(2, true);
-        $data = array();
+        $data = array(
+            "CONSUMPTION" => "",
+            "COST" => ""
+        );
         if ($this->manufacturers->Yesterday->return != false) {
             foreach ($this->manufacturers->Yesterday->Manufacturers as $count => $manufacturer) {
                 array_push($labels, $manufacturer);
