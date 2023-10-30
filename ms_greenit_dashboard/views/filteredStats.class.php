@@ -276,6 +276,7 @@ class FilteredStatsView extends View
                 WHERE 
                 DATE='" . $this->config->GetYesterdayDate() . "' 
                 AND CONSUMPTION <> 'VM detected' 
+                AND hardware.ID IN (" . $protectedPost[strtolower(str_replace(" ", "_", $l->g(729)))] . ")
             ";
 
             $collectQuery = "
@@ -289,6 +290,7 @@ class FilteredStatsView extends View
                 WHERE 
                 DATE BETWEEN '" . $this->config->GetCollectDate() . "' AND '" . $this->config->GetYesterdayDate() . "'
                 AND CONSUMPTION <> 'VM detected' 
+                AND hardware.ID IN (" . $protectedPost[strtolower(str_replace(" ", "_", $l->g(729)))] . ")
             ";
 
             $compareQuery = "
