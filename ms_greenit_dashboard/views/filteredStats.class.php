@@ -50,22 +50,22 @@ class FilteredStatsView extends View
     private string $computers;
 
     /**
-     *  List of groups for the filtered search module
+     *  List of groups for the filtered search filter module
      */
     private array $groups;
 
     /**
-     *  List of os for the filtered search module
+     *  List of os for the filtered search filter module
      */
     private array $os;
 
     /**
-     *  List of tags for the filtered search module
+     *  List of tags for the filtered search filter module
      */
     private array $tags;
 
     /**
-     *  List of assets for the filtered search module
+     *  List of assets for the filtered search filter module
      */
     private array $assets;
 

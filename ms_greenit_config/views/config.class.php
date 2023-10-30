@@ -247,6 +247,11 @@ class ConfigView
         ";
     }
 
+    /**
+     * Generate the Submit HTML code of the view
+     * 
+     * @return void Return nothing
+     */
     public function ShowSubmit(): void
     {
         global $l;

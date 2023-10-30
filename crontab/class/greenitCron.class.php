@@ -27,13 +27,39 @@ require_once(ETC_DIR . "/extensions/greenit/config/utilities/logMessage.class.ph
  */
 class CronStats
 {
+    /**
+     * Using Calculation Class format or calculate consumption, uptime and cost
+     */
     private Calculation $calculation;
+
+    /**
+     * Using Config Class to get user configuration
+     */
     private Config $config;
+
+    /**
+     * Using Data Class to get database data
+     */
     private Data $data;
+
+    /**
+     * Using LogMessage Class to send message when error or to inform user
+     */
     private LogMessage $logMessage;
+
+    /**
+     * List of arguments options
+     */
     private array $options;
+
+    /**
+     * List of log types
+     */
     private array $logType;
 
+    /**
+     * Constructor which define everything the view need to work
+     */
     function __construct()
     {
         $_SESSION["OCS"]["writeServer"] = dbconnect(SERVER_WRITE, COMPTE_BASE, PSWD_BASE, DB_NAME, SSL_KEY, SSL_CERT, CA_CERT, SERVER_PORT);
@@ -63,7 +89,12 @@ class CronStats
         );
     }
 
-    public function Options()
+    /**
+     * Check if mandatories options are defined
+     * 
+     * @return void Return nothing
+     */
+    public function Options(): void
     {
         if (sizeof($this->options) == 0) {
             echo $this->logMessage->NewMessage("ERROR", "Mode required to start the script. --help for more information.");
@@ -76,7 +107,12 @@ class CronStats
         $this->Mode();
     }
 
-    private function Help()
+    /**
+     * Display the help menu
+     * 
+     * @return void Return nothing
+     */
+    private function Help(): void
     {
         echo "Usage: php cron_stats.php [OPTION]... [VALUE]..." . "\n";
         echo "Script to push stats data to greenit stats table." . "\n";
@@ -85,7 +121,12 @@ class CronStats
         echo "-h, --help    To display the help panel." . "\n";
     }
 
-    private function Mode()
+    /**
+     * Root with the mode used
+     *
+     * @return void Return nothing
+     */
+    private function Mode(): void
     {
         switch ($this->options["mode"]) {
             case "delta":
@@ -100,7 +141,12 @@ class CronStats
         }
     }
 
-    private function DeltaMode()
+    /**
+     * Execute the delta database inject mode
+     *
+     * @return void Return nothing
+     */
+    private function DeltaMode(): void
     {
         echo $this->logMessage->NewMessage("INFO", "Executing delta mode. Processing...");
         echo $this->logMessage->NewMessage("INFO", "Communication with API system...");
@@ -922,7 +968,12 @@ class CronStats
             echo $this->logMessage->NewMessage("ERROR", "No data");
     }
 
-    private function FullMode()
+    /**
+     * Execute the full database inject mode
+     *
+     * @return void Return nothing
+     */
+    private function FullMode(): void
     {
         echo $this->logMessage->NewMessage("INFO", "Executing full mode. Processing...");
         echo $this->logMessage->NewMessage("INFO", "Communication with API system...");
