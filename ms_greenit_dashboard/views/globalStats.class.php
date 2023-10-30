@@ -1,4 +1,13 @@
 <?php
+//====================================================================================
+// OCS INVENTORY REPORTS
+// Copyleft Antoine ROBIN 2023
+// Web: http://www.ocsinventory-ng.org
+//
+// This code is open source and may be copied and modified as long as the source
+// code is always made freely available.
+// Please refer to the General Public Licence http://www.gnu.org/ or Licence.txt
+//====================================================================================
 
 require_once(__DIR__ . "/../../config/view.class.php");
 
@@ -168,7 +177,6 @@ class GlobalStatsView extends View
         $this->diagram->createVerticalBarChart("histogram_collect_period", "", $labels, $datasets);
 
         $labels = [$l->g(102702) . " " . $this->config->GetCompareInfoPeriod() . " " . $l->g(102706)];
-        $backgroundColor = $this->diagram->GenerateColorList(2, true);
         $data = array(
             "CONSUMPTION" => str_replace(" " . "kW/h", "", (isset($this->compareData) && $this->compareData->return != false ? $this->calculation->ConsumptionFormat($this->compareData->totalConsumption, $this->config->GetConsumptionRound()) : "0")),
             "COST" => str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->compareData) && $this->compareData->return != false ? $this->calculation->CostFormat($this->compareData->totalCost, $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0"))
@@ -178,13 +186,11 @@ class GlobalStatsView extends View
                 "backgroundColor" => $backgroundColor[0],
                 "data" => "[" . $data["CONSUMPTION"] . "]",
                 "label" => "'" . $l->g(102800) . " (" . "kW/h" . ")'",
-                "type" => "'bar'"
             ),
             "cost" => array(
                 "backgroundColor" => $backgroundColor[1],
                 "data" => "[" . $data["COST"] . "]",
                 "label" => "'" . $l->g(102801) . " (" . $this->config->GetCostUnit() . ")'",
-                "type" => "'bar'"
             )
         );
         $this->diagram->createCanvas("histogram_compare_period", "6", "225");

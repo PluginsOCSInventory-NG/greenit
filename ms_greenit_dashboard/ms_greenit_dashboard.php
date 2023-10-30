@@ -1,7 +1,7 @@
 <?php
 //====================================================================================
 // OCS INVENTORY REPORTS
-// Copyleft Antoine ROBIN (erwan(at)ocsinventory-ng(pt)org)
+// Copyleft Antoine ROBIN 2023
 // Web: http://www.ocsinventory-ng.org
 //
 // This code is open source and may be copied and modified as long as the source

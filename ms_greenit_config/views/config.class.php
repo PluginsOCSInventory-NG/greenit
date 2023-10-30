@@ -1,7 +1,15 @@
 <?php
+//====================================================================================
+// OCS INVENTORY REPORTS
+// Copyleft Antoine ROBIN 2023
+// Web: http://www.ocsinventory-ng.org
+//
+// This code is open source and may be copied and modified as long as the source
+// code is always made freely available.
+// Please refer to the General Public Licence http://www.gnu.org/ or Licence.txt
+//====================================================================================
 
-require_once(__DIR__ . "/../../config/utilities/config.class.php");
-require_once(__DIR__ . "/../../config/utilities/logMessage.class.php");
+require_once(__DIR__ . "/../../config/view.class.php");
 
 /**
  * Config view
@@ -60,17 +68,7 @@ class ConfigView
             "PX_ELE_I_IG" => $l->g(102020),
         );
 
-        if (
-            isset($protectedPost['SUBMIT_FORM']) &&
-            isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102002)))]) &&
-            isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102003)))]) &&
-            isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102004)))]) &&
-            isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102005)))]) &&
-            isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102006)))]) &&
-            isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102007)))]) &&
-            isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102009)))]) &&
-            isset($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102012)))])
-        ) {
+        if (isset($protectedPost['SUBMIT_FORM'])) {
             $insertQuery = "
                 UPDATE greenit_config 
                 SET 
@@ -89,7 +87,8 @@ class ConfigView
                 msg_success($l->g(101000));
             } else
                 msg_error($l->g(101001));
-        } else if (isset($protectedPost["TEST_API"])) {
+        }
+        if (isset($protectedPost["TEST_API"])) {
 
             $url = 'http://172.18.25.171:8080/';
             $query = curl_init($url);
@@ -191,7 +190,7 @@ class ConfigView
                     </select>
                 </div>
             </div>
-            <hr/>
+            <hr>
         ";
     }
 

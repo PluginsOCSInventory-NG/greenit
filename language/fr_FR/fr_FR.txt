@@ -1,8 +1,9 @@
 100000 GreenIT
 
 101000 La configuration à été mise à jour
-101001 Test API réussi
-101002 Échec du test API
+101001 Un problème est survenu lors de l'éxécution de la requête
+101002 Test API réussi
+101003 Échec du test API
 
 102000 Consommation d'énergie
 102001 Paramètre de l'interface

@@ -1,4 +1,13 @@
 <?php
+//====================================================================================
+// OCS INVENTORY REPORTS
+// Copyleft Antoine ROBIN 2023
+// Web: http://www.ocsinventory-ng.org
+//
+// This code is open source and may be copied and modified as long as the source
+// code is always made freely available.
+// Please refer to the General Public Licence http://www.gnu.org/ or Licence.txt
+//====================================================================================
 
 require_once(__DIR__ . "/../../config/view.class.php");
 
@@ -134,7 +143,9 @@ class OSStatsView extends View
             <div class='row'>
                 <div class='col-md-2'></div>
         ";
-        $labels = [$l->g(102708)];
+        $labels = [
+            $l->g(102708)
+        ];
         $backgroundColor = $this->diagram->GenerateColorList(2, true);
         $data = array();
         $data["CLIENTS"] = str_replace(" kW/h", "", (isset($this->yesterdayData->clients) && $this->yesterdayData->clients->return != false ? $this->calculation->ConsumptionFormat(floatval($this->yesterdayData->clients->totalConsumption), $this->config->GetConsumptionRound()) : "0"));
@@ -164,13 +175,11 @@ class OSStatsView extends View
 
         echo "<hr>";
 
-        $labels = array();
         $labels = [
             $l->g(102804),
             $l->g(102805)
         ];
         $backgroundColor = $this->diagram->GenerateColorList(2, false);
-        $data = array();
         $data["CLIENTS"] = str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->yesterdayData->clients) && $this->yesterdayData->clients->return != false ? $this->calculation->CostFormat($this->yesterdayData->clients->totalCost, $this->config->GetCostUnit(), $this->config->GetCostRound()) : 0));
         $data["SERVERS"] = str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->yesterdayData->servers) && $this->yesterdayData->servers->return != false ? $this->calculation->CostFormat($this->yesterdayData->servers->totalCost, $this->config->GetCostUnit(), $this->config->GetCostRound()) : 0));
         $datasets = array(
@@ -181,17 +190,13 @@ class OSStatsView extends View
                 "]",
             "backgroundColor" => "[" . $backgroundColor . "]"
         );
-
         $this->diagram->createCanvas("yesterday_cost_diagram", "4", "300");
         $this->diagram->CreateDoughnutChart("yesterday_cost_diagram", $l->g(102701) . ' (' . $this->config->GetCostUnit() . ')', $labels, $datasets);
 
-        $labels = array();
         $labels = [
             $l->g(102804),
             $l->g(102805)
         ];
-        $backgroundColor = $this->diagram->GenerateColorList(2, false);
-        $data = array();
         $data["CLIENTS"] = str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->collectData->clients) && $this->collectData->clients->return != false ? $this->calculation->CostFormat($this->collectData->clients->totalCost, $this->config->GetCostUnit(), $this->config->GetCostRound()) : 0));
         $data["SERVERS"] = str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->collectData->servers) && $this->collectData->servers->return != false ? $this->calculation->CostFormat($this->collectData->servers->totalCost, $this->config->GetCostUnit(), $this->config->GetCostRound()) : 0));
         $datasets = array(
@@ -202,17 +207,13 @@ class OSStatsView extends View
                 "]",
             "backgroundColor" => "[" . $backgroundColor . "]"
         );
-
         $this->diagram->createCanvas("collect_cost_diagram", "4", "300");
         $this->diagram->CreateDoughnutChart("collect_cost_diagram", $l->g(102702) . " " . $this->config->GetCollectInfoPeriod() . " " . $l->g(102706) . " (" . $this->config->GetCostUnit() . ")", $labels, $datasets);
 
-        $labels = array();
         $labels = [
             $l->g(102804),
             $l->g(102805)
         ];
-        $backgroundColor = $this->diagram->GenerateColorList(2, false);
-        $data = array();
         $data["CLIENTS"] = str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->compareData->clients) && $this->compareData->clients->return != false ? $this->calculation->CostFormat($this->compareData->clients->totalCost, $this->config->GetCostUnit(), $this->config->GetCostRound()) : 0));
         $data["SERVERS"] = str_replace(" " . $this->config->GetCostUnit(), "", (isset($this->compareData->servers) && $this->compareData->servers->return != false ? $this->calculation->CostFormat($this->compareData->servers->totalCost, $this->config->GetCostUnit(), $this->config->GetCostRound()) : 0));
         $datasets = array(
@@ -223,7 +224,6 @@ class OSStatsView extends View
                 "]",
             "backgroundColor" => "[" . $backgroundColor . "]"
         );
-
         $this->diagram->createCanvas("compare_cost_diagram", "4", "300");
         $this->diagram->CreateDoughnutChart("compare_cost_diagram", $l->g(102702) . " " . $this->config->GetCompareInfoPeriod() . " " . $l->g(102706) . " (" . $this->config->GetCostUnit() . ")", $labels, $datasets);
     }

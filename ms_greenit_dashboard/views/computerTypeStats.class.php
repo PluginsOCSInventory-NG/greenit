@@ -1,4 +1,13 @@
 <?php
+//====================================================================================
+// OCS INVENTORY REPORTS
+// Copyleft Antoine ROBIN 2023
+// Web: http://www.ocsinventory-ng.org
+//
+// This code is open source and may be copied and modified as long as the source
+// code is always made freely available.
+// Please refer to the General Public Licence http://www.gnu.org/ or Licence.txt
+//====================================================================================
 
 require_once(__DIR__ . "/../../config/view.class.php");
 
@@ -44,6 +53,8 @@ class ComputerTypeStatsView extends View
         $this->computerTypes = $this->data->GetComputerTypes();
 
         $this->yesterdayData = new stdClass();
+        $this->collectData = new stdClass();
+        $this->compareData = new stdClass();
 
         if ($this->computerTypes->return != false) {
             foreach ($this->computerTypes->ComputerTypes as $count => $computerType) {
@@ -55,11 +66,6 @@ class ComputerTypeStatsView extends View
                     TYPE = 'COMPUTERTYPESSTATS_" . strtoupper(str_replace(" ", "_", $computerType)) . "' 
                     AND DATE='" . $this->config->GetYesterdayDate() . "'
                 ");
-            }
-
-            $this->collectData = new stdClass();
-
-            foreach ($this->computerTypes->ComputerTypes as $count => $computerType) {
                 $this->collectData->{$computerType} = $this->data->GetGreenITData("
                     SELECT 
                     DATA 
@@ -68,11 +74,6 @@ class ComputerTypeStatsView extends View
                     TYPE = 'COMPUTERTYPES_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $computerType)) . "' 
                     AND DATE = '0000-00-00'
                 ");
-            }
-
-            $this->compareData = new stdClass();
-
-            foreach ($this->computerTypes->ComputerTypes as $count => $computerType) {
                 $this->compareData->{$computerType} = $this->data->GetGreenITData("
                     SELECT 
                     DATA 
@@ -125,7 +126,6 @@ class ComputerTypeStatsView extends View
                     </div>
                 ";
             }
-            reset($this->computerTypes);
             $table .= "
                 </div>
                 <br>
@@ -157,6 +157,7 @@ class ComputerTypeStatsView extends View
         }
 
         $labels = array();
+        $backgroundColor = $this->diagram->GenerateColorList(2, true);
         $data = array(
             "CONSUMPTION" => "",
             "COST" => ""
@@ -173,7 +174,6 @@ class ComputerTypeStatsView extends View
 
             }
         }
-        $backgroundColor = $this->diagram->GenerateColorList(2, true);
         $datasets = array(
             "consumption" => array(
                 "backgroundColor" => $backgroundColor[0],
@@ -205,7 +205,6 @@ class ComputerTypeStatsView extends View
                 }
             }
         }
-        $backgroundColor = $this->diagram->GenerateColorList(2, true);
         $datasets = array(
             "consumption" => array(
                 "backgroundColor" => $backgroundColor[0],
@@ -237,7 +236,6 @@ class ComputerTypeStatsView extends View
                 }
             }
         }
-        $backgroundColor = $this->diagram->GenerateColorList(2, true);
         $datasets = array(
             "consumption" => array(
                 "backgroundColor" => $backgroundColor[0],

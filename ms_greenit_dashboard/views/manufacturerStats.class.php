@@ -1,4 +1,13 @@
 <?php
+//====================================================================================
+// OCS INVENTORY REPORTS
+// Copyleft Antoine ROBIN 2023
+// Web: http://www.ocsinventory-ng.org
+//
+// This code is open source and may be copied and modified as long as the source
+// code is always made freely available.
+// Please refer to the General Public Licence http://www.gnu.org/ or Licence.txt
+//====================================================================================
 
 require_once(__DIR__ . "/../../config/view.class.php");
 
@@ -43,6 +52,10 @@ class ManufacturerStatsView extends View
 
         $this->manufacturers = new stdClass();
 
+        $this->yesterdayData = new stdClass();
+        $this->collectData = new stdClass();
+        $this->compareData = new stdClass();
+
         $this->manufacturers->Yesterday = $this->data->GetManufacturers("
             SELECT 
             bios.SMANUFACTURER AS MANUFACTURER, 
@@ -56,7 +69,6 @@ class ManufacturerStatsView extends View
             ORDER BY totalConsumption DESC 
             LIMIT 5
         ");
-
         $this->manufacturers->Collect = $this->data->GetManufacturers("
             SELECT 
             bios.SMANUFACTURER AS MANUFACTURER, 
@@ -70,7 +82,6 @@ class ManufacturerStatsView extends View
             ORDER BY totalConsumption DESC 
             LIMIT 5
         ");
-
         $this->manufacturers->Compare = $this->data->GetManufacturers("
             SELECT 
             bios.SMANUFACTURER AS MANUFACTURER, 
@@ -85,8 +96,6 @@ class ManufacturerStatsView extends View
             LIMIT 5
         ");
 
-        $this->yesterdayData = new stdClass();
-
         if ($this->manufacturers->Yesterday->return != false) {
             foreach ($this->manufacturers->Yesterday->Manufacturers as $count => $manufacturer) {
                 $this->yesterdayData->{$manufacturer} = $this->data->GetGreenITData("
@@ -97,14 +106,6 @@ class ManufacturerStatsView extends View
                     TYPE = 'MANUFACTURERSSTATS_" . strtoupper(str_replace(" ", "_", $manufacturer)) . "' 
                     AND DATE='" . $this->config->GetYesterdayDate() . "'
                 ");
-            }
-        }
-
-
-        $this->collectData = new stdClass();
-
-        if ($this->manufacturers->Collect->return != false) {
-            foreach ($this->manufacturers->Collect->Manufacturers as $count => $manufacturer) {
                 $this->collectData->{$manufacturer} = $this->data->GetGreenITData("
                     SELECT 
                     DATA 
@@ -113,12 +114,6 @@ class ManufacturerStatsView extends View
                     TYPE = 'MANUFACTURERS_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $manufacturer)) . "' 
                     AND DATE='0000-00-00'
                 ");
-            }
-        }
-        $this->compareData = new stdClass();
-
-        if ($this->manufacturers->Compare->return != false) {
-            foreach ($this->manufacturers->Compare->Manufacturers as $count => $manufacturer) {
                 $this->compareData->{$manufacturer} = $this->data->GetGreenITData("
                     SELECT 
                     DATA 
@@ -211,10 +206,7 @@ class ManufacturerStatsView extends View
 
         $labels = array();
         $backgroundColor = $this->diagram->GenerateColorList(2, true);
-        $data = array(
-            "CONSUMPTION" => "",
-            "COST" => ""
-        );
+        $data = array();
         if ($this->manufacturers->Yesterday->return != false) {
             foreach ($this->manufacturers->Yesterday->Manufacturers as $count => $manufacturer) {
                 array_push($labels, $manufacturer);
@@ -242,12 +234,10 @@ class ManufacturerStatsView extends View
                 "label" => "'" . $l->g(102801) . " (" . $this->config->GetCostUnit() . ")'",
             )
         );
-
         $this->diagram->createCanvas("yesterday_cost_diagram", "4", "500");
         $this->diagram->createHorizontalBarChart("yesterday_cost_diagram", $l->g(102701) . " " . $l->g(102711) . ' (' . $this->config->GetCostUnit() . ')', $labels, $datasets);
 
         $labels = array();
-        $backgroundColor = $this->diagram->GenerateColorList(2, true);
         $data = array(
             "CONSUMPTION" => "",
             "COST" => ""
@@ -279,12 +269,10 @@ class ManufacturerStatsView extends View
                 "label" => "'" . $l->g(102801) . " (" . $this->config->GetCostUnit() . ")'",
             )
         );
-
         $this->diagram->createCanvas("collect_cost_diagram", "4", "500");
         $this->diagram->createHorizontalBarChart("collect_cost_diagram", $l->g(102701) . " " . $l->g(102711) . ' (' . $this->config->GetCostUnit() . ')', $labels, $datasets);
 
         $labels = array();
-        $backgroundColor = $this->diagram->GenerateColorList(2, true);
         $data = array(
             "CONSUMPTION" => "",
             "COST" => ""
@@ -316,7 +304,6 @@ class ManufacturerStatsView extends View
                 "label" => "'" . $l->g(102801) . " (" . $this->config->GetCostUnit() . ")'",
             )
         );
-
         $this->diagram->createCanvas("compare_cost_diagram", "4", "500");
         $this->diagram->createHorizontalBarChart("compare_cost_diagram", $l->g(102701) . " " . $l->g(102711) . ' (' . $this->config->GetCostUnit() . ')', $labels, $datasets);
     }

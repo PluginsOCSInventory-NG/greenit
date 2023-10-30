@@ -1,4 +1,13 @@
 <?php
+//====================================================================================
+// OCS INVENTORY REPORTS
+// Copyleft Antoine ROBIN 2023
+// Web: http://www.ocsinventory-ng.org
+//
+// This code is open source and may be copied and modified as long as the source
+// code is always made freely available.
+// Please refer to the General Public Licence http://www.gnu.org/ or Licence.txt
+//====================================================================================
 
 require_once(__DIR__ . "/../../config/view.class.php");
 
@@ -96,8 +105,6 @@ class FilteredStatsView extends View
         $this->diagram = new Diagram();
         $this->data = new Data();
 
-        //////////////////////////////
-        // If reset button clicked, reset session variables
         if (isset($protectedPost["RESET"])) {
             if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))]))
                 unset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))]);
@@ -112,10 +119,7 @@ class FilteredStatsView extends View
             unset($_SESSION["GREENIT"]["FILTER"]["TAG"]);
             unset($_SESSION["GREENIT"]["FILTER"]["ASSET"]);
         }
-        //////////////////////////////
 
-        //////////////////////////////
-        // If formular submited, reset cache
         if (isset($protectedPost["SUBMIT_FORM"])) {
             if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))]))
                 unset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))]);
@@ -123,10 +127,7 @@ class FilteredStatsView extends View
                 unset($protectedPost[strtolower(str_replace(" ", "_", $l->g(729)))]);
             $tab_options["CACHE"] = "RESET";
         }
-        //////////////////////////////
 
-        //////////////////////////////
-        // Reset filter if default value was post
         if (isset($protectedPost["OS"]) && $protectedPost["OS"] == "0")
             unset($_SESSION["GREENIT"]["FILTER"]["OS"]);
         if (isset($protectedPost["GROUP"]) && $protectedPost["GROUP"] == "0")
@@ -135,10 +136,7 @@ class FilteredStatsView extends View
             unset($_SESSION["GREENIT"]["FILTER"]["TAG"]);
         if (isset($protectedPost["ASSET"]) && $protectedPost["ASSET"] == "0")
             unset($_SESSION["GREENIT"]["FILTER"]["ASSET"]);
-        //////////////////////////////
 
-        //////////////////////////////
-        // Define filter session variables
         if (is_defined($protectedPost["OS"]) && $protectedPost["OS"] != "0")
             $_SESSION["GREENIT"]["FILTER"]["OS"] = $protectedPost["OS"];
         if (is_defined($protectedPost["GROUP"]) && $protectedPost["GROUP"] != "0")
@@ -147,15 +145,12 @@ class FilteredStatsView extends View
             $_SESSION["GREENIT"]["FILTER"]["TAG"] = $protectedPost["TAG"];
         if (is_defined($protectedPost["ASSET"]) && $protectedPost["ASSET"] != "0")
             $_SESSION["GREENIT"]["FILTER"]["ASSET"] = $protectedPost["ASSET"];
-        //////////////////////////////
 
-        //////////////////////////////
-        // Get filtered computers
         $computerQuery["SQL"] = "
             SELECT DISTINCT 
             hardware.ID as ID 
             FROM hardware 
-            INNER JOIN accountinfo ON hardware.ID = accountinfo.hardware_id 
+            INNER JOIN accountinfo ON hardware.ID = accountinfo.HARDWARE_ID 
             INNER JOIN greenit ON hardware.ID = greenit.HARDWARE_ID 
             LEFT JOIN groups_cache ON hardware.ID = groups_cache.HARDWARE_ID 
         ";
@@ -193,10 +188,7 @@ class FilteredStatsView extends View
             if (next($computerData))
                 $this->computers .= ",";
         }
-        //////////////////////////////
 
-        //////////////////////////////
-        // Get filter table values
         $this->sqlFilteredSearch["SQL"] = "
             SELECT DISTINCT 
             hardware.ID AS ID,
@@ -206,7 +198,7 @@ class FilteredStatsView extends View
             groups_cache.GROUP_ID AS GROUP_ID,
             hardware.CATEGORY_ID AS CATEGORY_ID
             FROM hardware
-            INNER JOIN accountinfo ON hardware.ID = accountinfo.hardware_id
+            INNER JOIN accountinfo ON hardware.ID = accountinfo.HARDWARE_ID 
             INNER JOIN greenit ON hardware.ID = greenit.HARDWARE_ID
             LEFT JOIN groups_cache ON hardware.ID = groups_cache.HARDWARE_ID
         ";
@@ -235,10 +227,7 @@ class FilteredStatsView extends View
         }
 
         $this->sqlFilteredSearch["SQL"] .= " GROUP BY NAME";
-        //////////////////////////////
 
-        //////////////////////////////
-        // OS filter
         $query = "SELECT OSNAME FROM hardware WHERE OSNAME LIKE '%Windows%' AND DEVICEID<>'_SYSTEMGROUP_' AND DEVICEID<>'_DOWNLOADGROUP_' GROUP BY OSNAME ORDER BY OSNAME";
         $result = mysql2_query_secure($query, $_SESSION["OCS"]["readServer"]);
         $this->os = [
@@ -247,10 +236,7 @@ class FilteredStatsView extends View
         while ($item = mysqli_fetch_array($result)) {
             $this->os[$item["OSNAME"]] = $item["OSNAME"];
         }
-        //////////////////////////////
 
-        //////////////////////////////
-        // GROUP filter
         $query = "SELECT NAME, ID FROM hardware WHERE DEVICEID = '_SYSTEMGROUP_' GROUP BY NAME ORDER BY NAME";
         $result = mysql2_query_secure($query, $_SESSION["OCS"]["readServer"]);
         $this->groups = [
@@ -259,10 +245,7 @@ class FilteredStatsView extends View
         while ($item = mysqli_fetch_array($result)) {
             $this->groups[$item["ID"]] = $item["NAME"];
         }
-        //////////////////////////////
 
-        //////////////////////////////
-        // TAG filter
         $query = "SELECT TAG FROM accountinfo";
         $result = mysql2_query_secure($query, $_SESSION["OCS"]["readServer"]);
         $this->tags = [
@@ -271,10 +254,7 @@ class FilteredStatsView extends View
         while ($item = mysqli_fetch_array($result)) {
             $this->tags[$item["TAG"]] = $item["TAG"];
         }
-        //////////////////////////////
 
-        //////////////////////////////
-        // ASSET filter
         $query = "SELECT CATEGORY_NAME, ID FROM assets_categories GROUP BY CATEGORY_NAME ORDER BY CATEGORY_NAME";
         $result = mysql2_query_secure($query, $_SESSION["OCS"]["readServer"]);
         $this->assets = [
@@ -283,7 +263,6 @@ class FilteredStatsView extends View
         while ($item = mysqli_fetch_array($result)) {
             $this->assets[$item["ID"]] = $item["CATEGORY_NAME"];
         }
-        //////////////////////////////
 
         if (is_defined($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))]) || is_defined($protectedPost[strtolower(str_replace(" ", "_", $l->g(729)))])) {
             $yesterdayQuery = "
@@ -291,26 +270,13 @@ class FilteredStatsView extends View
                 DATE,
                 COUNT(DISTINCT HARDWARE_ID) AS totalMachines,
                 SUM(CONSUMPTION) AS totalConsumption,
-                SUM(UPTIME) AS totalUptime  
+                SUM(UPTIME) AS totalUptime 
                 FROM greenit 
                 INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
                 WHERE 
                 DATE='" . $this->config->GetYesterdayDate() . "' 
                 AND CONSUMPTION <> 'VM detected' 
             ";
-            if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))])) {
-                $yesterdayQuery .= "AND hardware.ID='" . $protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))] . "'";
-            } else if (isset($protectedPost[strtolower(str_replace(" ", "_", $l->g(729)))])) {
-                $computersData = explode(",", $protectedPost[strtolower(str_replace(" ", "_", $l->g(729)))]);
-                $yesterdayQuery .= "AND (";
-                foreach ($computersData as $computerName) {
-                    $yesterdayQuery .= "hardware.ID='" . $computerName . "'";
-                    if (next($computersData))
-                        $yesterdayQuery .= " OR ";
-                }
-                reset($computersData);
-                $yesterdayQuery .= ")";
-            }
 
             $collectQuery = "
                 SELECT 
@@ -324,20 +290,6 @@ class FilteredStatsView extends View
                 DATE BETWEEN '" . $this->config->GetCollectDate() . "' AND '" . $this->config->GetYesterdayDate() . "'
                 AND CONSUMPTION <> 'VM detected' 
             ";
-            if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))])) {
-                $collectQuery .= "AND hardware.ID='" . $protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))] . "'";
-            } else if (isset($protectedPost[strtolower(str_replace(" ", "_", $l->g(729)))])) {
-                $computersData = explode(",", $protectedPost[strtolower(str_replace(" ", "_", $l->g(729)))]);
-                $collectQuery .= "AND (";
-                foreach ($computersData as $computerName) {
-                    $collectQuery .= "hardware.ID='" . $computerName . "'";
-                    if (next($computersData))
-                        $collectQuery .= " OR ";
-                }
-                reset($computersData);
-                $collectQuery .= ")";
-            }
-            $collectQuery .= " GROUP BY DATE";
 
             $compareQuery = "
                 SELECT 
@@ -350,20 +302,10 @@ class FilteredStatsView extends View
                 WHERE 
                 DATE BETWEEN '" . $this->config->GetCompareDate() . "' AND '" . $this->config->GetYesterdayDate() . "'
                 AND CONSUMPTION <> 'VM detected' 
+                AND hardware.ID IN (" . $protectedPost[strtolower(str_replace(" ", "_", $l->g(729)))] . ")
             ";
-            if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))])) {
-                $compareQuery .= "AND hardware.ID='" . $protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))] . "'";
-            } else if (isset($protectedPost[strtolower(str_replace(" ", "_", $l->g(729)))])) {
-                $computersData = explode(",", $protectedPost[strtolower(str_replace(" ", "_", $l->g(729)))]);
-                $compareQuery .= "AND (";
-                foreach ($computersData as $computerName) {
-                    $compareQuery .= "hardware.ID='" . $computerName . "'";
-                    if (next($computersData))
-                        $compareQuery .= " OR ";
-                }
-                reset($computersData);
-                $compareQuery .= ")";
-            }
+
+            $collectQuery .= " GROUP BY DATE";
             $compareQuery .= " GROUP BY DATE";
 
             $this->electricityPrices = $this->data->GetElectricityPrices();
@@ -439,9 +381,6 @@ class FilteredStatsView extends View
         echo "<h4>" . $l->g(102900) . "</h4>";
 
         $form_name = "filteredSearch";
-
-        //////////////////////////////
-        // Table settings
         $table_name = $form_name;
         $this->tabOptionsFilteredSearch = $protectedPost;
         $this->tabOptionsFilteredSearch["form_name"] = $form_name;
@@ -458,15 +397,11 @@ class FilteredStatsView extends View
 
         $this->tabOptionsFilteredSearch["LIEN_LBL"][$l->g(23)] = "index.php?function=ms_greenit_dashboard&cat=filteredstats&" . strtolower(str_replace(" ", "_", $l->g(23))) . "=";
         $this->tabOptionsFilteredSearch["LIEN_CHAMP"][$l->g(23)] = "ID";
-        //////////////////////////////
 
         echo "
-        <div class='form-group'>
-            <div class='col-sm-12'>
+            <div class='form-group'>
+                <div class='col-sm-12'>
         ";
-
-        //////////////////////////////
-        // Show generate filtered stats + warning message about filter on
         if (
             is_defined($_SESSION["GREENIT"]["FILTER"]["OS"]) ||
             is_defined($_SESSION["GREENIT"]["FILTER"]["GROUP"]) ||
@@ -484,21 +419,14 @@ class FilteredStatsView extends View
         }
 
         echo open_form($form_name, '', '', 'form-horizontal');
-
         ajaxtab_entete_fixe($this->listFieldsFilteredSearch, $this->defaultFieldsFilteredSearch, $this->tabOptionsFilteredSearch, $this->listColCantDelFilteredSearch);
-
         echo "
-                <button type='button' data-toggle='collapse' data-target='#filter' class='btn'>" . $l->g(735) . "</button>
-                <div id='filter' class='collapse'>
-        ";
-
-        //////////////////////////////
-        // OS
-        echo "
-                    <div class='form-group'>
-                        <label class='control-label col-sm-2' for='OS'>" . $l->g(25) . "</label>
-                        <div class='col-sm-3'>
-                            <select name='OS' id='OS' class='form-control'>
+            <button type='button' data-toggle='collapse' data-target='#filter' class='btn'>" . $l->g(735) . "</button>
+            <div id='filter' class='collapse'>
+                <div class='form-group'>
+                    <label class='control-label col-sm-2' for='OS'>" . $l->g(25) . "</label>
+                    <div class='col-sm-3'>
+                        <select name='OS' id='OS' class='form-control'>
         ";
         foreach ($this->os as $key => $name) {
             if (isset($_SESSION["GREENIT"]["FILTER"]["OS"]) && $_SESSION["GREENIT"]["FILTER"]["OS"] == $key) {
@@ -508,17 +436,11 @@ class FilteredStatsView extends View
             }
         }
         echo "
-                            </select>
-                        </div>
-        ";
-        //////////////////////////////
-
-        //////////////////////////////
-        // GROUP
-        echo "
-                        <label class='control-label col-sm-2' for='GROUP'>" . $l->g(583) . "</label>
-                        <div class='col-sm-3'>
-                            <select name='GROUP' id='GROUP' class='form-control'>
+                </select>
+            </div>
+            <label class='control-label col-sm-2' for='GROUP'>" . $l->g(583) . "</label>
+            <div class='col-sm-3'>
+                <select name='GROUP' id='GROUP' class='form-control'>
         ";
         foreach ($this->groups as $key => $name) {
             if (isset($_SESSION["GREENIT"]["FILTER"]["GROUP"]) && $_SESSION["GREENIT"]["FILTER"]["GROUP"] == $key) {
@@ -528,19 +450,13 @@ class FilteredStatsView extends View
             }
         }
         echo "
-                            </select>
-                        </div>
-                    </div>
-        ";
-        //////////////////////////////
-
-        //////////////////////////////
-        // TAG
-        echo "
-                    <div class='form-group'>
-                        <label class='control-label col-sm-2' for='TAG'>" . $l->g(1425) . "</label>
-                        <div class='col-sm-3'>
-                            <select name='TAG' id='TAG' class='form-control'>
+                    </select>
+                </div>
+            </div>
+            <div class='form-group'>
+                <label class='control-label col-sm-2' for='TAG'>" . $l->g(1425) . "</label>
+                <div class='col-sm-3'>
+                    <select name='TAG' id='TAG' class='form-control'>
         ";
         foreach ($this->tags as $key => $name) {
             if (isset($_SESSION["GREENIT"]["FILTER"]["TAG"]) && $_SESSION["GREENIT"]["FILTER"]["TAG"] == $key) {
@@ -550,17 +466,11 @@ class FilteredStatsView extends View
             }
         }
         echo "
-                            </select>
-                        </div>
-        ";
-        //////////////////////////////
-
-        //////////////////////////////
-        // ASSET CATEGORY
-        echo "
-                        <label class='control-label col-sm-2' for='ASSET'>" . $l->g(2132) . "</label>
-                        <div class='col-sm-3'>
-                            <select name='ASSET' id='ASSET' class='form-control'>
+                </select>
+            </div>
+            <label class='control-label col-sm-2' for='ASSET'>" . $l->g(2132) . "</label>
+            <div class='col-sm-3'>
+                <select name='ASSET' id='ASSET' class='form-control'>
         ";
         foreach ($this->assets as $key => $name) {
             if (isset($_SESSION["GREENIT"]["FILTER"]["ASSET"]) && $_SESSION["GREENIT"]["FILTER"]["ASSET"] == $key) {
@@ -573,17 +483,11 @@ class FilteredStatsView extends View
                             </select>
                         </div>
                     </div>
-        ";
-        //////////////////////////////
-
-
-        echo "
-                <button class='btn btn-success' name='SUBMIT_FORM'>" . $l->g(393) . "</button>
-                <button class='btn btn-danger' name='RESET'>" . $l->g(41) . "</button>
+                    <button class='btn btn-success' name='SUBMIT_FORM'>" . $l->g(393) . "</button>
+                    <button class='btn btn-danger' name='RESET'>" . $l->g(41) . "</button>
+                </div>
             </div>
-        </div>
         ";
-
         echo close_form();
 
         echo "<hr>";
@@ -715,13 +619,11 @@ class FilteredStatsView extends View
                 "backgroundColor" => $backgroundColor[0],
                 "data" => "[" . $data["CONSUMPTION"] . "]",
                 "label" => "'" . $l->g(102800) . " (" . "kW/h" . ")'",
-                "type" => "'bar'"
             ),
             "cost" => array(
                 "backgroundColor" => $backgroundColor[1],
                 "data" => "[" . $data["COST"] . "]",
                 "label" => "'" . $l->g(102801) . " (" . $this->config->GetCostUnit() . ")'",
-                "type" => "'bar'"
             )
         );
         $this->diagram->createCanvas("histogram_compare_period", "6", "225");
