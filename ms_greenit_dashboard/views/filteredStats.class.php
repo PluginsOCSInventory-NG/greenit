@@ -276,9 +276,11 @@ class FilteredStatsView extends View
                 WHERE 
                 DATE='" . $this->config->GetYesterdayDate() . "' 
                 AND CONSUMPTION <> 'VM detected' 
-                AND hardware.ID IN (" . $protectedPost[strtolower(str_replace(" ", "_", $l->g(729)))] . ")
             ";
-
+            if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))]))
+                $yesterdayQuery .= "AND hardware.ID IN (" . $protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))] . ")";
+            else if (isset($protectedPost[strtolower(str_replace(" ", "_", $l->g(729)))]))
+                $yesterdayQuery .= "AND hardware.ID IN (" . $protectedPost[strtolower(str_replace(" ", "_", $l->g(729)))] . ")";
             $collectQuery = "
                 SELECT 
                 DATE,
@@ -290,9 +292,11 @@ class FilteredStatsView extends View
                 WHERE 
                 DATE BETWEEN '" . $this->config->GetCollectDate() . "' AND '" . $this->config->GetYesterdayDate() . "'
                 AND CONSUMPTION <> 'VM detected' 
-                AND hardware.ID IN (" . $protectedPost[strtolower(str_replace(" ", "_", $l->g(729)))] . ")
             ";
-
+            if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))]))
+                $collectQuery .= "AND hardware.ID IN (" . $protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))] . ")";
+            else if (isset($protectedPost[strtolower(str_replace(" ", "_", $l->g(729)))]))
+                $collectQuery .= "AND hardware.ID IN (" . $protectedPost[strtolower(str_replace(" ", "_", $l->g(729)))] . ")";
             $compareQuery = "
                 SELECT 
                 DATE,
@@ -304,9 +308,11 @@ class FilteredStatsView extends View
                 WHERE 
                 DATE BETWEEN '" . $this->config->GetCompareDate() . "' AND '" . $this->config->GetYesterdayDate() . "'
                 AND CONSUMPTION <> 'VM detected' 
-                AND hardware.ID IN (" . $protectedPost[strtolower(str_replace(" ", "_", $l->g(729)))] . ")
             ";
-
+            if (isset($protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))]))
+                $compareQuery .= "AND hardware.ID IN (" . $protectedGet[strtolower(str_replace(" ", "_", $l->g(23)))] . ")";
+            else if (isset($protectedPost[strtolower(str_replace(" ", "_", $l->g(729)))]))
+                $compareQuery .= "AND hardware.ID IN (" . $protectedPost[strtolower(str_replace(" ", "_", $l->g(729)))] . ")";
             $collectQuery .= " GROUP BY DATE";
             $compareQuery .= " GROUP BY DATE";
 
