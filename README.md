@@ -18,4 +18,4 @@ Currently supported on Windows, this plugin is made to retrieve power consumptio
 > _**IMPORTANT NOTE : This plugin works with a windows service application which can be downloaded from <a href="https://github.com/OCSInventory-NG/greenit_service/releases" target="_blank">here</a>**_
 
 ## Installation
-There is a documentation to help you to clearly install the plugin and his dependencies available [here](https://github.com/OCSInventory-NG/Wiki/blob/master/english/15.GreenIT/index.md).
+There is a documentation to help you to clearly install the plugin and his dependencies available <a href="https://github.com/OCSInventory-NG/Wiki/blob/master/english/15.GreenIT/index.md" target="_blank">here</a>.
