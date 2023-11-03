@@ -106,6 +106,8 @@ class ManufacturerStatsView extends View
                     TYPE = 'MANUFACTURERSSTATS_" . strtoupper(str_replace(" ", "_", $manufacturer)) . "' 
                     AND DATE='" . $this->config->GetYesterdayDate() . "'
                 ");
+            }
+            foreach ($this->manufacturers->Collect->Manufacturers as $count => $manufacturer) {
                 $this->collectData->{$manufacturer} = $this->data->GetGreenITData("
                     SELECT 
                     DATA 
@@ -114,6 +116,8 @@ class ManufacturerStatsView extends View
                     TYPE = 'MANUFACTURERS_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $manufacturer)) . "' 
                     AND DATE='0000-00-00'
                 ");
+            }
+            foreach ($this->manufacturers->Compare->Manufacturers as $count => $manufacturer) {
                 $this->compareData->{$manufacturer} = $this->data->GetGreenITData("
                     SELECT 
                     DATA 
