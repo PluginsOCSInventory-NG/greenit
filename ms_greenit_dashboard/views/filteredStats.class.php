@@ -201,6 +201,8 @@ class FilteredStatsView extends View
             INNER JOIN accountinfo ON hardware.ID = accountinfo.HARDWARE_ID 
             INNER JOIN greenit ON hardware.ID = greenit.HARDWARE_ID
             LEFT JOIN groups_cache ON hardware.ID = groups_cache.HARDWARE_ID
+            WHERE
+            greenit.consumption <> 'VM detected'
         ";
 
         if (
