@@ -196,6 +196,8 @@ class Data
             FROM greenit
             INNER JOIN hardware ON greenit.HARDWARE_ID=hardware.ID
             INNER JOIN bios ON greenit.HARDWARE_ID=bios.HARDWARE_ID
+            WHERE
+            greenit.consumption <> 'VM detected'
             GROUP BY COMPUTER_TYPE
         ";
         $dataResult = mysql2_query_secure($query, $_SESSION["OCS"]["readServer"]);
