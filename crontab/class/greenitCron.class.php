@@ -1037,10 +1037,12 @@ class CronStats
             DATE BETWEEN '" . $this->config->GetCollectDate() . "' AND '" . $this->config->GetYesterdayDate() . "'
             AND CONSUMPTION <> 'VM detected' 
             GROUP BY DATE
-        ";
+            ";
+        $data["GLOBAL_COLLECT_TOTAL_STATS"]["0000-00-00"]["totalConsumption"] = 0;
+        $data["GLOBAL_COLLECT_TOTAL_STATS"]["0000-00-00"]["totalUptime"] = 0;
+        $data["GLOBAL_COLLECT_TOTAL_STATS"]["0000-00-00"]["totalMachines"] = 0;
+        $data["GLOBAL_COLLECT_TOTAL_STATS"]["0000-00-00"]["totalCost"] = 0;
         if ($query = mysql2_query_secure($globalCollectTotalQuery, $_SESSION['OCS']["readServer"])) {
-            $data["GLOBAL_COLLECT_TOTAL_STATS"]["0000-00-00"]["totalConsumption"] = 0;
-            $data["GLOBAL_COLLECT_TOTAL_STATS"]["0000-00-00"]["totalUptime"] = 0;
             $formatedConsumptions = array();
             $apiKey = $this->config->GetAPIKey();
             foreach ($query as $values) {
@@ -1082,9 +1084,11 @@ class CronStats
             AND CONSUMPTION <> 'VM detected' 
             GROUP BY DATE
         ";
+        $data["GLOBAL_COMPARE_TOTAL_STATS"]["0000-00-00"]["totalConsumption"] = 0;
+        $data["GLOBAL_COMPARE_TOTAL_STATS"]["0000-00-00"]["totalUptime"] = 0;
+        $data["GLOBAL_COMPARE_TOTAL_STATS"]["0000-00-00"]["totalMachines"] = 0;
+        $data["GLOBAL_COMPARE_TOTAL_STATS"]["0000-00-00"]["totalCost"] = 0;
         if ($query = mysql2_query_secure($globalCompareTotalQuery, $_SESSION['OCS']["readServer"])) {
-            $data["GLOBAL_COMPARE_TOTAL_STATS"]["0000-00-00"]["totalConsumption"] = 0;
-            $data["GLOBAL_COMPARE_TOTAL_STATS"]["0000-00-00"]["totalUptime"] = 0;
             $formatedConsumptions = array();
             $apiKey = $this->config->GetAPIKey();
             foreach ($query as $values) {
@@ -1219,9 +1223,11 @@ class CronStats
             AND greenit.CONSUMPTION <> 'VM detected' 
             GROUP BY DATE
         ";
+        $data["OS_COLLECT_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalConsumption"] = 0;
+        $data["OS_COLLECT_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalUptime"] = 0;
+        $data["OS_COLLECT_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalMachines"] = 0;
+        $data["OS_COLLECT_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalCost"] = 0;
         if ($query = mysql2_query_secure($clientsOSCollectTotalQuery, $_SESSION['OCS']["readServer"])) {
-            $data["OS_COLLECT_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalConsumption"] = 0;
-            $data["OS_COLLECT_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalUptime"] = 0;
             $formatedConsumptions = array();
             $apiKey = $this->config->GetAPIKey();
             foreach ($query as $values) {
@@ -1268,6 +1274,8 @@ class CronStats
         if ($query = mysql2_query_secure($serversOSCollectTotalQuery, $_SESSION['OCS']["readServer"])) {
             $data["OS_COLLECT_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalConsumption"] = 0;
             $data["OS_COLLECT_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalUptime"] = 0;
+            $data["OS_COLLECT_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalMachines"] = 0;
+            $data["OS_COLLECT_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalCost"] = 0;
             $formatedConsumptions = array();
             $apiKey = $this->config->GetAPIKey();
             foreach ($query as $values) {
@@ -1315,6 +1323,8 @@ class CronStats
         if ($query = mysql2_query_secure($clientsOSCompareTotalQuery, $_SESSION['OCS']["readServer"])) {
             $data["OS_COMPARE_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalConsumption"] = 0;
             $data["OS_COMPARE_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalUptime"] = 0;
+            $data["OS_COMPARE_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalMachines"] = 0;
+            $data["OS_COMPARE_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalCost"] = 0;
             $formatedConsumptions = array();
             $apiKey = $this->config->GetAPIKey();
             foreach ($query as $values) {
@@ -1361,6 +1371,8 @@ class CronStats
         if ($query = mysql2_query_secure($serversOSCompareTotalQuery, $_SESSION['OCS']["readServer"])) {
             $data["OS_COMPARE_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalConsumption"] = 0;
             $data["OS_COMPARE_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalUptime"] = 0;
+            $data["OS_COMPARE_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalMachines"] = 0;
+            $data["OS_COMPARE_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalCost"] = 0;
             $formatedConsumptions = array();
             $apiKey = $this->config->GetAPIKey();
             foreach ($query as $values) {
@@ -1512,6 +1524,8 @@ class CronStats
             foreach ($query as $values) {
                 $data["COMPUTERTYPES_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalConsumption"] = 0;
                 $data["COMPUTERTYPES_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalUptime"] = 0;
+                $data["COMPUTERTYPES_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalMachines"] = 0;
+                $data["COMPUTERTYPES_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalCost"] = 0;
             }
             $formatedConsumptions = array();
             $apiKey = $this->config->GetAPIKey();
@@ -1589,6 +1603,8 @@ class CronStats
             foreach ($query as $values) {
                 $data["COMPUTERTYPES_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalConsumption"] = 0;
                 $data["COMPUTERTYPES_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalUptime"] = 0;
+                $data["COMPUTERTYPES_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalMachines"] = 0;
+                $data["COMPUTERTYPES_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalCost"] = 0;
             }
             $formatedConsumptions = array();
             $apiKey = $this->config->GetAPIKey();
@@ -1685,6 +1701,8 @@ class CronStats
             foreach ($query as $values) {
                 $data["MANUFACTURERS_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalConsumption"] = floatval($values["totalConsumption"]);
                 $data["MANUFACTURERS_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalUptime"] = intval($values["totalUptime"]);
+                $data["MANUFACTURERS_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
+                $data["MANUFACTURERS_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalCost"] = 0;
             }
             $formatedConsumptions = array();
             $apiKey = $this->config->GetAPIKey();
@@ -1734,6 +1752,8 @@ class CronStats
             foreach ($query as $values) {
                 $data["MANUFACTURERS_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalConsumption"] = floatval($values["totalConsumption"]);
                 $data["MANUFACTURERS_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalUptime"] = intval($values["totalUptime"]);
+                $data["MANUFACTURERS_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
+                $data["MANUFACTURERS_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalCost"] = 0;
             }
             $formatedConsumptions = array();
             $apiKey = $this->config->GetAPIKey();
@@ -1767,11 +1787,11 @@ class CronStats
         if (isset($data)) {
             foreach ($data as $type => $date) {
                 foreach ($date as $date => $value) {
-                    if (isset($data[$type][$date]["totalMachines"])) {
-                        $data[$type][$date]["consumptionAverage"] = round($data[$type][$date]["totalConsumption"] / $data[$type][$date]["totalMachines"], 6);
-                        $data[$type][$date]["uptimeAverage"] = round($data[$type][$date]["totalUptime"] / $data[$type][$date]["totalMachines"], 6);
-                        $data[$type][$date]["costAverage"] = round($data[$type][$date]["totalCost"] / $data[$type][$date]["totalMachines"], 6);
-                    }
+                    if ($data[$type][$date]["totalMachines"] == 0)
+                        $data[$type][$date]["totalMachines"] = 1;
+                    $data[$type][$date]["consumptionAverage"] = round($data[$type][$date]["totalConsumption"] / $data[$type][$date]["totalMachines"], 6);
+                    $data[$type][$date]["uptimeAverage"] = round($data[$type][$date]["totalUptime"] / $data[$type][$date]["totalMachines"], 6);
+                    $data[$type][$date]["costAverage"] = round($data[$type][$date]["totalCost"] / $data[$type][$date]["totalMachines"], 6);
                 }
             }
 
