@@ -29,7 +29,7 @@
 
 102100 GreenIT manager
 102101 device(s) with 
-102102 virtual machine(s) in the GreenIT parc out of
+102102 virtual machine(s) in the GreenIT infrastucture out of
 102103 Global Statistics
 102104 Filtered Statistics
 102105 Operating system Statistics
