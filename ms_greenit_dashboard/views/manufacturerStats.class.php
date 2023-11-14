@@ -65,6 +65,7 @@ class ManufacturerStatsView extends View
             INNER JOIN bios ON greenit.HARDWARE_ID=bios.HARDWARE_ID 
             WHERE
             greenit.DATE='" . $this->config->GetYesterdayDate() . "'
+            AND greenit.consumption <> 'VM detected'
             GROUP BY MANUFACTURER
             ORDER BY totalConsumption DESC 
             LIMIT 5
@@ -78,6 +79,7 @@ class ManufacturerStatsView extends View
             INNER JOIN bios ON greenit.HARDWARE_ID=bios.HARDWARE_ID 
             WHERE
             greenit.DATE BETWEEN '" . $this->config->GetCollectDate() . "' AND '" . $this->config->GetYesterdayDate() . "'
+            AND greenit.consumption <> 'VM detected'
             GROUP BY MANUFACTURER
             ORDER BY totalConsumption DESC 
             LIMIT 5
@@ -91,6 +93,7 @@ class ManufacturerStatsView extends View
             INNER JOIN bios ON greenit.HARDWARE_ID=bios.HARDWARE_ID 
             WHERE
             greenit.DATE BETWEEN '" . $this->config->GetCompareDate() . "' AND '" . $this->config->GetYesterdayDate() . "'
+            AND greenit.consumption <> 'VM detected'
             GROUP BY MANUFACTURER
             ORDER BY totalConsumption DESC 
             LIMIT 5
