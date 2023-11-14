@@ -1767,9 +1767,11 @@ class CronStats
         if (isset($data)) {
             foreach ($data as $type => $date) {
                 foreach ($date as $date => $value) {
-                    $data[$type][$date]["consumptionAverage"] = round($data[$type][$date]["totalConsumption"] / $data[$type][$date]["totalMachines"], 6);
-                    $data[$type][$date]["uptimeAverage"] = round($data[$type][$date]["totalUptime"] / $data[$type][$date]["totalMachines"], 6);
-                    $data[$type][$date]["costAverage"] = round($data[$type][$date]["totalCost"] / $data[$type][$date]["totalMachines"], 6);
+                    if (isset($data[$type][$date]["totalMachines"])) {
+                        $data[$type][$date]["consumptionAverage"] = round($data[$type][$date]["totalConsumption"] / $data[$type][$date]["totalMachines"], 6);
+                        $data[$type][$date]["uptimeAverage"] = round($data[$type][$date]["totalUptime"] / $data[$type][$date]["totalMachines"], 6);
+                        $data[$type][$date]["costAverage"] = round($data[$type][$date]["totalCost"] / $data[$type][$date]["totalMachines"], 6);
+                    }
                 }
             }
 
