@@ -1,7 +1,7 @@
 <?php
 ###############################################################################
 ## OCSINVENTORY-NG
-## Copyleft Silvan Raijer 2022
+## Copyleft Antoine ROBIN 2023
 ## Web : http://www.ocsinventory-ng.org
 ##
 ## This code is open source and may be copied and modified as long as the source
@@ -10,10 +10,10 @@
 ################################################################################
 
 
- /**
-  * This file is used to build a table refering to the plugin and define its 
-  * default columns as well as SQL request.
-  */
+/**
+ * This file is used to build a table refering to the plugin and define its 
+ * default columns as well as SQL request.
+ */
 
 if (AJAX) {
     parse_str($protectedPost['ocs']['0'], $params);
@@ -26,7 +26,7 @@ if (AJAX) {
 
 
 // print a title for the table
-print_item_header($l->g(80700));
+print_item_header($l->g(102000));
 
 if (!isset($protectedPost['SHOW'])) {
     $protectedPost['SHOW'] = 'NOSHOW';
@@ -44,7 +44,7 @@ echo open_form($form_name);
 $list_fields = array(
     'Date' => 'DATE',
     'Comsumption (W/h)' => 'CONSUMPTION',
-    'Uptime' => 'UPTIME',
+    'Uptime (s)' => 'UPTIME',
 );
 
 // columns to include at any time and default columns
@@ -53,7 +53,7 @@ $default_fields = $list_fields;
 
 // select columns for table display
 $sql = prepare_sql_tab($list_fields);
-$sql['SQL']  .= "FROM $table_name WHERE (hardware_id = $systemid)";
+$sql['SQL'] .= "FROM $table_name WHERE (hardware_id = $systemid)";
 
 array_push($sql['ARG'], $systemid);
 $tab_options['ARG_SQL'] = $sql['ARG'];

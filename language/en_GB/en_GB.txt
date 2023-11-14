@@ -1,26 +1,67 @@
-80700 Power consumption
-80701 GreenIT manager
-80702 Today's Statistics
-80703 Total consumption
-80704 Consumption average
-80705 Total uptime
-80706 Uptime average
-80707 Consumption Cost Statistics
-80708 Today cost
-80709 Consumption cost for last 
-80710 Average cost per device
-80711 Average cost per device for last
-80712 day(s)
-80713 Consumption
-80714 Cost
+100000 GreenIT
 
-80715 GreenIT
-80716 Data collection period (in days)
-80717 Consumption decimal precision
-80718 Cost decimal precision
-80719 Cost unit
-80720 Kilowatt cost
-80721 Uptime format
-80722 Submit
+101000 Configuration has been updated
+101001 A problem occurred with the configuration query
+101002 API successfully called
+101003 API unsuccessfully called
 
-80723 Configuration has been updated
+102000 Power consumption
+102001 Interface's settings
+102002 Data collection period (in days)
+102003 Data comparator period (in days)
+102004 Consumption decimal precision
+102005 Cost decimal precision
+102006 Cost unit
+102007 Uptime format
+102008 API configuration
+102009 API key
+102010 Call API test
+102011 Insert your API key
+102012 Consumption type
+102013 Default slice
+102014 IA Slice (Consumption < 20 MWh/year)
+102015 IB Slice (20 < Consumption < 500 MWh/year)
+102016 IC Slice (500 < Consumption < 2000 MWh/year)
+102017 ID Slice (2 < Consumption < 20 GWh/year)
+102018 IE Slice (20 < Consumption < 70 GWh/year)
+102019 IF Slice (70 < Consumption < 150 GWh/year)
+102020 IG Slice (150 < Consumption GWh/year)
+
+102100 GreenIT manager
+102101 device(s) with 
+102102 virtual machine(s) in the GreenIT infrastucture out of
+102103 Global Statistics
+102104 Filtered Statistics
+102105 Operating system Statistics
+102106 Computer type Statistics
+102107 Manufacturer Statistics
+
+102600 Yesterday's Statistics
+102601 Total consumption
+102602 Consumption average per device
+102603 Total uptime
+102604 Uptime average per device
+102605 Total cost
+102606 Average cost per device
+
+102700 Statistics comparator
+102701 Yesterday's cost
+102702 Cost for last
+102703 Average cost of
+102704 Average cost per device for last
+102705 for last
+102706 day(s)
+102707 of 5 largest consumers
+102708 Yesterday's total consumption (kW/h)
+102709 Yesterday's total uptime for Windows clients
+102710 Yesterday's total uptime for Windows servers
+
+102800 Consumption
+102801 Cost
+102802 Total consumption for Windows clients
+102803 Total consumption for Windows servers
+102804 Windows clients
+102805 Windows servers
+
+102900 Filtered Search
+102901 Generate filtered stats

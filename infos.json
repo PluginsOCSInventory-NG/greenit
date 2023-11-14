@@ -1,9 +1,9 @@
 {
-    "displayName" : "Green IT",
+    "displayName" : "GreenIT",
     "author" : ["Antoine ROBIN"],
     "contributor" : ["Léa DROGUET, Gilles DUBOIS"],
     "supportedAgent" : ["Windows"],
-    "version" : "1.0",
+    "version" : "2.0",
     "licence" : "GPLv2",
     "description" : 
         {
