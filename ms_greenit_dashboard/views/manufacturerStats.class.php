@@ -169,7 +169,7 @@ class ManufacturerStatsView extends View
                     ";
                 }
                 $table .= "
-                        <p style='font-size: 32px; font-weight:bold;'>" . (isset($this->collectData->{$manufacturer}) && $this->collectData->{$manufacturer}->return != false ? $this->calculation->CostFormat($this->collectData->{$manufacturer}->costAverage, $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
+                        <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->collectData->{$manufacturer}) && $this->collectData->{$manufacturer}->return != false ? $this->calculation->CostFormat($this->collectData->{$manufacturer}->costAverage, $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
                         <p style='color:#333; font-size: 15px;'>" . $l->g(102703) . " " . $manufacturer . " " . $l->g(102705) . " " . $this->config->GetCollectInfoPeriod() . " " . $l->g(102706) . "</p>
                     </div>
                 ";
@@ -196,7 +196,7 @@ class ManufacturerStatsView extends View
                     ";
                 }
                 $table .= "
-                        <p style='font-size: 32px; font-weight:bold;'>" . (isset($this->compareData->{$manufacturer}) && $this->compareData->{$manufacturer}->return != false ? $this->calculation->CostFormat($this->compareData->{$manufacturer}->costAverage, $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
+                        <p style='font-size: 30px; font-weight:bold;'>" . (isset($this->compareData->{$manufacturer}) && $this->compareData->{$manufacturer}->return != false ? $this->calculation->CostFormat($this->compareData->{$manufacturer}->costAverage, $this->config->GetCostUnit(), $this->config->GetCostRound()) : "0") . "</p>
                         <p style='color:#333; font-size: 15px;'>" . $l->g(102703) . " " . $manufacturer . " " . $l->g(102705) . " " . $this->config->GetCompareInfoPeriod() . " " . $l->g(102706) . "</p>
                     </div>
                 ";
