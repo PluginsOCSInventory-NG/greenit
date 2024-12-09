@@ -15,7 +15,7 @@
 ## Description
 Currently supported on Windows, this plugin is made to retrieve power consumption information.
 
-> _**IMPORTANT NOTE : This plugin works with a windows service application which can be downloaded from <a href="https://github.com/Atineon/ocsinventory-service_greenit" target="_blank">here</a>**_
+> _**IMPORTANT NOTE : This plugin works with a windows service application which can be downloaded from <a href="https://github.com/OCSInventory-NG/greenit_service" target="_blank">here</a>**_
 
 
 
