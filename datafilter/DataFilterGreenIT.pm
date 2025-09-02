@@ -1,6 +1,6 @@
 ###############################################################################
 ## OCSINVENTORY-NG
-## Copyleft Antoine ROBIN 2023
+## Copyleft Antoine ROBIN 2025
 ## Web : http://www.ocsinventory-ng.org
 ##
 ## This code is open source and may be copied and modified as long as the source
