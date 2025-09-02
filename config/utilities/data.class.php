@@ -75,7 +75,7 @@ class Data
      * 
      * @return object Return an object with the formated data from database or false if the database canno't be reached
      */
-    public function GetFilteredGreenITData(string $query, object $eletricityPrices, bool $multiple): object
+    public function GetFilteredGreenITData(string $query, float $eletricityPrices, bool $multiple): object
     {
         $data = new stdClass();
         $config = new Config();
@@ -89,23 +89,28 @@ class Data
                     $data->totalUptime = $row->totalUptime;
                     $formatedConsumptions[$row->DATE] = floatval($row->totalConsumption);
                     $totalCost = 0;
-                    $apiKey = $config->GetAPIKey();
-                    if (is_defined($apiKey)) {
-                        foreach ($formatedConsumptions as $FCDate => $FCValue) {
-                            $Date = new Datetime($FCDate);
-                            foreach ($eletricityPrices as $KWCDate => $KWCValue) {
-                                if ($KWCDate != "return") {
-                                    if ($Date->format("Y-m-01") > $KWCDate) {
-                                        while ($Date->format("Y-m-01") != $KWCDate) {
-                                            $Date->modify("- 1 month");
-                                        }
-                                        break;
-                                    }
-                                }
-                            }
-                            $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($eletricityPrices->{$Date->format("Y-m-01")} / 100), $config->GetCostRound());
-                        }
+                    // Comment this if you are using the API version
+                    foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                        $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * $eletricityPrices, $config->GetCostRound());
                     }
+                    // Used for API version
+                    // $apiKey = $config->GetAPIKey();
+                    // if (is_defined($apiKey)) {
+                    //     foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    //         $Date = new Datetime($FCDate);
+                    //         foreach ($eletricityPrices as $KWCDate => $KWCValue) {
+                    //             if ($KWCDate != "return") {
+                    //                 if ($Date->format("Y-m-01") > $KWCDate) {
+                    //                     while ($Date->format("Y-m-01") != $KWCDate) {
+                    //                         $Date->modify("- 1 month");
+                    //                     }
+                    //                     break;
+                    //                 }
+                    //             }
+                    //         }
+                    //         $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($eletricityPrices->{$Date->format("Y-m-01")} / 100), $config->GetCostRound());
+                    //     }
+                    // }
                     $data->totalCost = floatval($totalCost);
                     $data->consumptionAverage = round($data->totalConsumption / $data->totalMachines, 6);
                     $data->uptimeAverage = round($data->totalUptime / $data->totalMachines, 6);
@@ -122,24 +127,30 @@ class Data
                     $data->totalConsumption += $row->totalConsumption;
                     $data->totalUptime += $row->totalUptime;
                     $formatedConsumptions[$row->DATE] = floatval($row->totalConsumption);
+                    // Comment this if you are using the API version
+
+                    // Used for the API version
                     $totalCost = 0;
-                    $apiKey = $config->GetAPIKey();
-                    if (is_defined($apiKey)) {
-                        foreach ($formatedConsumptions as $FCDate => $FCValue) {
-                            $Date = new Datetime($FCDate);
-                            foreach ($eletricityPrices as $KWCDate => $KWCValue) {
-                                if ($KWCDate != "return") {
-                                    if ($Date->format("Y-m-01") > $KWCDate) {
-                                        while ($Date->format("Y-m-01") != $KWCDate) {
-                                            $Date->modify("- 1 month");
-                                        }
-                                        break;
-                                    }
-                                }
-                            }
-                            $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($eletricityPrices->{$Date->format("Y-m-01")} / 100), $config->GetCostRound());
-                        }
+                    foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                        $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * $eletricityPrices, $config->GetCostRound());
                     }
+                    // $apiKey = $config->GetAPIKey();
+                    // if (is_defined($apiKey)) {
+                    //     foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    //         $Date = new Datetime($FCDate);
+                    //         foreach ($eletricityPrices as $KWCDate => $KWCValue) {
+                    //             if ($KWCDate != "return") {
+                    //                 if ($Date->format("Y-m-01") > $KWCDate) {
+                    //                     while ($Date->format("Y-m-01") != $KWCDate) {
+                    //                         $Date->modify("- 1 month");
+                    //                     }
+                    //                     break;
+                    //                 }
+                    //             }
+                    //         }
+                    //         $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($eletricityPrices->{$Date->format("Y-m-01")} / 100), $config->GetCostRound());
+                    //     }
+                    // }
                     $data->totalCost = floatval($totalCost);
                     $data->consumptionAverage = round($data->totalConsumption / $data->totalMachines, 6);
                     $data->uptimeAverage = round($data->totalUptime / $data->totalMachines, 6);
@@ -238,45 +249,56 @@ class Data
     /**
      * Get the electricity prices from the GreenIT API
      * 
+     * @return float Return the electricity price per kWh
+     */
+    public function GetElectricityPrices(): float
+    {
+        $config = new Config();
+        return $config->GetKilowattCost();
+    }
+
+    /**
+     * Get the electricity prices from the GreenIT API
+     * 
      * @return object Return an object with the formated data from database or false if the database canno't be reached
      */
-    public function GetElectricityPrices(): object
-    {
-        $data = new stdClass();
-        $config = new Config();
-        $url = 'http://172.18.25.171:8080/data/periods/';
-        $query = curl_init($url);
-        curl_setopt(
-            $query,
-            CURLOPT_RETURNTRANSFER,
-            true
-        );
-        $apiKey = $config->GetAPIKey();
-        if (is_defined($apiKey))
-            curl_setopt(
-                $query,
-                CURLOPT_HTTPHEADER,
-                array(
-                    'Authorization: Token ' . $config->GetAPIKey()
-                )
-            );
-        $response = curl_exec($query);
-        $response = json_decode($response);
-        curl_close($query);
+    // public function GetElectricityPrices(): object
+    // {
+    //     $data = new stdClass();
+    //     $config = new Config();
+    //     $url = 'http://172.18.25.171:8080/data/periods/';
+    //     $query = curl_init($url);
+    //     curl_setopt(
+    //         $query,
+    //         CURLOPT_RETURNTRANSFER,
+    //         true
+    //     );
+    //     $apiKey = $config->GetAPIKey();
+    //     if (is_defined($apiKey))
+    //         curl_setopt(
+    //             $query,
+    //             CURLOPT_HTTPHEADER,
+    //             array(
+    //                 'Authorization: Token ' . $config->GetAPIKey()
+    //             )
+    //         );
+    //     $response = curl_exec($query);
+    //     $response = json_decode($response);
+    //     curl_close($query);
 
-        if (curl_getinfo($query, CURLINFO_HTTP_CODE) == 200) {
-            foreach ($response as $element) {
-                foreach ($element->{"groups"} as $group) {
-                    if ($group->{"name"} == $config->GetConsumptionType()) {
-                        $data->{$element->{"period"}} = $group->{"electricity_price"};
-                    }
-                }
-            }
-            $data->return = true;
-        } else
-            $data->return = false;
-        return $data;
-    }
+    //     if (curl_getinfo($query, CURLINFO_HTTP_CODE) == 200) {
+    //         foreach ($response as $element) {
+    //             foreach ($element->{"groups"} as $group) {
+    //                 if ($group->{"name"} == $config->GetConsumptionType()) {
+    //                     $data->{$element->{"period"}} = $group->{"electricity_price"};
+    //                 }
+    //             }
+    //         }
+    //         $data->return = true;
+    //     } else
+    //         $data->return = false;
+    //     return $data;
+    // }
 }
 
 ?>

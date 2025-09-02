@@ -26,6 +26,7 @@
 102018 IE Slice (20 < Consumption < 70 GWh/year)
 102019 IF Slice (70 < Consumption < 150 GWh/year)
 102020 IG Slice (150 < Consumption GWh/year)
+102021 kilowatt Cost
 
 102100 GreenIT manager
 102101 device(s) with 

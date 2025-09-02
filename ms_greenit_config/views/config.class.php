@@ -57,18 +57,20 @@ class ConfigView
             "h-m-s" => "h-m-s",
         );
 
-        $this->consumptionTypes = array(
-            "PX_ELE_I_TTES_TRANCHES" => $l->g(102013),
-            "PX_ELE_I_IA" => $l->g(102014),
-            "PX_ELE_I_IB" => $l->g(102015),
-            "PX_ELE_I_IC" => $l->g(102016),
-            "PX_ELE_I_ID" => $l->g(102017),
-            "PX_ELE_I_IE" => $l->g(102018),
-            "PX_ELE_I_IF" => $l->g(102019),
-            "PX_ELE_I_IG" => $l->g(102020),
-        );
+        // Used for API version
+        // $this->consumptionTypes = array(
+        //     "PX_ELE_I_TTES_TRANCHES" => $l->g(102013),
+        //     "PX_ELE_I_IA" => $l->g(102014),
+        //     "PX_ELE_I_IB" => $l->g(102015),
+        //     "PX_ELE_I_IC" => $l->g(102016),
+        //     "PX_ELE_I_ID" => $l->g(102017),
+        //     "PX_ELE_I_IE" => $l->g(102018),
+        //     "PX_ELE_I_IF" => $l->g(102019),
+        //     "PX_ELE_I_IG" => $l->g(102020),
+        // );
 
         if (isset($protectedPost['SUBMIT_FORM'])) {
+            // Comment this if you are using API version
             $insertQuery = "
                 UPDATE greenit_config 
                 SET 
@@ -78,43 +80,58 @@ class ConfigView
                 COST_ROUND='" . $protectedPost[strtoupper(str_replace(" ", "_", $l->g(102005)))] . "',
                 COST_UNIT='" . $protectedPost[strtoupper(str_replace(" ", "_", $l->g(102006)))] . "',
                 UPTIME_FORMAT='" . $protectedPost[strtoupper(str_replace(" ", "_", $l->g(102007)))] . "',
-                API_KEY='" . $protectedPost[strtoupper(str_replace(" ", "_", $l->g(102009)))] . "',
-                CONSUMPTION_TYPE='" . $protectedPost[strtoupper(str_replace(" ", "_", $l->g(102012)))] . "'
+                KILOWATT_COST='" . $protectedPost[strtoupper(str_replace(" ", "_", $l->g(102021)))] . "'
                 WHERE ID='1';
             ";
+
+            // Used for API version
+            // $insertQuery = "
+            //     UPDATE greenit_config 
+            //     SET 
+            //     COLLECT_INFO_PERIOD='" . $protectedPost[strtoupper(str_replace(" ", "_", $l->g(102002)))] . "',
+            //     COMPARE_INFO_PERIOD='" . $protectedPost[strtoupper(str_replace(" ", "_", $l->g(102003)))] . "',
+            //     CONSUMPTION_ROUND='" . $protectedPost[strtoupper(str_replace(" ", "_", $l->g(102004)))] . "',
+            //     COST_ROUND='" . $protectedPost[strtoupper(str_replace(" ", "_", $l->g(102005)))] . "',
+            //     COST_UNIT='" . $protectedPost[strtoupper(str_replace(" ", "_", $l->g(102006)))] . "',
+            //     UPTIME_FORMAT='" . $protectedPost[strtoupper(str_replace(" ", "_", $l->g(102007)))] . "',
+            //     API_KEY='" . $protectedPost[strtoupper(str_replace(" ", "_", $l->g(102009)))] . "',
+            //     CONSUMPTION_TYPE='" . $protectedPost[strtoupper(str_replace(" ", "_", $l->g(102012)))] . "'
+            //     WHERE ID='1';
+            // ";
             if (mysql2_query_secure($insertQuery, $_SESSION['OCS']["writeServer"])) {
                 $this->config = new Config();
                 msg_success($l->g(101000));
             } else
                 msg_error($l->g(101001));
         }
-        if (isset($protectedPost["TEST_API"])) {
+        // Used for API version
+        // if (isset($protectedPost["TEST_API"])) {
 
-            $url = 'http://172.18.25.171:8080/';
-            $query = curl_init($url);
-            curl_setopt(
-                $query,
-                CURLOPT_RETURNTRANSFER,
-                true
-            );
-            $apiKey = $this->config->GetAPIKey();
-            if (is_defined($apiKey))
-                curl_setopt(
-                    $query,
-                    CURLOPT_HTTPHEADER,
-                    array(
-                        'Authorization: Token ' . $this->config->GetAPIKey()
-                    )
-                );
-            $response = curl_exec($query);
-            $response = curl_getinfo($query);
-            curl_close($query);
+        //     $url = 'http://172.18.25.171:8080/';
+        //     $query = curl_init($url);
+        //     curl_setopt(
+        //         $query,
+        //         CURLOPT_RETURNTRANSFER,
+        //         true
+        //     );
+        //     $apiKey = $this->config->GetAPIKey();
+        //     if (is_defined($apiKey))
+        //         curl_setopt(
+        //             $query,
+        //             CURLOPT_HTTPHEADER,
+        //             array(
+        //                 'Authorization: Token ' . $this->config->GetAPIKey()
+        //             )
+        //         );
+        //     $response = curl_exec($query);
+        //     $response = curl_getinfo($query);
+        //     curl_close($query);
 
-            if (curl_getinfo($query, CURLINFO_HTTP_CODE) == 200)
-                msg_success($l->g(101002));
-            else
-                msg_error($l->g(101003));
-        }
+        //     if (curl_getinfo($query, CURLINFO_HTTP_CODE) == 200)
+        //         msg_success($l->g(101002));
+        //     else
+        //         msg_error($l->g(101003));
+        // }
     }
 
     /**
@@ -186,66 +203,81 @@ class ConfigView
                 echo "<option value='" . $option . "' " . ($option == ($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102007)))] ?? $this->config->GetUptimeFormat()) ? "selected" : "") . ">" . ($this->uptimeFormats[$option] ? $this->uptimeFormats[$option] : $option) . "</option>";
             }
         }
+        // Comment this if you are using API version
         echo "
                     </select>
                 </div>
             </div>
+            <div class='form-group'>
+                <label class='col-sm-7 text-left' for='" . strtoupper(str_replace(' ', '_', $l->g(102021))) . "'>" . $l->g(102021) . "</label>
+                <div class='col-sm-5'>
+                    <input name='" . strtoupper(str_replace(' ', '_', $l->g(102021))) . "' id='" . strtoupper(str_replace(' ', '_', $l->g(102021))) . "' class='form-control' type='number' min='0' step='0.000001' value='" . ($protectedPost[strtoupper(str_replace(' ', '_', $l->g(102021)))] ?? $this->config->GetKilowattCost()) . "'\>
+                </div>
+            </div>
             <hr>
         ";
+        // Used for API version
+        // echo "
+        //             </select>
+        //         </div>
+        //     </div>
+        //     <hr>
+        // ";
     }
 
+    // Used for API version
     /**
      * Generate the API Configuration HTML code of the view
      * 
      * @return void Return nothing
      */
-    public function ShowAPIConfiguration(): void
-    {
-        global $l;
-        global $protectedPost;
+    // public function ShowAPIConfiguration(): void
+    // {
+    //     global $l;
+    //     global $protectedPost;
 
-        echo "
-            <h4>" . $l->g(102008) . "</h4>
+    //     echo "
+    //         <h4>" . $l->g(102008) . "</h4>
 
-            <div class='form-group'>
-                <label class='col-sm-7 text-left' for='" . strtoupper(str_replace(" ", "_", $l->g(102009))) . "'>" . $l->g(102009) . "</label>
-        ";
-        $apiKey = $this->config->GetAPIKey();
-        if (is_defined($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102009)))]) || is_defined($apiKey)) {
-            echo "
-                <div class='col-sm-3'>
-                    <input name='" . strtoupper(str_replace(" ", "_", $l->g(102009))) . "' id='" . strtoupper(str_replace(" ", "_", $l->g(102009))) . "' class='form-control' type='text' placeholder='" . $l->g(102011) . "' value='" . ($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102009)))] ?? $this->config->GetAPIKey()) . "' />
-                </div>
-                <div class='col-sm-2'>
-                    <button class='btn btn-success' name='TEST_API'>" . $l->g(102010) . "</button>
-                </div>
-            ";
-        } else {
-            echo "
-                <div class='col-sm-5'>
-                    <input name='" . strtoupper(str_replace(" ", "_", $l->g(102009))) . "' id='" . strtoupper(str_replace(" ", "_", $l->g(102009))) . "' class='form-control' type='text' placeholder='" . $l->g(102011) . "' value='" . ($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102009)))] ?? $this->config->GetAPIKey()) . "' />
-                </div>
-            ";
-        }
-        echo "
-            </div>
-            
-            <div class='form-group'>
-                <label class='col-sm-7 text-left' for='" . strtoupper(str_replace(" ", "_", $l->g(102012))) . "'>" . $l->g(102012) . "</label>
-                <div class='col-sm-5'>
-                    <select name='" . strtoupper(str_replace(" ", "_", $l->g(102012))) . "' id='" . strtoupper(str_replace(" ", "_", $l->g(102012))) . "' class='form-control'>
-        ";
-        if (is_array($this->consumptionTypes)) {
-            foreach ($this->consumptionTypes as $option => $value) {
-                echo "<option value='" . $option . "' " . ($option == ($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102012)))] ?? $this->config->GetConsumptionType()) ? "selected" : "") . ">" . $this->consumptionTypes[$option] . "</option>";
-            }
-        }
-        echo "
-                    </select>
-                </div>
-            </div>
-        ";
-    }
+    //         <div class='form-group'>
+    //             <label class='col-sm-7 text-left' for='" . strtoupper(str_replace(" ", "_", $l->g(102009))) . "'>" . $l->g(102009) . "</label>
+    //     ";
+    //     $apiKey = $this->config->GetAPIKey();
+    //     if (is_defined($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102009)))]) || is_defined($apiKey)) {
+    //         echo "
+    //             <div class='col-sm-3'>
+    //                 <input name='" . strtoupper(str_replace(" ", "_", $l->g(102009))) . "' id='" . strtoupper(str_replace(" ", "_", $l->g(102009))) . "' class='form-control' type='text' placeholder='" . $l->g(102011) . "' value='" . ($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102009)))] ?? $this->config->GetAPIKey()) . "' />
+    //             </div>
+    //             <div class='col-sm-2'>
+    //                 <button class='btn btn-success' name='TEST_API'>" . $l->g(102010) . "</button>
+    //             </div>
+    //         ";
+    //     } else {
+    //         echo "
+    //             <div class='col-sm-5'>
+    //                 <input name='" . strtoupper(str_replace(" ", "_", $l->g(102009))) . "' id='" . strtoupper(str_replace(" ", "_", $l->g(102009))) . "' class='form-control' type='text' placeholder='" . $l->g(102011) . "' value='" . ($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102009)))] ?? $this->config->GetAPIKey()) . "' />
+    //             </div>
+    //         ";
+    //     }
+    //     echo "
+    //         </div>
+
+    //         <div class='form-group'>
+    //             <label class='col-sm-7 text-left' for='" . strtoupper(str_replace(" ", "_", $l->g(102012))) . "'>" . $l->g(102012) . "</label>
+    //             <div class='col-sm-5'>
+    //                 <select name='" . strtoupper(str_replace(" ", "_", $l->g(102012))) . "' id='" . strtoupper(str_replace(" ", "_", $l->g(102012))) . "' class='form-control'>
+    //     ";
+    //     if (is_array($this->consumptionTypes)) {
+    //         foreach ($this->consumptionTypes as $option => $value) {
+    //             echo "<option value='" . $option . "' " . ($option == ($protectedPost[strtoupper(str_replace(" ", "_", $l->g(102012)))] ?? $this->config->GetConsumptionType()) ? "selected" : "") . ">" . $this->consumptionTypes[$option] . "</option>";
+    //         }
+    //     }
+    //     echo "
+    //                 </select>
+    //             </div>
+    //         </div>
+    //     ";
+    // }
 
     /**
      * Generate the Submit HTML code of the view

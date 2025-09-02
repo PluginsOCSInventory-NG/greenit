@@ -47,15 +47,23 @@ class Config
      */
     private string $COST_UNIT;
 
+    // Comment this if you are using API version
+    /**
+     * Data of the kilowatt cost
+     */
+    private float $KILOWATT_COST;
+
+    // Used for API version
     /**
      * Data of the API key
      */
-    private string $API_KEY;
+    // private string $API_KEY;
 
+    // Used for API version
     /**
      * Data of the consumption type
      */
-    private string $CONSUMPTION_TYPE;
+    // private string $CONSUMPTION_TYPE;
 
     /**
      * Date of D-1 for dynamic queries
@@ -77,6 +85,7 @@ class Config
      */
     function __construct()
     {
+        // Comment this if you are using API version
         $configQuery = "
             SELECT 
             COLLECT_INFO_PERIOD, 
@@ -85,12 +94,28 @@ class Config
             UPTIME_FORMAT, 
             COST_ROUND, 
             COST_UNIT,
-            API_KEY,
-            CONSUMPTION_TYPE 
+            KILOWATT_COST
             FROM greenit_config 
             WHERE 
             ID='1'
         ";
+
+        // Used for API version
+        // $configQuery = "
+        //     SELECT 
+        //     COLLECT_INFO_PERIOD, 
+        //     COMPARE_INFO_PERIOD, 
+        //     CONSUMPTION_ROUND, 
+        //     UPTIME_FORMAT, 
+        //     COST_ROUND, 
+        //     COST_UNIT,
+        //     API_KEY,
+        //     CONSUMPTION_TYPE 
+        //     FROM greenit_config 
+        //     WHERE 
+        //     ID='1'
+        // ";
+
         $configResult = mysql2_query_secure($configQuery, $_SESSION["OCS"]["readServer"]);
 
         while ($row = mysqli_fetch_object($configResult)) {
@@ -100,8 +125,11 @@ class Config
             $this->UPTIME_FORMAT = $row->UPTIME_FORMAT;
             $this->COST_ROUND = $row->COST_ROUND;
             $this->COST_UNIT = $row->COST_UNIT;
-            $this->API_KEY = $row->API_KEY;
-            $this->CONSUMPTION_TYPE = $row->CONSUMPTION_TYPE;
+            $this->KILOWATT_COST = $row->KILOWATT_COST;
+
+            // Used for API version
+            // $this->API_KEY = $row->API_KEY;
+            // $this->CONSUMPTION_TYPE = $row->CONSUMPTION_TYPE;
         }
 
         $this->yesterdayDate = new DateTime("NOW");
@@ -203,24 +231,36 @@ class Config
     }
 
     /**
+     * Get the kilowatt cost
+     * 
+     * @return float Return the kilowatt cost
+     */
+    public function GetKilowattCost(): float
+    {
+        return $this->KILOWATT_COST;
+    }
+
+    // Used for API version
+    /**
      * Get the API key
      * 
      * @return string Return the API key
      */
-    public function GetAPIKey(): string
-    {
-        return $this->API_KEY;
-    }
+    // public function GetAPIKey(): string
+    // {
+    //     return $this->API_KEY;
+    // }
 
+    // Used for API version
     /**
      * Get the consumption type
      * 
      * @return string Return the consumption type
      */
-    public function GetConsumptionType(): string
-    {
-        return $this->CONSUMPTION_TYPE;
-    }
+    // public function GetConsumptionType(): string
+    // {
+    //     return $this->CONSUMPTION_TYPE;
+    // }
 }
 
 ?>

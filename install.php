@@ -40,6 +40,7 @@ function extension_install_greenit()
         "CREATE INDEX HARDWARE_ID_INDEX ON `greenit`(HARDWARE_ID);"
     );
 
+    // Comment this if you are using API version
     $commonObject->sqlQuery(
         "CREATE TABLE IF NOT EXISTS `greenit_config` (
         `ID` INTEGER NOT NULL AUTO_INCREMENT,
@@ -49,14 +50,34 @@ function extension_install_greenit()
         `COST_ROUND` INTEGER NOT NULL,
         `COST_UNIT` varchar(255) NOT NULL,
         `UPTIME_FORMAT` VARCHAR(255) NOT NULL,
-        `API_KEY` VARCHAR(255) NOT NULL,
-        `CONSUMPTION_TYPE` VARCHAR(255) NOT NULL,
+        `KILOWATT_COST` FLOAT NOT NULL,
         PRIMARY KEY (ID)) ENGINE=INNODB;"
     );
 
+    // Used for API version
+    // $commonObject->sqlQuery(
+    //     "CREATE TABLE IF NOT EXISTS `greenit_config` (
+    //     `ID` INTEGER NOT NULL AUTO_INCREMENT,
+    //     `COLLECT_INFO_PERIOD` INTEGER NOT NULL,
+    //     `COMPARE_INFO_PERIOD` INTEGER NOT NULL,
+    //     `CONSUMPTION_ROUND` INTEGER NOT NULL,
+    //     `COST_ROUND` INTEGER NOT NULL,
+    //     `COST_UNIT` varchar(255) NOT NULL,
+    //     `UPTIME_FORMAT` VARCHAR(255) NOT NULL,
+    //     `API_KEY` VARCHAR(255) NOT NULL,
+    //     `CONSUMPTION_TYPE` VARCHAR(255) NOT NULL,
+    //     PRIMARY KEY (ID)) ENGINE=INNODB;"
+    // );
+
+    // Comment this if you are using API version
     $commonObject->sqlQuery(
-        "INSERT INTO `greenit_config` (COLLECT_INFO_PERIOD,COMPARE_INFO_PERIOD,CONSUMPTION_ROUND,COST_ROUND,COST_UNIT,UPTIME_FORMAT,API_KEY,CONSUMPTION_TYPE) VALUES ('30','365','2','2','€','h-m-s', '', 'PX_ELE_I_TTES_TRANCHES');"
+        "INSERT INTO `greenit_config` (COLLECT_INFO_PERIOD,COMPARE_INFO_PERIOD,CONSUMPTION_ROUND,COST_ROUND,COST_UNIT,UPTIME_FORMAT,KILOWATT_COST) VALUES ('30','365','2','2','€','h-m-s','0');"
     );
+
+    // Used for API version
+    // $commonObject->sqlQuery(
+    //     "INSERT INTO `greenit_config` (COLLECT_INFO_PERIOD,COMPARE_INFO_PERIOD,CONSUMPTION_ROUND,COST_ROUND,COST_UNIT,UPTIME_FORMAT,API_KEY,CONSUMPTION_TYPE) VALUES ('30','365','2','2','€','h-m-s', '', 'PX_ELE_I_TTES_TRANCHES');"
+    // );
 
     $commonObject->sqlQuery(
         "CREATE TABLE IF NOT EXISTS `greenit_stats` (

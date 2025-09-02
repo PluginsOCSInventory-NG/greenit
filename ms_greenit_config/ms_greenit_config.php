@@ -38,7 +38,8 @@ if (isset($view)) {
     ";
     $view->ShowTitle();
     $view->ShowInterfaceSettings();
-    $view->ShowAPIConfiguration();
+    // Used for API version
+    // $view->ShowAPIConfiguration();
     $view->ShowSubmit();
     echo "
         </div>

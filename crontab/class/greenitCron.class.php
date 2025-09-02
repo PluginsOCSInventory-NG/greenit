@@ -171,7 +171,8 @@ class CronStats
             GROUP BY DATE
         ";
         if ($query = mysql2_query_secure($globalQuery, $_SESSION["OCS"]["readServer"])) {
-            $apiKey = $this->config->GetAPIKey();
+            // used for API version
+            // $apiKey = $this->config->GetAPIKey();
             foreach ($query as $values) {
                 $data["GLOBALSTATS"][$values["DATE"]]["totalMachines"] = intval($values["totalMachines"]);
                 $data["GLOBALSTATS"][$values["DATE"]]["totalConsumption"] = floatval($values["totalConsumption"]);
@@ -179,20 +180,25 @@ class CronStats
                 $formatedConsumptions = array();
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($apiKey)) {
-                    foreach ($formatedConsumptions as $FCDate => $FCValue) {
-                        $Date = new Datetime($FCDate);
-                        foreach ($kilowattCosts as $KWCDate => $KWCValue) {
-                            if ($Date->format("Y-m-01") > $KWCDate) {
-                                while ($Date->format("Y-m-01") != $KWCDate) {
-                                    $Date->modify("- 1 month");
-                                }
-                                break;
-                            }
-                        }
-                        $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
-                    }
+                // Comment this if you are using API version
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * $kilowattCosts, $this->config->GetCostRound());
                 }
+                // Used for API version
+                // if (is_defined($apiKey)) {
+                //     foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                //         $Date = new Datetime($FCDate);
+                //         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                //             if ($Date->format("Y-m-01") > $KWCDate) {
+                //                 while ($Date->format("Y-m-01") != $KWCDate) {
+                //                     $Date->modify("- 1 month");
+                //                 }
+                //                 break;
+                //             }
+                //         }
+                //         $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                //     }
+                // }
                 $data["GLOBALSTATS"][$values["DATE"]]["totalCost"] = floatval($totalCost);
             }
         } else {
@@ -218,27 +224,33 @@ class CronStats
             $data["GLOBAL_COLLECT_TOTAL_STATS"]["0000-00-00"]["totalMachines"] = 0;
             $data["GLOBAL_COLLECT_TOTAL_STATS"]["0000-00-00"]["totalCost"] = 0;
             $formatedConsumptions = array();
-            $apiKey = $this->config->GetAPIKey();
+            // used for API version
+            // $apiKey = $this->config->GetAPIKey();
             foreach ($query as $values) {
                 $data["GLOBAL_COLLECT_TOTAL_STATS"]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
                 $data["GLOBAL_COLLECT_TOTAL_STATS"]["0000-00-00"]["totalConsumption"] += floatval($values["totalConsumption"]);
                 $data["GLOBAL_COLLECT_TOTAL_STATS"]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($apiKey)) {
-                    foreach ($formatedConsumptions as $FCDate => $FCValue) {
-                        $Date = new Datetime($FCDate);
-                        foreach ($kilowattCosts as $KWCDate => $KWCValue) {
-                            if ($Date->format("Y-m-01") > $KWCDate) {
-                                while ($Date->format("Y-m-01") != $KWCDate) {
-                                    $Date->modify("- 1 month");
-                                }
-                                break;
-                            }
-                        }
-                        $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
-                    }
+                // Comment this if you are using API version
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * $kilowattCosts, $this->config->GetCostRound());
                 }
+                // Used for API version
+                // if (is_defined($apiKey)) {
+                //     foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                //         $Date = new Datetime($FCDate);
+                //         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                //             if ($Date->format("Y-m-01") > $KWCDate) {
+                //                 while ($Date->format("Y-m-01") != $KWCDate) {
+                //                     $Date->modify("- 1 month");
+                //                 }
+                //                 break;
+                //             }
+                //         }
+                //         $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                //     }
+                // }
                 $data["GLOBAL_COLLECT_TOTAL_STATS"]["0000-00-00"]["totalCost"] = floatval($totalCost);
             }
         } else {
@@ -264,27 +276,33 @@ class CronStats
             $data["GLOBAL_COMPARE_TOTAL_STATS"]["0000-00-00"]["totalMachines"] = 0;
             $data["GLOBAL_COMPARE_TOTAL_STATS"]["0000-00-00"]["totalCost"] = 0;
             $formatedConsumptions = array();
-            $apiKey = $this->config->GetAPIKey();
+            // used for API version
+            // $apiKey = $this->config->GetAPIKey();
             foreach ($query as $values) {
                 $data["GLOBAL_COMPARE_TOTAL_STATS"]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
                 $data["GLOBAL_COMPARE_TOTAL_STATS"]["0000-00-00"]["totalConsumption"] += floatval($values["totalConsumption"]);
                 $data["GLOBAL_COMPARE_TOTAL_STATS"]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($apiKey)) {
-                    foreach ($formatedConsumptions as $FCDate => $FCValue) {
-                        $Date = new Datetime($FCDate);
-                        foreach ($kilowattCosts as $KWCDate => $KWCValue) {
-                            if ($Date->format("Y-m-01") > $KWCDate) {
-                                while ($Date->format("Y-m-01") != $KWCDate) {
-                                    $Date->modify("- 1 month");
-                                }
-                                break;
-                            }
-                        }
-                        $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
-                    }
+                // Comment this if you are using API version
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * $kilowattCosts, $this->config->GetCostRound());
                 }
+                // Used for API version
+                // if (is_defined($apiKey)) {
+                //     foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                //         $Date = new Datetime($FCDate);
+                //         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                //             if ($Date->format("Y-m-01") > $KWCDate) {
+                //                 while ($Date->format("Y-m-01") != $KWCDate) {
+                //                     $Date->modify("- 1 month");
+                //                 }
+                //                 break;
+                //             }
+                //         }
+                //         $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                //     }
+                // }
                 $data["GLOBAL_COMPARE_TOTAL_STATS"]["0000-00-00"]["totalCost"] = floatval($totalCost);
             }
         } else {
@@ -311,7 +329,8 @@ class CronStats
             GROUP BY DATE
         ";
         if ($query = mysql2_query_secure($clientsOSQuery, $_SESSION["OCS"]["readServer"])) {
-            $apiKey = $this->config->GetAPIKey();
+            // used for API version
+            // $apiKey = $this->config->GetAPIKey();
             foreach ($query as $values) {
                 $data["OSSTATS_CLIENTS"][$values["DATE"]]["totalMachines"] = intval($values["totalMachines"]);
                 $data["OSSTATS_CLIENTS"][$values["DATE"]]["totalConsumption"] = floatval($values["totalConsumption"]);
@@ -319,20 +338,25 @@ class CronStats
                 $formatedConsumptions = array();
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($apiKey)) {
-                    foreach ($formatedConsumptions as $FCDate => $FCValue) {
-                        $Date = new Datetime($FCDate);
-                        foreach ($kilowattCosts as $KWCDate => $KWCValue) {
-                            if ($Date->format("Y-m-01") > $KWCDate) {
-                                while ($Date->format("Y-m-01") != $KWCDate) {
-                                    $Date->modify("- 1 month");
-                                }
-                                break;
-                            }
-                        }
-                        $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
-                    }
+                // Comment this if you are using API version
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * $kilowattCosts, $this->config->GetCostRound());
                 }
+                // Used for API version
+                // if (is_defined($apiKey)) {
+                //     foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                //         $Date = new Datetime($FCDate);
+                //         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                //             if ($Date->format("Y-m-01") > $KWCDate) {
+                //                 while ($Date->format("Y-m-01") != $KWCDate) {
+                //                     $Date->modify("- 1 month");
+                //                 }
+                //                 break;
+                //             }
+                //         }
+                //         $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                //     }
+                // }
                 $data["OSSTATS_CLIENTS"][$values["DATE"]]["totalCost"] = floatval($totalCost);
             }
         } else {
@@ -355,7 +379,8 @@ class CronStats
             GROUP BY DATE
         ";
         if ($query = mysql2_query_secure($serversOSQuery, $_SESSION["OCS"]["readServer"])) {
-            $apiKey = $this->config->GetAPIKey();
+            // used for API version
+            // $apiKey = $this->config->GetAPIKey();
             foreach ($query as $values) {
                 $data["OSSTATS_SERVERS"][$values["DATE"]]["totalMachines"] = intval($values["totalMachines"]);
                 $data["OSSTATS_SERVERS"][$values["DATE"]]["totalConsumption"] = floatval($values["totalConsumption"]);
@@ -363,20 +388,25 @@ class CronStats
                 $formatedConsumptions = array();
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($apiKey)) {
-                    foreach ($formatedConsumptions as $FCDate => $FCValue) {
-                        $Date = new Datetime($FCDate);
-                        foreach ($kilowattCosts as $KWCDate => $KWCValue) {
-                            if ($Date->format("Y-m-01") > $KWCDate) {
-                                while ($Date->format("Y-m-01") != $KWCDate) {
-                                    $Date->modify("- 1 month");
-                                }
-                                break;
-                            }
-                        }
-                        $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
-                    }
+                // Comment this if you are using API version
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * $kilowattCosts, $this->config->GetCostRound());
                 }
+                // Used for API version
+                // if (is_defined($apiKey)) {
+                //     foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                //         $Date = new Datetime($FCDate);
+                //         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                //             if ($Date->format("Y-m-01") > $KWCDate) {
+                //                 while ($Date->format("Y-m-01") != $KWCDate) {
+                //                     $Date->modify("- 1 month");
+                //                 }
+                //                 break;
+                //             }
+                //         }
+                //         $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                //     }
+                // }
                 $data["OSSTATS_SERVERS"][$values["DATE"]]["totalCost"] = floatval($totalCost);
             }
         } else {
@@ -405,27 +435,33 @@ class CronStats
             $data["OS_COLLECT_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalMachines"] = 0;
             $data["OS_COLLECT_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalCost"] = 0;
             $formatedConsumptions = array();
-            $apiKey = $this->config->GetAPIKey();
+            // used for API version
+            // $apiKey = $this->config->GetAPIKey();
             foreach ($query as $values) {
                 $data["OS_COLLECT_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
                 $data["OS_COLLECT_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalConsumption"] += floatval($values["totalConsumption"]);
                 $data["OS_COLLECT_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($apiKey)) {
-                    foreach ($formatedConsumptions as $FCDate => $FCValue) {
-                        $Date = new Datetime($FCDate);
-                        foreach ($kilowattCosts as $KWCDate => $KWCValue) {
-                            if ($Date->format("Y-m-01") > $KWCDate) {
-                                while ($Date->format("Y-m-01") != $KWCDate) {
-                                    $Date->modify("- 1 month");
-                                }
-                                break;
-                            }
-                        }
-                        $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
-                    }
+                // Comment this if you are using API version
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * $kilowattCosts, $this->config->GetCostRound());
                 }
+                // Used for API version
+                // if (is_defined($apiKey)) {
+                //     foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                //         $Date = new Datetime($FCDate);
+                //         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                //             if ($Date->format("Y-m-01") > $KWCDate) {
+                //                 while ($Date->format("Y-m-01") != $KWCDate) {
+                //                     $Date->modify("- 1 month");
+                //                 }
+                //                 break;
+                //             }
+                //         }
+                //         $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                //     }
+                // }
                 $data["OS_COLLECT_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalCost"] = floatval($totalCost);
             }
         } else {
@@ -453,27 +489,33 @@ class CronStats
             $data["OS_COLLECT_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalMachines"] = 0;
             $data["OS_COLLECT_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalCost"] = 0;
             $formatedConsumptions = array();
-            $apiKey = $this->config->GetAPIKey();
+            // used for API version
+            // $apiKey = $this->config->GetAPIKey();
             foreach ($query as $values) {
                 $data["OS_COLLECT_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
                 $data["OS_COLLECT_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalConsumption"] += floatval($values["totalConsumption"]);
                 $data["OS_COLLECT_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($apiKey)) {
-                    foreach ($formatedConsumptions as $FCDate => $FCValue) {
-                        $Date = new Datetime($FCDate);
-                        foreach ($kilowattCosts as $KWCDate => $KWCValue) {
-                            if ($Date->format("Y-m-01") > $KWCDate) {
-                                while ($Date->format("Y-m-01") != $KWCDate) {
-                                    $Date->modify("- 1 month");
-                                }
-                                break;
-                            }
-                        }
-                        $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
-                    }
+                // Comment this if you are using API version
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * $kilowattCosts, $this->config->GetCostRound());
                 }
+                // Used for API version
+                // if (is_defined($apiKey)) {
+                //     foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                //         $Date = new Datetime($FCDate);
+                //         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                //             if ($Date->format("Y-m-01") > $KWCDate) {
+                //                 while ($Date->format("Y-m-01") != $KWCDate) {
+                //                     $Date->modify("- 1 month");
+                //                 }
+                //                 break;
+                //             }
+                //         }
+                //         $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                //     }
+                // }
                 $data["OS_COLLECT_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalCost"] = floatval($totalCost);
             }
         } else {
@@ -502,27 +544,33 @@ class CronStats
             $data["OS_COMPARE_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalMachines"] = 0;
             $data["OS_COMPARE_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalCost"] = 0;
             $formatedConsumptions = array();
-            $apiKey = $this->config->GetAPIKey();
+            // used for API version
+            // $apiKey = $this->config->GetAPIKey();
             foreach ($query as $values) {
                 $data["OS_COMPARE_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
                 $data["OS_COMPARE_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalConsumption"] += floatval($values["totalConsumption"]);
                 $data["OS_COMPARE_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($apiKey)) {
-                    foreach ($formatedConsumptions as $FCDate => $FCValue) {
-                        $Date = new Datetime($FCDate);
-                        foreach ($kilowattCosts as $KWCDate => $KWCValue) {
-                            if ($Date->format("Y-m-01") > $KWCDate) {
-                                while ($Date->format("Y-m-01") != $KWCDate) {
-                                    $Date->modify("- 1 month");
-                                }
-                                break;
-                            }
-                        }
-                        $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
-                    }
+                // Comment this if you are using API version
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * $kilowattCosts, $this->config->GetCostRound());
                 }
+                // Used for API version
+                // if (is_defined($apiKey)) {
+                //     foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                //         $Date = new Datetime($FCDate);
+                //         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                //             if ($Date->format("Y-m-01") > $KWCDate) {
+                //                 while ($Date->format("Y-m-01") != $KWCDate) {
+                //                     $Date->modify("- 1 month");
+                //                 }
+                //                 break;
+                //             }
+                //         }
+                //         $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                //     }
+                // }
                 $data["OS_COMPARE_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalCost"] = floatval($totalCost);
             }
         } else {
@@ -550,27 +598,33 @@ class CronStats
             $data["OS_COMPARE_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalMachines"] = 0;
             $data["OS_COMPARE_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalCost"] = 0;
             $formatedConsumptions = array();
-            $apiKey = $this->config->GetAPIKey();
+            // used for API version
+            // $apiKey = $this->config->GetAPIKey();
             foreach ($query as $values) {
                 $data["OS_COMPARE_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
                 $data["OS_COMPARE_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalConsumption"] += floatval($values["totalConsumption"]);
                 $data["OS_COMPARE_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($apiKey)) {
-                    foreach ($formatedConsumptions as $FCDate => $FCValue) {
-                        $Date = new Datetime($FCDate);
-                        foreach ($kilowattCosts as $KWCDate => $KWCValue) {
-                            if ($Date->format("Y-m-01") > $KWCDate) {
-                                while ($Date->format("Y-m-01") != $KWCDate) {
-                                    $Date->modify("- 1 month");
-                                }
-                                break;
-                            }
-                        }
-                        $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
-                    }
+                // Comment this if you are using API version
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * $kilowattCosts, $this->config->GetCostRound());
                 }
+                // Used for API version
+                // if (is_defined($apiKey)) {
+                //     foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                //         $Date = new Datetime($FCDate);
+                //         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                //             if ($Date->format("Y-m-01") > $KWCDate) {
+                //                 while ($Date->format("Y-m-01") != $KWCDate) {
+                //                     $Date->modify("- 1 month");
+                //                 }
+                //                 break;
+                //             }
+                //         }
+                //         $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                //     }
+                // }
                 $data["OS_COMPARE_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalCost"] = floatval($totalCost);
             }
         } else {
@@ -625,7 +679,8 @@ class CronStats
             GROUP BY COMPUTER_TYPE, DATE
         ";
         if ($query = mysql2_query_secure($computerTypesQuery, $_SESSION["OCS"]["readServer"])) {
-            $apiKey = $this->config->GetAPIKey();
+            // used for API version
+            // $apiKey = $this->config->GetAPIKey();
             foreach ($query as $values) {
                 $data["COMPUTERTYPESSTATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))][$values["DATE"]]["totalMachines"] = intval($values["totalMachines"]);
                 $data["COMPUTERTYPESSTATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))][$values["DATE"]]["totalConsumption"] = floatval($values["totalConsumption"]);
@@ -633,20 +688,25 @@ class CronStats
                 $formatedConsumptions = array();
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($apiKey)) {
-                    foreach ($formatedConsumptions as $FCDate => $FCValue) {
-                        $Date = new Datetime($FCDate);
-                        foreach ($kilowattCosts as $KWCDate => $KWCValue) {
-                            if ($Date->format("Y-m-01") > $KWCDate) {
-                                while ($Date->format("Y-m-01") != $KWCDate) {
-                                    $Date->modify("- 1 month");
-                                }
-                                break;
-                            }
-                        }
-                        $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
-                    }
+                // Comment this if you are using API version
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * $kilowattCosts, $this->config->GetCostRound());
                 }
+                // Used for API version
+                // if (is_defined($apiKey)) {
+                //     foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                //         $Date = new Datetime($FCDate);
+                //         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                //             if ($Date->format("Y-m-01") > $KWCDate) {
+                //                 while ($Date->format("Y-m-01") != $KWCDate) {
+                //                     $Date->modify("- 1 month");
+                //                 }
+                //                 break;
+                //             }
+                //         }
+                //         $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                //     }
+                // }
                 $data["COMPUTERTYPESSTATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))][$values["DATE"]]["totalCost"] = floatval($totalCost);
             }
         } else {
@@ -705,27 +765,33 @@ class CronStats
                 $data["COMPUTERTYPES_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalCost"] = 0;
             }
             $formatedConsumptions = array();
-            $apiKey = $this->config->GetAPIKey();
+            // used for API version
+            // $apiKey = $this->config->GetAPIKey();
             foreach ($query as $values) {
                 $data["COMPUTERTYPES_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
                 $data["COMPUTERTYPES_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalConsumption"] += floatval($values["totalConsumption"]);
                 $data["COMPUTERTYPES_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($apiKey)) {
-                    foreach ($formatedConsumptions as $FCDate => $FCValue) {
-                        $Date = new Datetime($FCDate);
-                        foreach ($kilowattCosts as $KWCDate => $KWCValue) {
-                            if ($Date->format("Y-m-01") > $KWCDate) {
-                                while ($Date->format("Y-m-01") != $KWCDate) {
-                                    $Date->modify("- 1 month");
-                                }
-                                break;
-                            }
-                        }
-                        $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
-                    }
+                // Comment this if you are using API version
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * $kilowattCosts, $this->config->GetCostRound());
                 }
+                // Used for API version
+                // if (is_defined($apiKey)) {
+                //     foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                //         $Date = new Datetime($FCDate);
+                //         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                //             if ($Date->format("Y-m-01") > $KWCDate) {
+                //                 while ($Date->format("Y-m-01") != $KWCDate) {
+                //                     $Date->modify("- 1 month");
+                //                 }
+                //                 break;
+                //             }
+                //         }
+                //         $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                //     }
+                // }
                 $data["COMPUTERTYPES_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalCost"] = floatval($totalCost);
             }
         } else {
@@ -784,27 +850,33 @@ class CronStats
                 $data["COMPUTERTYPES_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalCost"] = 0;
             }
             $formatedConsumptions = array();
-            $apiKey = $this->config->GetAPIKey();
+            // used for API version
+            // $apiKey = $this->config->GetAPIKey();
             foreach ($query as $values) {
                 $data["COMPUTERTYPES_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
                 $data["COMPUTERTYPES_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalConsumption"] += floatval($values["totalConsumption"]);
                 $data["COMPUTERTYPES_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($apiKey)) {
-                    foreach ($formatedConsumptions as $FCDate => $FCValue) {
-                        $Date = new Datetime($FCDate);
-                        foreach ($kilowattCosts as $KWCDate => $KWCValue) {
-                            if ($Date->format("Y-m-01") > $KWCDate) {
-                                while ($Date->format("Y-m-01") != $KWCDate) {
-                                    $Date->modify("- 1 month");
-                                }
-                                break;
-                            }
-                        }
-                        $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
-                    }
+                // Comment this if you are using API version
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * $kilowattCosts, $this->config->GetCostRound());
                 }
+                // Used for API version
+                // if (is_defined($apiKey)) {
+                //     foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                //         $Date = new Datetime($FCDate);
+                //         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                //             if ($Date->format("Y-m-01") > $KWCDate) {
+                //                 while ($Date->format("Y-m-01") != $KWCDate) {
+                //                     $Date->modify("- 1 month");
+                //                 }
+                //                 break;
+                //             }
+                //         }
+                //         $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                //     }
+                // }
                 $data["COMPUTERTYPES_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalCost"] = floatval($totalCost);
             }
         } else {
@@ -830,7 +902,8 @@ class CronStats
             GROUP BY MANUFACTURER, DATE
         ";
         if ($query = mysql2_query_secure($ManufacturersQuery, $_SESSION["OCS"]["readServer"])) {
-            $apiKey = $this->config->GetAPIKey();
+            // used for API version
+            // $apiKey = $this->config->GetAPIKey();
             foreach ($query as $values) {
                 $data["MANUFACTURERSSTATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))][$values["DATE"]]["totalMachines"] = intval($values["totalMachines"]);
                 $data["MANUFACTURERSSTATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))][$values["DATE"]]["totalConsumption"] = floatval($values["totalConsumption"]);
@@ -838,20 +911,25 @@ class CronStats
                 $formatedConsumptions = array();
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($apiKey)) {
-                    foreach ($formatedConsumptions as $FCDate => $FCValue) {
-                        $Date = new Datetime($FCDate);
-                        foreach ($kilowattCosts as $KWCDate => $KWCValue) {
-                            if ($Date->format("Y-m-01") > $KWCDate) {
-                                while ($Date->format("Y-m-01") != $KWCDate) {
-                                    $Date->modify("- 1 month");
-                                }
-                                break;
-                            }
-                        }
-                        $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
-                    }
+                // Comment this if you are using API version
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * $kilowattCosts, $this->config->GetCostRound());
                 }
+                // Used for API version
+                // if (is_defined($apiKey)) {
+                //     foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                //         $Date = new Datetime($FCDate);
+                //         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                //             if ($Date->format("Y-m-01") > $KWCDate) {
+                //                 while ($Date->format("Y-m-01") != $KWCDate) {
+                //                     $Date->modify("- 1 month");
+                //                 }
+                //                 break;
+                //             }
+                //         }
+                //         $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                //     }
+                // }
                 $data["MANUFACTURERSSTATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))][$values["DATE"]]["totalCost"] = floatval($totalCost);
             }
         } else {
@@ -882,27 +960,33 @@ class CronStats
                 $data["MANUFACTURERS_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalCost"] = 0;
             }
             $formatedConsumptions = array();
-            $apiKey = $this->config->GetAPIKey();
+            // used for API version
+            // $apiKey = $this->config->GetAPIKey();
             foreach ($query as $values) {
                 $data["MANUFACTURERS_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
                 $data["MANUFACTURERS_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalConsumption"] += floatval($values["totalConsumption"]);
                 $data["MANUFACTURERS_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($apiKey)) {
-                    foreach ($formatedConsumptions as $FCDate => $FCValue) {
-                        $Date = new Datetime($FCDate);
-                        foreach ($kilowattCosts as $KWCDate => $KWCValue) {
-                            if ($Date->format("Y-m-01") > $KWCDate) {
-                                while ($Date->format("Y-m-01") != $KWCDate) {
-                                    $Date->modify("- 1 month");
-                                }
-                                break;
-                            }
-                        }
-                        $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
-                    }
+                // Comment this if you are using API version
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * $kilowattCosts, $this->config->GetCostRound());
                 }
+                // Used for API version
+                // if (is_defined($apiKey)) {
+                //     foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                //         $Date = new Datetime($FCDate);
+                //         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                //             if ($Date->format("Y-m-01") > $KWCDate) {
+                //                 while ($Date->format("Y-m-01") != $KWCDate) {
+                //                     $Date->modify("- 1 month");
+                //                 }
+                //                 break;
+                //             }
+                //         }
+                //         $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                //     }
+                // }
                 $data["MANUFACTURERS_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalCost"] = floatval($totalCost);
             }
         } else {
@@ -933,27 +1017,33 @@ class CronStats
                 $data["MANUFACTURERS_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalCost"] = 0;
             }
             $formatedConsumptions = array();
-            $apiKey = $this->config->GetAPIKey();
+            // used for API version
+            // $apiKey = $this->config->GetAPIKey();
             foreach ($query as $values) {
                 $data["MANUFACTURERS_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
                 $data["MANUFACTURERS_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalConsumption"] += floatval($values["totalConsumption"]);
                 $data["MANUFACTURERS_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($apiKey)) {
-                    foreach ($formatedConsumptions as $FCDate => $FCValue) {
-                        $Date = new Datetime($FCDate);
-                        foreach ($kilowattCosts as $KWCDate => $KWCValue) {
-                            if ($Date->format("Y-m-01") > $KWCDate) {
-                                while ($Date->format("Y-m-01") != $KWCDate) {
-                                    $Date->modify("- 1 month");
-                                }
-                                break;
-                            }
-                        }
-                        $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
-                    }
+                // Comment this if you are using API version
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * $kilowattCosts, $this->config->GetCostRound());
                 }
+                // Used for API version
+                // if (is_defined($apiKey)) {
+                //     foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                //         $Date = new Datetime($FCDate);
+                //         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                //             if ($Date->format("Y-m-01") > $KWCDate) {
+                //                 while ($Date->format("Y-m-01") != $KWCDate) {
+                //                     $Date->modify("- 1 month");
+                //                 }
+                //                 break;
+                //             }
+                //         }
+                //         $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                //     }
+                // }
                 $data["MANUFACTURERS_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalCost"] = floatval($totalCost);
             }
         } else {
@@ -1019,7 +1109,8 @@ class CronStats
             GROUP BY DATE
         ";
         if ($query = mysql2_query_secure($globalQuery, $_SESSION["OCS"]["readServer"])) {
-            $apiKey = $this->config->GetAPIKey();
+            // used for API version
+            // $apiKey = $this->config->GetAPIKey();
             foreach ($query as $values) {
                 $data["GLOBALSTATS"][$values["DATE"]]["totalMachines"] = intval($values["totalMachines"]);
                 $data["GLOBALSTATS"][$values["DATE"]]["totalConsumption"] = floatval($values["totalConsumption"]);
@@ -1027,20 +1118,25 @@ class CronStats
                 $formatedConsumptions = array();
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($apiKey)) {
-                    foreach ($formatedConsumptions as $FCDate => $FCValue) {
-                        $Date = new Datetime($FCDate);
-                        foreach ($kilowattCosts as $KWCDate => $KWCValue) {
-                            if ($Date->format("Y-m-01") > $KWCDate) {
-                                while ($Date->format("Y-m-01") != $KWCDate) {
-                                    $Date->modify("- 1 month");
-                                }
-                                break;
-                            }
-                        }
-                        $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
-                    }
+                // Comment this if you are using API version
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * $kilowattCosts, $this->config->GetCostRound());
                 }
+                // Used for API version
+                // if (is_defined($apiKey)) {
+                //     foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                //         $Date = new Datetime($FCDate);
+                //         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                //             if ($Date->format("Y-m-01") > $KWCDate) {
+                //                 while ($Date->format("Y-m-01") != $KWCDate) {
+                //                     $Date->modify("- 1 month");
+                //                 }
+                //                 break;
+                //             }
+                //         }
+                //         $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                //     }
+                // }
                 $data["GLOBALSTATS"][$values["DATE"]]["totalCost"] = floatval($totalCost);
             }
         } else {
@@ -1066,27 +1162,33 @@ class CronStats
             $data["GLOBAL_COLLECT_TOTAL_STATS"]["0000-00-00"]["totalMachines"] = 0;
             $data["GLOBAL_COLLECT_TOTAL_STATS"]["0000-00-00"]["totalCost"] = 0;
             $formatedConsumptions = array();
-            $apiKey = $this->config->GetAPIKey();
+            // used for API version
+            // $apiKey = $this->config->GetAPIKey();
             foreach ($query as $values) {
                 $data["GLOBAL_COLLECT_TOTAL_STATS"]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
                 $data["GLOBAL_COLLECT_TOTAL_STATS"]["0000-00-00"]["totalConsumption"] += floatval($values["totalConsumption"]);
                 $data["GLOBAL_COLLECT_TOTAL_STATS"]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($apiKey)) {
-                    foreach ($formatedConsumptions as $FCDate => $FCValue) {
-                        $Date = new Datetime($FCDate);
-                        foreach ($kilowattCosts as $KWCDate => $KWCValue) {
-                            if ($Date->format("Y-m-01") > $KWCDate) {
-                                while ($Date->format("Y-m-01") != $KWCDate) {
-                                    $Date->modify("- 1 month");
-                                }
-                                break;
-                            }
-                        }
-                        $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
-                    }
+                // Comment this if you are using API version
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * $kilowattCosts, $this->config->GetCostRound());
                 }
+                // Used for API version
+                // if (is_defined($apiKey)) {
+                //     foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                //         $Date = new Datetime($FCDate);
+                //         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                //             if ($Date->format("Y-m-01") > $KWCDate) {
+                //                 while ($Date->format("Y-m-01") != $KWCDate) {
+                //                     $Date->modify("- 1 month");
+                //                 }
+                //                 break;
+                //             }
+                //         }
+                //         $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                //     }
+                // }
                 $data["GLOBAL_COLLECT_TOTAL_STATS"]["0000-00-00"]["totalCost"] = floatval($totalCost);
             }
         } else {
@@ -1112,27 +1214,33 @@ class CronStats
             $data["GLOBAL_COMPARE_TOTAL_STATS"]["0000-00-00"]["totalMachines"] = 0;
             $data["GLOBAL_COMPARE_TOTAL_STATS"]["0000-00-00"]["totalCost"] = 0;
             $formatedConsumptions = array();
-            $apiKey = $this->config->GetAPIKey();
+            // used for API version
+            // $apiKey = $this->config->GetAPIKey();
             foreach ($query as $values) {
                 $data["GLOBAL_COMPARE_TOTAL_STATS"]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
                 $data["GLOBAL_COMPARE_TOTAL_STATS"]["0000-00-00"]["totalConsumption"] += floatval($values["totalConsumption"]);
                 $data["GLOBAL_COMPARE_TOTAL_STATS"]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($apiKey)) {
-                    foreach ($formatedConsumptions as $FCDate => $FCValue) {
-                        $Date = new Datetime($FCDate);
-                        foreach ($kilowattCosts as $KWCDate => $KWCValue) {
-                            if ($Date->format("Y-m-01") > $KWCDate) {
-                                while ($Date->format("Y-m-01") != $KWCDate) {
-                                    $Date->modify("- 1 month");
-                                }
-                                break;
-                            }
-                        }
-                        $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
-                    }
+                // Comment this if you are using API version
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * $kilowattCosts, $this->config->GetCostRound());
                 }
+                // Used for API version
+                // if (is_defined($apiKey)) {
+                //     foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                //         $Date = new Datetime($FCDate);
+                //         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                //             if ($Date->format("Y-m-01") > $KWCDate) {
+                //                 while ($Date->format("Y-m-01") != $KWCDate) {
+                //                     $Date->modify("- 1 month");
+                //                 }
+                //                 break;
+                //             }
+                //         }
+                //         $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                //     }
+                // }
                 $data["GLOBAL_COMPARE_TOTAL_STATS"]["0000-00-00"]["totalCost"] = floatval($totalCost);
             }
         } else {
@@ -1158,7 +1266,8 @@ class CronStats
             GROUP BY DATE
         ";
         if ($query = mysql2_query_secure($clientsOSQuery, $_SESSION["OCS"]["readServer"])) {
-            $apiKey = $this->config->GetAPIKey();
+            // used for API version
+            // $apiKey = $this->config->GetAPIKey();
             foreach ($query as $values) {
                 $data["OSSTATS_CLIENTS"][$values["DATE"]]["totalMachines"] = intval($values["totalMachines"]);
                 $data["OSSTATS_CLIENTS"][$values["DATE"]]["totalConsumption"] = floatval($values["totalConsumption"]);
@@ -1166,20 +1275,25 @@ class CronStats
                 $formatedConsumptions = array();
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($apiKey)) {
-                    foreach ($formatedConsumptions as $FCDate => $FCValue) {
-                        $Date = new Datetime($FCDate);
-                        foreach ($kilowattCosts as $KWCDate => $KWCValue) {
-                            if ($Date->format("Y-m-01") > $KWCDate) {
-                                while ($Date->format("Y-m-01") != $KWCDate) {
-                                    $Date->modify("- 1 month");
-                                }
-                                break;
-                            }
-                        }
-                        $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
-                    }
+                // Comment this if you are using API version
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * $kilowattCosts, $this->config->GetCostRound());
                 }
+                // Used for API version
+                // if (is_defined($apiKey)) {
+                //     foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                //         $Date = new Datetime($FCDate);
+                //         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                //             if ($Date->format("Y-m-01") > $KWCDate) {
+                //                 while ($Date->format("Y-m-01") != $KWCDate) {
+                //                     $Date->modify("- 1 month");
+                //                 }
+                //                 break;
+                //             }
+                //         }
+                //         $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                //     }
+                // }
                 $data["OSSTATS_CLIENTS"][$values["DATE"]]["totalCost"] = floatval($totalCost);
             }
         } else {
@@ -1201,7 +1315,8 @@ class CronStats
             GROUP BY DATE
         ";
         if ($query = mysql2_query_secure($serversOSQuery, $_SESSION["OCS"]["readServer"])) {
-            $apiKey = $this->config->GetAPIKey();
+            // used for API version
+            // $apiKey = $this->config->GetAPIKey();
             foreach ($query as $values) {
                 $data["OSSTATS_SERVERS"][$values["DATE"]]["totalMachines"] = intval($values["totalMachines"]);
                 $data["OSSTATS_SERVERS"][$values["DATE"]]["totalConsumption"] = floatval($values["totalConsumption"]);
@@ -1209,20 +1324,25 @@ class CronStats
                 $formatedConsumptions = array();
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($apiKey)) {
-                    foreach ($formatedConsumptions as $FCDate => $FCValue) {
-                        $Date = new Datetime($FCDate);
-                        foreach ($kilowattCosts as $KWCDate => $KWCValue) {
-                            if ($Date->format("Y-m-01") > $KWCDate) {
-                                while ($Date->format("Y-m-01") != $KWCDate) {
-                                    $Date->modify("- 1 month");
-                                }
-                                break;
-                            }
-                        }
-                        $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
-                    }
+                // Comment this if you are using API version
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * $kilowattCosts, $this->config->GetCostRound());
                 }
+                // Used for API version
+                // if (is_defined($apiKey)) {
+                //     foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                //         $Date = new Datetime($FCDate);
+                //         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                //             if ($Date->format("Y-m-01") > $KWCDate) {
+                //                 while ($Date->format("Y-m-01") != $KWCDate) {
+                //                     $Date->modify("- 1 month");
+                //                 }
+                //                 break;
+                //             }
+                //         }
+                //         $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                //     }
+                // }
                 $data["OSSTATS_SERVERS"][$values["DATE"]]["totalCost"] = floatval($totalCost);
             }
         } else {
@@ -1251,27 +1371,33 @@ class CronStats
             $data["OS_COLLECT_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalMachines"] = 0;
             $data["OS_COLLECT_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalCost"] = 0;
             $formatedConsumptions = array();
-            $apiKey = $this->config->GetAPIKey();
+            // used for API version
+            // $apiKey = $this->config->GetAPIKey();
             foreach ($query as $values) {
                 $data["OS_COLLECT_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
                 $data["OS_COLLECT_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalConsumption"] += floatval($values["totalConsumption"]);
                 $data["OS_COLLECT_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($apiKey)) {
-                    foreach ($formatedConsumptions as $FCDate => $FCValue) {
-                        $Date = new Datetime($FCDate);
-                        foreach ($kilowattCosts as $KWCDate => $KWCValue) {
-                            if ($Date->format("Y-m-01") > $KWCDate) {
-                                while ($Date->format("Y-m-01") != $KWCDate) {
-                                    $Date->modify("- 1 month");
-                                }
-                                break;
-                            }
-                        }
-                        $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
-                    }
+                // Comment this if you are using API version
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * $kilowattCosts, $this->config->GetCostRound());
                 }
+                // Used for API version
+                // if (is_defined($apiKey)) {
+                //     foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                //         $Date = new Datetime($FCDate);
+                //         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                //             if ($Date->format("Y-m-01") > $KWCDate) {
+                //                 while ($Date->format("Y-m-01") != $KWCDate) {
+                //                     $Date->modify("- 1 month");
+                //                 }
+                //                 break;
+                //             }
+                //         }
+                //         $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                //     }
+                // }
                 $data["OS_COLLECT_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalCost"] = floatval($totalCost);
             }
         } else {
@@ -1299,27 +1425,33 @@ class CronStats
             $data["OS_COLLECT_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalMachines"] = 0;
             $data["OS_COLLECT_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalCost"] = 0;
             $formatedConsumptions = array();
-            $apiKey = $this->config->GetAPIKey();
+            // used for API version
+            // $apiKey = $this->config->GetAPIKey();
             foreach ($query as $values) {
                 $data["OS_COLLECT_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
                 $data["OS_COLLECT_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalConsumption"] += floatval($values["totalConsumption"]);
                 $data["OS_COLLECT_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($apiKey)) {
-                    foreach ($formatedConsumptions as $FCDate => $FCValue) {
-                        $Date = new Datetime($FCDate);
-                        foreach ($kilowattCosts as $KWCDate => $KWCValue) {
-                            if ($Date->format("Y-m-01") > $KWCDate) {
-                                while ($Date->format("Y-m-01") != $KWCDate) {
-                                    $Date->modify("- 1 month");
-                                }
-                                break;
-                            }
-                        }
-                        $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
-                    }
+                // Comment this if you are using API version
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * $kilowattCosts, $this->config->GetCostRound());
                 }
+                // Used for API version
+                // if (is_defined($apiKey)) {
+                //     foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                //         $Date = new Datetime($FCDate);
+                //         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                //             if ($Date->format("Y-m-01") > $KWCDate) {
+                //                 while ($Date->format("Y-m-01") != $KWCDate) {
+                //                     $Date->modify("- 1 month");
+                //                 }
+                //                 break;
+                //             }
+                //         }
+                //         $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                //     }
+                // }
                 $data["OS_COLLECT_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalCost"] = floatval($totalCost);
             }
         } else {
@@ -1348,27 +1480,33 @@ class CronStats
             $data["OS_COMPARE_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalMachines"] = 0;
             $data["OS_COMPARE_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalCost"] = 0;
             $formatedConsumptions = array();
-            $apiKey = $this->config->GetAPIKey();
+            // used for API version
+            // $apiKey = $this->config->GetAPIKey();
             foreach ($query as $values) {
                 $data["OS_COMPARE_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
                 $data["OS_COMPARE_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalConsumption"] += floatval($values["totalConsumption"]);
                 $data["OS_COMPARE_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($apiKey)) {
-                    foreach ($formatedConsumptions as $FCDate => $FCValue) {
-                        $Date = new Datetime($FCDate);
-                        foreach ($kilowattCosts as $KWCDate => $KWCValue) {
-                            if ($Date->format("Y-m-01") > $KWCDate) {
-                                while ($Date->format("Y-m-01") != $KWCDate) {
-                                    $Date->modify("- 1 month");
-                                }
-                                break;
-                            }
-                        }
-                        $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
-                    }
+                // Comment this if you are using API version
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * $kilowattCosts, $this->config->GetCostRound());
                 }
+                // Used for API version
+                // if (is_defined($apiKey)) {
+                //     foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                //         $Date = new Datetime($FCDate);
+                //         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                //             if ($Date->format("Y-m-01") > $KWCDate) {
+                //                 while ($Date->format("Y-m-01") != $KWCDate) {
+                //                     $Date->modify("- 1 month");
+                //                 }
+                //                 break;
+                //             }
+                //         }
+                //         $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                //     }
+                // }
                 $data["OS_COMPARE_TOTAL_STATS_CLIENTS"]["0000-00-00"]["totalCost"] = floatval($totalCost);
             }
         } else {
@@ -1396,27 +1534,33 @@ class CronStats
             $data["OS_COMPARE_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalMachines"] = 0;
             $data["OS_COMPARE_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalCost"] = 0;
             $formatedConsumptions = array();
-            $apiKey = $this->config->GetAPIKey();
+            // used for API version
+            // $apiKey = $this->config->GetAPIKey();
             foreach ($query as $values) {
                 $data["OS_COMPARE_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
                 $data["OS_COMPARE_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalConsumption"] += floatval($values["totalConsumption"]);
                 $data["OS_COMPARE_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($apiKey)) {
-                    foreach ($formatedConsumptions as $FCDate => $FCValue) {
-                        $Date = new Datetime($FCDate);
-                        foreach ($kilowattCosts as $KWCDate => $KWCValue) {
-                            if ($Date->format("Y-m-01") > $KWCDate) {
-                                while ($Date->format("Y-m-01") != $KWCDate) {
-                                    $Date->modify("- 1 month");
-                                }
-                                break;
-                            }
-                        }
-                        $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
-                    }
+                // Comment this if you are using API version
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * $kilowattCosts, $this->config->GetCostRound());
                 }
+                // Used for API version
+                // if (is_defined($apiKey)) {
+                //     foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                //         $Date = new Datetime($FCDate);
+                //         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                //             if ($Date->format("Y-m-01") > $KWCDate) {
+                //                 while ($Date->format("Y-m-01") != $KWCDate) {
+                //                     $Date->modify("- 1 month");
+                //                 }
+                //                 break;
+                //             }
+                //         }
+                //         $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                //     }
+                // }
                 $data["OS_COMPARE_TOTAL_STATS_SERVERS"]["0000-00-00"]["totalCost"] = floatval($totalCost);
             }
         } else {
@@ -1470,7 +1614,8 @@ class CronStats
             GROUP BY COMPUTER_TYPE, DATE
         ";
         if ($query = mysql2_query_secure($computerTypesQuery, $_SESSION["OCS"]["readServer"])) {
-            $apiKey = $this->config->GetAPIKey();
+            // used for API version
+            // $apiKey = $this->config->GetAPIKey();
             foreach ($query as $values) {
                 $data["COMPUTERTYPESSTATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))][$values["DATE"]]["totalMachines"] = intval($values["totalMachines"]);
                 $data["COMPUTERTYPESSTATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))][$values["DATE"]]["totalConsumption"] = floatval($values["totalConsumption"]);
@@ -1478,20 +1623,25 @@ class CronStats
                 $formatedConsumptions = array();
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($apiKey)) {
-                    foreach ($formatedConsumptions as $FCDate => $FCValue) {
-                        $Date = new Datetime($FCDate);
-                        foreach ($kilowattCosts as $KWCDate => $KWCValue) {
-                            if ($Date->format("Y-m-01") > $KWCDate) {
-                                while ($Date->format("Y-m-01") != $KWCDate) {
-                                    $Date->modify("- 1 month");
-                                }
-                                break;
-                            }
-                        }
-                        $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
-                    }
+                // Comment this if you are using API version
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * $kilowattCosts, $this->config->GetCostRound());
                 }
+                // Used for API version
+                // if (is_defined($apiKey)) {
+                //     foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                //         $Date = new Datetime($FCDate);
+                //         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                //             if ($Date->format("Y-m-01") > $KWCDate) {
+                //                 while ($Date->format("Y-m-01") != $KWCDate) {
+                //                     $Date->modify("- 1 month");
+                //                 }
+                //                 break;
+                //             }
+                //         }
+                //         $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                //     }
+                // }
                 $data["COMPUTERTYPESSTATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))][$values["DATE"]]["totalCost"] = floatval($totalCost);
             }
         } else {
@@ -1550,27 +1700,33 @@ class CronStats
                 $data["COMPUTERTYPES_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalCost"] = 0;
             }
             $formatedConsumptions = array();
-            $apiKey = $this->config->GetAPIKey();
+            // used for API version
+            // $apiKey = $this->config->GetAPIKey();
             foreach ($query as $values) {
                 $data["COMPUTERTYPES_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
                 $data["COMPUTERTYPES_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalConsumption"] += floatval($values["totalConsumption"]);
                 $data["COMPUTERTYPES_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($apiKey)) {
-                    foreach ($formatedConsumptions as $FCDate => $FCValue) {
-                        $Date = new Datetime($FCDate);
-                        foreach ($kilowattCosts as $KWCDate => $KWCValue) {
-                            if ($Date->format("Y-m-01") > $KWCDate) {
-                                while ($Date->format("Y-m-01") != $KWCDate) {
-                                    $Date->modify("- 1 month");
-                                }
-                                break;
-                            }
-                        }
-                        $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
-                    }
+                // Comment this if you are using API version
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * $kilowattCosts, $this->config->GetCostRound());
                 }
+                // Used for API version
+                // if (is_defined($apiKey)) {
+                //     foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                //         $Date = new Datetime($FCDate);
+                //         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                //             if ($Date->format("Y-m-01") > $KWCDate) {
+                //                 while ($Date->format("Y-m-01") != $KWCDate) {
+                //                     $Date->modify("- 1 month");
+                //                 }
+                //                 break;
+                //             }
+                //         }
+                //         $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                //     }
+                // }
                 $data["COMPUTERTYPES_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalCost"] = floatval($totalCost);
             }
         } else {
@@ -1629,27 +1785,33 @@ class CronStats
                 $data["COMPUTERTYPES_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalCost"] = 0;
             }
             $formatedConsumptions = array();
-            $apiKey = $this->config->GetAPIKey();
+            // used for API version
+            // $apiKey = $this->config->GetAPIKey();
             foreach ($query as $values) {
                 $data["COMPUTERTYPES_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
                 $data["COMPUTERTYPES_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalConsumption"] += floatval($values["totalConsumption"]);
                 $data["COMPUTERTYPES_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($apiKey)) {
-                    foreach ($formatedConsumptions as $FCDate => $FCValue) {
-                        $Date = new Datetime($FCDate);
-                        foreach ($kilowattCosts as $KWCDate => $KWCValue) {
-                            if ($Date->format("Y-m-01") > $KWCDate) {
-                                while ($Date->format("Y-m-01") != $KWCDate) {
-                                    $Date->modify("- 1 month");
-                                }
-                                break;
-                            }
-                        }
-                        $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
-                    }
+                // Comment this if you are using API version
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * $kilowattCosts, $this->config->GetCostRound());
                 }
+                // Used for API version
+                // if (is_defined($apiKey)) {
+                //     foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                //         $Date = new Datetime($FCDate);
+                //         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                //             if ($Date->format("Y-m-01") > $KWCDate) {
+                //                 while ($Date->format("Y-m-01") != $KWCDate) {
+                //                     $Date->modify("- 1 month");
+                //                 }
+                //                 break;
+                //             }
+                //         }
+                //         $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                //     }
+                // }
                 $data["COMPUTERTYPES_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["COMPUTER_TYPE"]))]["0000-00-00"]["totalCost"] = floatval($totalCost);
             }
         } else {
@@ -1675,7 +1837,8 @@ class CronStats
             GROUP BY MANUFACTURER, DATE
         ";
         if ($query = mysql2_query_secure($ManufacturersQuery, $_SESSION["OCS"]["readServer"])) {
-            $apiKey = $this->config->GetAPIKey();
+            // used for API version
+            // $apiKey = $this->config->GetAPIKey();
             foreach ($query as $values) {
                 $data["MANUFACTURERSSTATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))][$values["DATE"]]["totalMachines"] = intval($values["totalMachines"]);
                 $data["MANUFACTURERSSTATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))][$values["DATE"]]["totalConsumption"] = floatval($values["totalConsumption"]);
@@ -1683,20 +1846,25 @@ class CronStats
                 $formatedConsumptions = array();
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($apiKey)) {
-                    foreach ($formatedConsumptions as $FCDate => $FCValue) {
-                        $Date = new Datetime($FCDate);
-                        foreach ($kilowattCosts as $KWCDate => $KWCValue) {
-                            if ($Date->format("Y-m-01") > $KWCDate) {
-                                while ($Date->format("Y-m-01") != $KWCDate) {
-                                    $Date->modify("- 1 month");
-                                }
-                                break;
-                            }
-                        }
-                        $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
-                    }
+                // Comment this if you are using API version
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * $kilowattCosts, $this->config->GetCostRound());
                 }
+                // Used for API version
+                // if (is_defined($apiKey)) {
+                //     foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                //         $Date = new Datetime($FCDate);
+                //         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                //             if ($Date->format("Y-m-01") > $KWCDate) {
+                //                 while ($Date->format("Y-m-01") != $KWCDate) {
+                //                     $Date->modify("- 1 month");
+                //                 }
+                //                 break;
+                //             }
+                //         }
+                //         $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                //     }
+                // }
                 $data["MANUFACTURERSSTATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))][$values["DATE"]]["totalCost"] = floatval($totalCost);
             }
         } else {
@@ -1727,27 +1895,33 @@ class CronStats
                 $data["MANUFACTURERS_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalCost"] = 0;
             }
             $formatedConsumptions = array();
-            $apiKey = $this->config->GetAPIKey();
+            // used for API version
+            // $apiKey = $this->config->GetAPIKey();
             foreach ($query as $values) {
                 $data["MANUFACTURERS_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
                 $data["MANUFACTURERS_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalConsumption"] += floatval($values["totalConsumption"]);
                 $data["MANUFACTURERS_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($apiKey)) {
-                    foreach ($formatedConsumptions as $FCDate => $FCValue) {
-                        $Date = new Datetime($FCDate);
-                        foreach ($kilowattCosts as $KWCDate => $KWCValue) {
-                            if ($Date->format("Y-m-01") > $KWCDate) {
-                                while ($Date->format("Y-m-01") != $KWCDate) {
-                                    $Date->modify("- 1 month");
-                                }
-                                break;
-                            }
-                        }
-                        $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
-                    }
+                // Comment this if you are using API version
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * $kilowattCosts, $this->config->GetCostRound());
                 }
+                // Used for API version
+                // if (is_defined($apiKey)) {
+                //     foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                //         $Date = new Datetime($FCDate);
+                //         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                //             if ($Date->format("Y-m-01") > $KWCDate) {
+                //                 while ($Date->format("Y-m-01") != $KWCDate) {
+                //                     $Date->modify("- 1 month");
+                //                 }
+                //                 break;
+                //             }
+                //         }
+                //         $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                //     }
+                // }
                 $data["MANUFACTURERS_COLLECT_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalCost"] = floatval($totalCost);
             }
         } else {
@@ -1778,27 +1952,33 @@ class CronStats
                 $data["MANUFACTURERS_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalCost"] = 0;
             }
             $formatedConsumptions = array();
-            $apiKey = $this->config->GetAPIKey();
+            // used for API version
+            // $apiKey = $this->config->GetAPIKey();
             foreach ($query as $values) {
                 $data["MANUFACTURERS_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalMachines"] = intval($values["totalMachines"]);
                 $data["MANUFACTURERS_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalConsumption"] += floatval($values["totalConsumption"]);
                 $data["MANUFACTURERS_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalUptime"] += intval($values["totalUptime"]);
                 $formatedConsumptions[$values["DATE"]] = floatval($values["totalConsumption"]);
                 $totalCost = 0;
-                if (is_defined($apiKey)) {
-                    foreach ($formatedConsumptions as $FCDate => $FCValue) {
-                        $Date = new Datetime($FCDate);
-                        foreach ($kilowattCosts as $KWCDate => $KWCValue) {
-                            if ($Date->format("Y-m-01") > $KWCDate) {
-                                while ($Date->format("Y-m-01") != $KWCDate) {
-                                    $Date->modify("- 1 month");
-                                }
-                                break;
-                            }
-                        }
-                        $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
-                    }
+                // Comment this if you are using API version
+                foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                    $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * $kilowattCosts, $this->config->GetCostRound());
                 }
+                // Used for API version
+                // if (is_defined($apiKey)) {
+                //     foreach ($formatedConsumptions as $FCDate => $FCValue) {
+                //         $Date = new Datetime($FCDate);
+                //         foreach ($kilowattCosts as $KWCDate => $KWCValue) {
+                //             if ($Date->format("Y-m-01") > $KWCDate) {
+                //                 while ($Date->format("Y-m-01") != $KWCDate) {
+                //                     $Date->modify("- 1 month");
+                //                 }
+                //                 break;
+                //             }
+                //         }
+                //         $totalCost += round(($formatedConsumptions[$FCDate] / 1000) * ($kilowattCosts->{$Date->format("Y-m-01")} / 100), $this->config->GetCostRound());
+                //     }
+                // }
                 $data["MANUFACTURERS_COMPARE_TOTAL_STATS_" . strtoupper(str_replace(" ", "_", $values["MANUFACTURER"]))]["0000-00-00"]["totalCost"] = floatval($totalCost);
             }
         } else {

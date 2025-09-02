@@ -318,7 +318,10 @@ class FilteredStatsView extends View
             $collectQuery .= " GROUP BY DATE";
             $compareQuery .= " GROUP BY DATE";
 
-            $this->electricityPrices = $this->data->GetElectricityPrices();
+            // Comment this if you are using API version
+            $this->electricityPrices = $this->config->GetKilowattCost();
+            // Used for API version
+            // $this->electricityPrices = $this->data->GetElectricityPrices();
 
             $this->yesterdayData = $this->data->GetFilteredGreenITData($yesterdayQuery, $this->electricityPrices, false);
             $this->collectData = $this->data->GetFilteredGreenITData($collectQuery, $this->electricityPrices, true);
