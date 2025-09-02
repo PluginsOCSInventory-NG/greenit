@@ -76,28 +76,33 @@ sub greenit_pre_inventory {
     my $index = 0;
     my $indexbis = 0;
 
+    # Check if data from the inventoried machine already exist
     my $verif_query = "SELECT * FROM `greenit` WHERE HARDWARE_ID = ?";
     my @verif_arg = ($hardware_id);
     my $verif_result = _prepare_sql($verif_query, @verif_arg);
     my $verif_value_result = undef;
     if(!defined $verif_result) { return INVENTORY_CONTINUE; }
 
+    # Retrieve existing data for comparing with new data
     while(my $row = $verif_result->fetchrow_hashref()) {
         $verif_value_result->{$row->{DATE}}->{UPTIME} = $row->{UPTIME};
     }
 
-    for my $session (@{$xml->{CONTENT}->{GREENIT}}) {        
-        if(($session->{DATE} ne $datetime) && ($session->{UPTIME} eq $verif_value_result->{$session->{DATE}}->{UPTIME})) {
-            delete $xml->{CONTENT}->{GREENIT}[$index];
+    # Delete all data which not have the same date than datetime
+    if (ref($xml->{CONTENT}->{GREENIT}) eq 'ARRAY') {
+        for my $session (@{$xml->{CONTENT}->{GREENIT}}) {        
+            if(($session->{DATE} ne $datetime) && ($session->{UPTIME} eq $verif_value_result->{$session->{DATE}}->{UPTIME})) {
+                delete $xml->{CONTENT}->{GREENIT}[$index];
+            }
+            if(defined($xml->{CONTENT}->{GREENIT}[$index])) {
+                $greenit_hash->{GREENIT}[$indexbis] = $xml->{CONTENT}->{GREENIT}[$index];
+                $indexbis++;
+            }
+            $index++;
         }
-        if(defined($xml->{CONTENT}->{GREENIT}[$index])) {
-            $greenit_hash->{GREENIT}[$indexbis] = $xml->{CONTENT}->{GREENIT}[$index];
-            $indexbis++;
-        }
-        $index++;
-    }
 
-    $xml->{CONTENT}->{GREENIT} = $greenit_hash->{GREENIT};
+        $xml->{CONTENT}->{GREENIT} = $greenit_hash->{GREENIT};
+    }
 
     return INVENTORY_CONTINUE;
 }
@@ -114,10 +119,28 @@ sub greenit_post_inventory {
     my @column_paramaters;
     my @arguments_insert;
 
+    # Retrieve all existing data from the database and update all by deleting and insering new one
+    my $verif_query = "SELECT * FROM `greenit` WHERE HARDWARE_ID = ? AND DATE = ?";
 
-    foreach my $session (@{$xml->{CONTENT}->{GREENIT}}) {
-        my $verif_query = "SELECT * FROM `greenit` WHERE HARDWARE_ID = ? AND DATE = ?";
-        my @verif_arg = ($hardware_id, $session->{DATE});
+    if (ref($xml->{CONTENT}->{GREENIT}) eq 'ARRAY') {
+        foreach my $session (@{$xml->{CONTENT}->{GREENIT}}) {
+            my @verif_arg = ($hardware_id, $session->{DATE});
+            my $verif_result = _prepare_sql($verif_query, @verif_arg);
+            if(!defined $verif_result) { return INVENTORY_CONTINUE; }
+
+            while(my $row = $verif_result->fetchrow_hashref()) {
+                push @id_to_delete, $row->{ID};
+            }
+
+            push @column_paramaters, "(?, ?, ?, ?)";
+            push @arguments_insert, $hardware_id;
+            push @arguments_insert, $session->{DATE};
+            push @arguments_insert, $session->{CONSUMPTION};
+            push @arguments_insert, $session->{UPTIME};
+        }
+    }
+    else {
+        my @verif_arg = ($hardware_id, $xml->{CONTENT}->{GREENIT}->{DATE});
         my $verif_result = _prepare_sql($verif_query, @verif_arg);
         if(!defined $verif_result) { return INVENTORY_CONTINUE; }
 
@@ -127,10 +150,11 @@ sub greenit_post_inventory {
 
         push @column_paramaters, "(?, ?, ?, ?)";
         push @arguments_insert, $hardware_id;
-        push @arguments_insert, $session->{DATE};
-        push @arguments_insert, $session->{CONSUMPTION};
-        push @arguments_insert, $session->{UPTIME};
+        push @arguments_insert, $xml->{CONTENT}->{GREENIT}->{DATE};
+        push @arguments_insert, $xml->{CONTENT}->{GREENIT}->{CONSUMPTION};
+        push @arguments_insert, $xml->{CONTENT}->{GREENIT}->{UPTIME};
     }
+
     if(@id_to_delete) {
         my $delete_query = "DELETE FROM `greenit` WHERE ID IN (";
         $delete_query .= join ",", @id_to_delete;
