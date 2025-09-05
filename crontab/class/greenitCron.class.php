@@ -149,7 +149,8 @@ class CronStats
     private function DeltaMode(): void
     {
         echo $this->logMessage->NewMessage("INFO", "Executing delta mode. Processing...");
-        echo $this->logMessage->NewMessage("INFO", "Communication with API system...");
+        // Used for API version
+        // echo $this->logMessage->NewMessage("INFO", "Communication with API system...");
         echo $this->logMessage->NewMessage("INFO", "Getting electricity prices...");
         $kilowattCosts = $this->data->GetElectricityPrices();
 
@@ -1088,7 +1089,8 @@ class CronStats
     private function FullMode(): void
     {
         echo $this->logMessage->NewMessage("INFO", "Executing full mode. Processing...");
-        echo $this->logMessage->NewMessage("INFO", "Communication with API system...");
+        // Used for API version
+        // echo $this->logMessage->NewMessage("INFO", "Communication with API system...");
         echo $this->logMessage->NewMessage("INFO", "Getting electricity prices...");
         $kilowattCosts = $this->data->GetElectricityPrices();
 
