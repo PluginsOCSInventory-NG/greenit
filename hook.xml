@@ -7,16 +7,16 @@
     <hook type="submenu">
         <mainmenuidentifier>ms_regconfig</mainmenuidentifier>
         <identifier>ms_greenit_config</identifier>
-        <translation>80715</translation>
+        <translation>100000</translation>
     </hook>
     <hook type="submenu">
         <mainmenuidentifier>ms_inventory</mainmenuidentifier>
         <identifier>ms_greenit_dashboard</identifier>
-        <translation>80701</translation>
+        <translation>102100</translation>
     </hook>
     <hook type="cdentry">
         <identifier>cd_greenit</identifier>
-        <translation>80700</translation>
+        <translation>102000</translation>
         <category>other</category>
         <available>greenit</available>
     </hook>

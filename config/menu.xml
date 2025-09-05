@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menu>
+  <menu-elem id="globalstats">
+    <label>g(102103)</label>
+    <url>index.php?function=ms_greenit_dashboard&amp;cat=globalstats</url>
+  </menu-elem>
+  <menu-elem id="filteredstats">
+    <label>g(102104)</label>
+    <url>index.php?function=ms_greenit_dashboard&amp;cat=filteredstats</url>
+  </menu-elem>
+  <menu-elem id="osstats">
+    <label>g(102105)</label>
+    <url>index.php?function=ms_greenit_dashboard&amp;cat=osstats</url>
+  </menu-elem>
+  <menu-elem id="computerstatsstats">
+    <label>g(102106)</label>
+    <url>index.php?function=ms_greenit_dashboard&amp;cat=computertypestats</url>
+  </menu-elem>
+  <menu-elem id="manufacturerstats">
+    <label>g(102107)</label>
+    <url>index.php?function=ms_greenit_dashboard&amp;cat=manufacturerstats</url>
+  </menu-elem>
+</menu>

@@ -1,6 +1,6 @@
 ###############################################################################
 ## OCSINVENTORY-NG
-## Copyleft Antoine ROBIN 2023
+## Copyleft Antoine ROBIN 2025
 ## Web : http://www.ocsinventory-ng.org
 ##
 ## This code is open source and may be copied and modified as long as the source
@@ -11,26 +11,22 @@
 $data = $null
 
 if(Test-Path 'C:\ProgramData\GreenIT\data.json') {
-    $dataContent = Get-Content -Path 'C:\ProgramData\GreenIT\data.json'
+    $data = Get-Content -Path 'C:\ProgramData\GreenIT\data.json' -Raw | ConvertFrom-Json
 }
-if($null -eq $dataContent) {
+if($data -eq $null) {
     $xml = "<GREENIT/>"
 } else {
     $xml = ""
 
-    $regex =  "`"(?<DATE>[0-9]+-[0-9]+-[0-9]+)`": {`"CONSUMPTION`":`"(?<CONSUMPTION>[\s\S]+?)`",`"UPTIME`":`"(?<UPTIME>[0-9]+)`"},"
-    foreach($data in $dataContent)
+    foreach($date in $data.PSObject.Properties.Name)
     {
-        if($data -match $regex)
-        {
-            $xml += "<GREENIT>`n"
-            $xml += "<DATE>" + $Matches.DATE + "</DATE>`n"
-            $xml += "<CONSUMPTION>" + $Matches.CONSUMPTION + "</CONSUMPTION>`n"
-            $xml += "<UPTIME>" + $Matches.UPTIME + "</UPTIME>`n"
-            $xml += "</GREENIT>`n"
-        }
+        $entry = $data.$date
+        $xml += "<GREENIT>`n"
+        $xml += "<DATE>$date</DATE>`n"
+        $xml += "<CONSUMPTION>$($entry.consumption)</CONSUMPTION>`n"
+        $xml += "<UPTIME>$($entry.uptime)</UPTIME>`n"
+        $xml += "</GREENIT>`n"
     }
 }
 
-$PSDefaultParameterValues['Out-File:Encoding'] = 'utf8'
 [Console]::WriteLine($xml)
